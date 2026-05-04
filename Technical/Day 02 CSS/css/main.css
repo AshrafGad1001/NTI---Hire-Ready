@@ -1,0 +1,23 @@
+.card {
+    display: inline-block;
+    width: 33%;
+}
+
+
+
+.card img {
+    width: 100%;
+}
+
+.card .card-info {
+    width: 100%;
+    text-align: center;
+}
+
+.card .card-info button {
+    background-color: rgb(64, 92, 163);
+    color: #fff;
+    /* white is more readable on dark blue */
+    padding: 6px 8px;
+    font-size: 20px;
+}

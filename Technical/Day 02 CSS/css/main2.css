@@ -1,0 +1,36 @@
+body {
+    background-color: rgb(255, 0, 195);
+}
+
+.container {
+    background-color: rgb(103, 99, 98);
+}
+
+.card {
+
+    /* width: calc(100%/3); */
+
+    width: 32%;
+    float: left;
+}
+
+.clear {
+    clear: both;
+}
+
+.card img {
+    width: 100%;
+}
+
+.card .card-info {
+    width: 100%;
+    text-align: center;
+}
+
+.card .card-info button {
+    background-color: rgb(64, 92, 163);
+    color: #fff;
+    /* white is more readable on dark blue */
+    padding: 6px 8px;
+    font-size: 20px;
+}

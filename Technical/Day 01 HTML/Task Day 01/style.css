@@ -1,0 +1,18 @@
+.form_section {
+  background-color: red;
+}
+.name_info {
+  background-color: darkgoldenrod;
+}
+#table_section {
+  background-color: palevioletred;
+}
+/* #cat_table {
+  background-color: darkmagenta;
+} */
+.cat {
+  width: 150px;
+}
+.submit_button {
+  width: 50;
+}
