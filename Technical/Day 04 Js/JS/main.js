@@ -248,3 +248,78 @@ console.log(invertedTriangle(5));
 console.log("................................");
 
 console.log("----------------------------End Of Bouns Task 3 ");
+
+
+
+
+
+/* 
+   SHAPE 4: Pyramid ← THE CLASSIC!
+      ★
+     ★★★
+    ★★★★★
+   ★★★★★★★
+*/
+
+
+
+function pyramid(n) {
+    let output = "";
+
+    for (let row = 1; row <= n; row++) {
+        for (let space = 1; space <= n - row; space++) {
+            output += " ";
+        }
+        for (let star = 1; star <= (row * 2 - 1); star++) {
+            output += "*";
+        }
+        output += "\n";
+    }
+
+    return output;
+}
+
+console.log(pyramid(5));
+console.log("................................");
+
+
+console.log("----------------------------End Of Bouns Task 4 ");
+
+/* 
+   SHAPE 5: Diamond ← Hardest Shape (2 pyramids!)
+      ★
+     ★★★
+    ★★★★★
+     ★★★
+      ★
+
+
+*/
+function diamond(n) {
+    let output = "";
+
+    for (let row = 1; row <= n; row++) {
+        for (let s = 1; s <= n - row; s++)
+            output += " ";
+        for (let c = 1; c <= row * 2 - 1; c++)
+            output += "*";
+        output += "\n";
+    }
+
+    for (let row = n - 1; row >= 1; row--) {
+        for (let s = 1; s <= n - row; s++)
+            output += " ";
+        for (let c = 1; c <= row * 2 - 1; c++)
+            output += "*";
+        output += "\n";
+    }
+
+    return output;
+}
+
+console.log(diamond(5));
+console.log("................................");
+
+
+
+console.log("----------------------------End Of Bouns Task 5");

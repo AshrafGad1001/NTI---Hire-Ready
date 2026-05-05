@@ -1,4 +1,283 @@
+
 <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>JS Tasks UI</title>
+
+        <style>
+        body {
+            font-family: Arial;
+            background: #c3c2c1;
+            color: white;   
+            padding: 20px;
+        }
+h1{
+    text-align: center;
+    color:black;
+}
+        h2 {
+            color: #090909;
+        }
+
+        .card {
+            background: #BBD5DA;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #22c55e;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        .output {
+            margin-top: 10px;
+            background: rgba(28, 61, 132, 0.6);
+            padding: 10px;
+            white-space: pre-wrap;
+        }
+    </style>
+    </head>
+
+    <body>
+
+        <h1>JS Tasks Day 01</h1>
+
+        <!-- Task 1 -->
+        <div class="card">
+            <h2>Even or Odd</h2>
+            <input type="number" id="numInput">
+            <button onclick="handleEvenOdd()">Check</button>
+            <div class="output" id="evenOddResult">OutPut : </div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="card">
+            <h2>Celsius to Fahrenheit</h2>
+            <input type="number" id="tempInput">
+            <button onclick="handleTemp()">Convert</button>
+            <div class="output" id="tempResult">OutPut : </div>
+        </div>
+
+        <!-- Task 3 & 4 -->
+        <div class="card">
+            <h2>Array Operations</h2>
+            <input type="text" id="arrayInput" placeholder="1,2,3,4">
+            <button onclick="handleArray()">Calculate</button>
+            <div class="output" id="arrayResult">OutPut : </div>
+        </div>
+
+        <!-- Task 5 -->
+        <div class="card">
+            <h2>Count Vowels</h2>
+            <input type="text" id="stringInput">
+            <button onclick="handleVowels()">Count</button>
+            <div class="output" id="vowelResult">OutPut : </div>
+        </div>
+
+        <!-- Task 6 -->
+        <div class="card">
+            <h2>Reverse String</h2>
+            <input type="text" id="reverseInput">
+            <button onclick="handleReverse()">Reverse</button>
+            <div class="output" id="reverseResult">OutPut : </div>
+        </div>
+
+        <!-- Shapes -->
+        <div class="card">
+            <h2>Shapes</h2>
+            <input type="number" id="shapeInput" placeholder="Enter size">
+            <button onclick="handleShapes()">Draw</button>
+            <div class="output" id="shapeResult">OutPut : </div>
+        </div>
+
+        <script>
+
+// ===== TASKS FUNCTIONS =====
+
+function isEvenOrOdd(num) {
+    return num % 2 === 0 ? "Even" : "Odd";
+}
+
+function celsiusToFahrenheit(c) {
+    return c * 1.8 + 32;
+}
+
+function sumArray(arr) {
+    return arr.reduce((a, b) => a + b, 0);
+}
+
+function findMaxNumber(arr) {
+    return Math.max(...arr);
+}
+
+function countVowels(str) {
+    let vowels = "aeiouAEIOU";
+    let count = 0;
+
+    for (let char of str) {
+        if (vowels.includes(char)) count++;
+    }
+
+    return count;
+}
+
+function reverseString(str) {
+    let reversed = "";
+    for (let i = str.length - 1; i >= 0; i--) {
+        reversed += str[i];
+    }
+    return reversed;
+}
+
+// ===== SHAPES =====
+
+function square(n) {
+   let output = "";
+
+    for (let row = 1; row <= n; row++) {
+        for (let col = 1; col <= n; col++) {
+            output += "*  ";
+        }
+        output += "\n";
+    }
+    return output;
+}
+
+function triangle(n) {
+     let output = "";
+
+    for (let row = 1; row <= n; row++) {
+        for (let col = 1; col <= row; col++) {
+            output += "*  ";
+        }
+        output += "\n";
+    }
+    return output;
+}
+
+function invertedTriangle(n) {
+     let output = "";
+
+    for (let row = n; row >= 1; row--) {
+        for (let col = 1; col <= row; col++) {
+            output += "*  ";
+        }
+        output += "\n";
+    }
+
+    return output;
+}
+
+function pyramid(n) {
+      let output = "";
+
+    for (let row = 1; row <= n; row++) {
+        for (let space = 1; space <= n - row; space++) {
+            output += " ";
+        }
+        for (let star = 1; star <= (row * 2 - 1); star++) {
+            output += "*";
+        }
+        output += "\n";
+    }
+
+    return output;
+}
+
+function diamond(n) {
+        let output = "";
+
+    for (let row = 1; row <= n; row++) {
+        for (let s = 1; s <= n - row; s++)
+            output += " ";
+        for (let c = 1; c <= row * 2 - 1; c++)
+            output += "*";
+        output += "\n";
+    }
+
+    for (let row = n - 1; row >= 1; row--) {
+        for (let s = 1; s <= n - row; s++)
+            output += " ";
+        for (let c = 1; c <= row * 2 - 1; c++)
+            output += "*";
+        output += "\n";
+    }
+
+    return output;
+}
+
+// ===== HANDLERS =====
+
+function handleEvenOdd() {
+    let num = document.getElementById("numInput").value;
+    document.getElementById("evenOddResult").innerText = isEvenOrOdd(num);
+}
+
+function handleTemp() {
+    let temp = document.getElementById("tempInput").value;
+    document.getElementById("tempResult").innerText =
+        celsiusToFahrenheit(temp) + " °F";
+}
+
+function handleArray() {
+    let input = document.getElementById("arrayInput").value;
+    let arr = input.split(",").map(Number);
+
+    let sum = sumArray(arr);
+    let max = findMaxNumber(arr);
+
+    document.getElementById("arrayResult").innerText =
+        "Sum = " + sum + "\nMax = " + max;
+}
+
+function handleVowels() {
+    let str = document.getElementById("stringInput").value;
+    document.getElementById("vowelResult").innerText =
+        countVowels(str);
+}
+
+function handleReverse() {
+    let str = document.getElementById("reverseInput").value;
+    document.getElementById("reverseResult").innerText =
+        reverseString(str);
+}
+
+function handleShapes() {
+    let n = document.getElementById("shapeInput").value;
+
+    let result =
+        "Square:\n" + square(n) +
+        "\nTriangle:\n" + triangle(n) +
+        "\nInverted:\n" + invertedTriangle(n) +
+        "\nPyramid:\n" + pyramid(n) +
+        "\nDiamond:\n" + diamond(n);
+
+    document.getElementById("shapeResult").innerText = result;
+}
+
+</script>
+
+    </body>
+</html>
+
+<!-- <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -8,22 +287,8 @@
         <link rel="stylesheet" href="CSS/main.css">
         <title>Document</title>
     </head>
-    <body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+    <body> 
         <script src="js/main.js"></script>
 
     </body>
-</html>
+</html> -->
