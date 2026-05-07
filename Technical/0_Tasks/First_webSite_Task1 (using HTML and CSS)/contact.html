@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="CSS/all.min.css">
+
+        <link rel="stylesheet" href="CSS/main.css">
+        <title>Beit-ElGomla - Contact-US</title>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="nav-logo">
+                    <img src="images/Logo.png" alt="Beit-ElGoma Logo">
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <a href="contact.html" class="btn-primary">Get Started</a>
+            </nav>
+        </header>
+
+        <main>
+
+            <!-- ═══ CONTACT SECTION ═══ -->
+            <section class="contact-section">
+                <div class="container">
+                    <div class="contact-grid">
+
+                        <!-- LEFT: FORM -->
+                        <div class="contact-form-wrapper fade-up">
+                            <h1>Contact Us</h1>
+                            <p class="contact-tagline">Feel free to contact us
+                                anytime!</p>
+
+                            <form class="contact-form"
+                                onsubmit="handleSubmit(event)">
+
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" name="name"
+                                        placeholder="Your name" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email"
+                                        placeholder="Your email" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="message">Message</label>
+                                    <textarea id="message" name="message"
+                                        placeholder="Your message..." rows="5"
+                                        required></textarea>
+                                </div>
+
+                                <button type="submit"
+                                    class="btn-primary btn-full">Send
+                                    Message</button>
+                                <p id="form-success" class="form-success"
+                                    style="display:none;">
+                                    ✅ Message sent successfully! We'll get back
+                                    to you soon.
+                                </p>
+
+                            </form>
+                        </div>
+
+                        <div class="contact-image fade-up-2">
+                            <img src="images/contact-img2.jpg"
+                                alt="Green plant decoration"
+                                class="contact-img" />
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ CONTACT INFO BAR ═══ -->
+            <section class="contact-info">
+                <div class="container">
+                    <div class="info-grid">
+
+                        <div class="info-card">
+                            <div class="info-icon"><i
+                                    class="fa-solid fa-envelope"></i></div>
+                            <div>
+                                <h4>Email</h4>
+                                <p>info@ecolife.com</p>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon"><i
+                                    class="fa-solid fa-phone"></i></div>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+2001553585239</p>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon"><i
+                                    class="fa-solid fa-map-marker-alt"></i></div>
+                            <div>
+                                <h4>Location</h4>
+                                <p>123 Green Street,<br>New York, USA</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo"><img src="images/Logo.png"
+                            alt></div>
+                    <p>A platform dedicated to providing all household
+                        essentials, groceries, and daily products at wholesale
+                        prices with high quality.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="#" title="Facebook"><i
+                                class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" title="Instagram"><i
+                                class="fa-brands fa-instagram"></i></a>
+                        <a href="#" title="Twitter"><i
+                                class="fa-brands fa-twitter"></i></a>
+                        <a href="#" title="YouTube"><i
+                                class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 BeitElGomla. All rights reserved.</p>
+            </div>
+        </footer>
+        <script src="js/main.js"></script>
+
+    </body>
+</html>
