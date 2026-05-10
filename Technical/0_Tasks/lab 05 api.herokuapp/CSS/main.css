@@ -1,0 +1,20 @@
+h1 {
+    margin: 20px;
+    text-align: center;
+    color: #E8EDF2;
+}
+
+body {
+    background-color: #2C3947;
+}
+
+img {
+    height: 180px;
+    object-fit: cover
+}
+
+.card {
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    background-color: #E8EDF2;
+}

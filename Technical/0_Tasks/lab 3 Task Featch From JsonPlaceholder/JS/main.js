@@ -10,7 +10,7 @@ function getPosts() {
     Request.open("GET", "https://jsonplaceholder.typicode.com/posts");
     Request.send();
     Request.onload = function () {
-        if (Request.status == 200 && Request.readyState == 4) {
+        if (Request.status === 200 && Request.readyState === 4) {
             let posts = JSON.parse(Request.response);
             postsContainer.innerHTML = "";
             for (let i = 0; i < posts.length; i++) {

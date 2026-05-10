@@ -1,0 +1,142 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* .grid-container {
+    background-color: gray;
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 100px 200px 300px;
+    grid-template-rows: 100px 150px 200px 300px; 
+
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 33% 33% 33%;
+
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 20px;
+
+    align-content: center;
+    justify-content: center;
+} */
+
+/* .grid-item {
+    font-size: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+}
+
+.grid-item-1 {
+    background-color: rebeccapurple;
+}
+
+.grid-item-2 {
+    background-color: lightcoral;
+}
+
+.grid-item-3 {
+    background-color: lightgreen;
+}
+
+.grid-item-4 {
+    background-color: rgb(46, 77, 87);
+}
+
+.grid-item-5 {
+    background-color: rgb(58, 58, 30);
+}
+
+.grid-item-6 {
+    background-color: lightpink;
+}
+
+.grid-item-7 {
+    background-color: rgb(109, 68, 68);
+}
+
+.grid-item-8 {
+    background-color: rgb(15, 53, 53);
+}
+
+.grid-item-9 {
+    background-color: lightseagreen;
+}
+
+.grid-item-10 {
+    background-color: rgb(40, 59, 59);
+} */
+
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: rgb(12, 12, 12);
+}
+
+.grid-container {
+    background-color: rgb(12, 12, 12);
+    display: grid;
+    gap: 20px;
+    text-align: center;
+    margin-top: 60px;
+    width: 90%;
+    grid-template-columns: repeat(3, 1fr) 170px;
+    grid-template-rows: repeat(6, 100px);
+}
+
+
+.grid-container .header {
+    padding: 20px;
+    background-color: rebeccapurple;
+    /* grid-column: 1/-1; */
+    grid-column: 1/5;
+}
+
+.grid-container .box-1 {
+    padding: 20px;
+    background-color: lightcoral;
+    grid-row: 2/4;
+}
+
+.grid-container .box-2 {
+    padding: 20px;
+    background-color: rgb(128, 135, 240);
+    grid-row: 2/4;
+
+}
+
+.grid-container .box-3 {
+    padding: 20px;
+    background-color: rgb(88, 12, 56);
+    grid-row: 2/4;
+
+}
+
+.grid-container .side-bar {
+    padding: 20px;
+    background-color: rgb(24, 19, 99);
+    grid-row: 2/6;
+}
+
+.grid-container .main-content {
+    padding: 20px;
+    background-color: rgb(153, 255, 204);
+    grid-column: 1/4;
+    grid-row: 4/6;
+}
+
+.grid-container .footer {
+    padding: 20px;
+    background-color: rgb(255, 182, 193);
+    grid-column: 1/5;
+}
