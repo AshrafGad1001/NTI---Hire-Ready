@@ -13,6 +13,7 @@ const clearBtn = document.getElementById('clear-completed-btn');
 
 
 const localStorsgeKey = 'Task Manager';
+
 let tasks = [];
 let filter = 'all';
 

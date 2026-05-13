@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="CSS/main.css">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="CSS/main.css" />
         <title>Task Manager</title>
     </head>
     <body>
@@ -13,30 +13,51 @@
                 <h1>Task Manager</h1>
             </div>
 
+            
             <div id="input-area">
-                <input type="text" id="task-input"
-                    placeholder="Add a new task..." />
+
+                
+                <input
+                    type="text"
+                    id="task-title"
+                    placeholder="Task title (required)..." />
+
+                
+                <input
+                    type="text"
+                    id="task-desc"
+                    placeholder="Description (optional)..." />
+
+                
+                <input
+                    type="datetime-local"
+                    id="task-date" />
+
                 <button id="add-btn">+ Add</button>
             </div>
+
             <div id="error-msg"></div>
 
+            
             <div id="filter-bar">
                 <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="active">Pending</button>
                 <button class="filter-btn"
                     data-filter="completed">Completed</button>
             </div>
 
+            
             <ul id="task-list"></ul>
             <div id="empty-msg" style="display:none;">No Tasks Today.</div>
 
+            
             <div id="stats-bar" style="display:none;">
                 <span id="stats-text"></span>
-                <button id="clear-completed-btn">Delete All Complete
+                <button id="clear-completed-btn">Delete All Completed
                     Tasks</button>
             </div>
         </div>
 
-        <script  src="dist/index.js"></script>
+        <script type="module" src="js/index.js"></script>
     </body>
 </html>
