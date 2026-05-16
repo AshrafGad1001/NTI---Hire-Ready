@@ -1,5 +1,5 @@
 {
-  "name": "app-using-bootstrap",
+  "name": "task-react",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,10 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^7.2.0",
     "bootstrap": "^5.3.8",
     "react": "^19.2.6",
-    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.6"
   },
   "devDependencies": {

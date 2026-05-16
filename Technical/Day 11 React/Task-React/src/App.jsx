@@ -1,15 +1,13 @@
 import './App.css'
-import Parent from './components/parent/Parent';
-
-
+import Products from './Components/Products/Products';
 
 function App() {
 
-
   return (
     <>
-      <Parent />
+      <Products />
     </>
   )
 }
+
 export default App
