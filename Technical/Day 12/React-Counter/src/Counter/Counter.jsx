@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 
 export default function Counter() {
 
@@ -11,9 +11,17 @@ export default function Counter() {
     // }, []);  
 
     useEffect(() => {
-        console.log(`Count : ${count}`);
-
+        console.log(`Update......Count : ${count}`);
     }, [count]);
+
+    useEffect(() => {
+
+        console.log("Component Mounted");
+
+        return () => {
+            console.log("******************Component Unmounted******************");
+        };
+    }, []);
 
     return (
         <div className="d-flex flex-column align-items-center justify-content-center vh-100">
