@@ -9,20 +9,21 @@ import Layout from './componets/Layout/Layout';
 
 function App() {
 
-  let router = createBrowserRouter([
+  const router = createBrowserRouter([
     {
       path: "", element: <Layout />, children: [
-
-        { index: true, element: <Hero /> },
-        { path: "gallery", element: <Gallery /> },
-        { path: "About", element: <About />, }
-
+        { path: "", element: <Hero /> },
+        { path: "home", element: <Hero /> },
+        { path: "about", element: <About /> },
+        { path: "gallery", element: <Gallery /> }
       ]
-    },
+    }
   ]);
 
   return (
-    <RouterProvider router={router} />
+    <>
+      <RouterProvider router={router} ></RouterProvider>
+    </>
   )
 }
 
