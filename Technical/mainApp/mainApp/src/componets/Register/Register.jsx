@@ -1,24 +1,30 @@
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
+import axios from 'axios';
 
 export default function Register() {
 
-
-    function handelRegister() {
-        console.log("-------------Ashraf------------✅");
-
+    async function handelRegister(values) {
+        try {
+            const { data } = await axios.post(
+                'https://ecommerce.routemisr.com/api/v1/auth/signup',
+                values
+            );
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const formik = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
+            name: '',
             email: '',
             password: '',
-            repassword: ''
+            rePassword: '',
+            phone: ''
         },
         onSubmit: handelRegister
-
     });
 
     return (
@@ -31,26 +37,14 @@ export default function Register() {
                 <form onSubmit={formik.handleSubmit}>
 
                     <div className="mb-3">
-                        <label className="form-label">First Name</label>
+                        <label className="form-label">Name</label>
                         <input
                             type="text"
-                            name="firstName"
+                            name="name"
                             className="form-control"
-                            placeholder="Enter your first name"
+                            placeholder="Enter your name"
                             onChange={formik.handleChange}
-                            value={formik.values.firstName}
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Last Name</label>
-                        <input
-                            type="text"
-                            name="lastName"
-                            className="form-control"
-                            placeholder="Enter your last name"
-                            onChange={formik.handleChange}
-                            value={formik.values.lastName}
+                            value={formik.values.name}
                         />
                     </div>
 
@@ -82,11 +76,23 @@ export default function Register() {
                         <label className="form-label">Confirm Password</label>
                         <input
                             type="password"
-                            name="repassword"
+                            name="rePassword"
                             className="form-control"
                             placeholder="Confirm your password"
                             onChange={formik.handleChange}
-                            value={formik.values.repassword}
+                            value={formik.values.rePassword}
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label">Phone</label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            className="form-control"
+                            placeholder="Enter your phone number"
+                            onChange={formik.handleChange}
+                            value={formik.values.phone}
                         />
                     </div>
 
