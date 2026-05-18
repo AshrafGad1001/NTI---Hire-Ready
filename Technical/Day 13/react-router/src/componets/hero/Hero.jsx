@@ -24,8 +24,7 @@ export function Hero() {
                     </h1>
 
                     <p className="lead mb-5 mx-auto" style={{ maxWidth: "550px", color: "#cbd5e1" }}>
-                        Master React step by step — from components and hooks
-                        to full real-world projects
+                        Master React step by step 
                     </p>
 
                     <div className="d-flex gap-3 justify-content-center">

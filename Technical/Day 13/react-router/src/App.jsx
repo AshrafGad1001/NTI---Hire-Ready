@@ -9,6 +9,8 @@ import { Login } from './componets/Login/Login';
 import { NotFound } from './componets/NotFound/NotFound';
 import { Register } from './componets/Register/Register';
 import { Home } from './componets/Home/Home';
+import { Services } from './componets/Services/Services';
+import { Contact } from './componets/Contact/Contact';
 
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
         { path: "home", element: <Home /> },
         { path: "about", element: <About /> },
         { path: "gallery", element: <Gallery /> },
+        { path: "services", element: <Services /> },
+        {path: "contact", element: <Contact /> },
         { path: "login", element: <Login /> },
         { path: "register", element: <Register /> }
       ]

@@ -9,17 +9,15 @@ export function Navbar() {
         <>
             <nav
                 className="navbar navbar-expand-lg navbar-dark px-4"
-                style={{ background: "linear-gradient(135deg, #0a0a2e, #1a1a6e, #4a0080)" }}
-            >
+                style={{ background: "linear-gradient(135deg, #0a0a2e, #1a1a6e, #4a0080)" }}>
 
-                <div
-                    className="navbar-brand fw-bold fs-4"
-                    style={{ color: "#a78bfa" }}
-                >
-                    MyLogo
-                </div>
+             
+<div className="navbar-brand fw-bold fs-4" style={{ color: "#a78bfa" }}>
+    <Link to="/" className="text-decoration-none" style={{ color: "#a78bfa" }}>
+        MyLogo
+    </Link>
+</div>
 
-                {/* Hamburger Button */}
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -35,6 +33,8 @@ export function Navbar() {
                         <li className="nav-item"><Link to="home" className="nav-link text-white">Home</Link></li>
                         <li className="nav-item"><Link to="about" className="nav-link text-white">About</Link></li>
                         <li className="nav-item"><Link to="gallery" className="nav-link text-white">Gallery</Link></li>
+                        <li className="nav-item"><Link to="services" className="nav-link text-white">Services</Link></li>
+                        <li className="nav-item"><Link to="contact" className="nav-link text-white">Contact</Link></li>
                     </ul>
 
                     <div className="d-flex gap-2 mt-2 mt-lg-0">
