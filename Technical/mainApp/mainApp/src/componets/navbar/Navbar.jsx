@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStore } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -12,9 +14,9 @@ export function Navbar() {
                 style={{ background: "linear-gradient(135deg, #0a0a2e, #1a1a6e, #4a0080)" }}>
 
 
-                <div className="navbar-brand fw-bold fs-4" style={{ color: "#a78bfa" }}>
-                    <Link to="/" className="text-decoration-none" style={{ color: "#a78bfa" }}>
-                        MyLogo
+                <div className="navbar-brand fw-bold fs-4" style={{ color: "#ffffff" }}>
+                    <Link to="/" className="text-decoration-none" style={{ color: "#ffffff" }}>
+                        <FontAwesomeIcon icon={faStore} className="ms-5 me-5" />
                     </Link>
                 </div>
 
@@ -37,6 +39,7 @@ export function Navbar() {
                         {/* <li className="nav-item"><Link to="contact" className="nav-link text-white">Contact</Link></li> */}
                         {/* <li className="nav-item"><Link to="Projects" className="nav-link text-white">Projects</Link></li> */}
                         <li className="nav-item"><Link to="Products" className="nav-link text-white">Products</Link></li>
+                        <li className="nav-item"><Link to="Categories" className="nav-link text-white">Categories</Link></li>
                     </ul>
 
                     <div className="d-flex gap-2 mt-2 mt-lg-0">

@@ -42,11 +42,21 @@ export default function Products() {
 
 
                 <div className="row g-4">
-                    {products.map((product) => (
-                        <div className="col-md-3">
-                            <Product p={product} />
-                        </div>
-                    ))}
+                    {
+
+                        products.length == 0 ? <div className="d-flex justify-content-center align-items-center min-vh-100">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                        </div> :
+                            products.map((product) => (
+                                <div key={product._id} className="col-md-3">
+                                    <Product p={product} />
+                                </div>
+                            ))
+
+
+                    }
                 </div>
 
             </div>

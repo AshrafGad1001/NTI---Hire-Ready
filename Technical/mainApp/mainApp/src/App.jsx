@@ -7,6 +7,9 @@ import { Login } from './componets/Login/Login';
 import { Register } from './componets/Register/Register';
 import { Hero } from './componets/hero/Hero';
 import Products from './componets/Products/Products';
+import Categories from './componets/Categories/Categories';
+import Men from './componets/Men/Men';
+import Women from './componets/Women/Women';
 
 
 
@@ -61,8 +64,12 @@ function App() {
       path: "", element: <Layout />, children: [
         { path: "", element: <Hero /> },
         { path: "Products", element: <Products /> },
-
-
+        {
+          path: "Categories", element: <Categories />, children: [
+            { path: "Men", element: <Men /> },
+            { path: "Women", element: <Women /> }
+          ]
+        },
         { path: "login", element: <Login /> },
         { path: "register", element: <Register /> }
       ]

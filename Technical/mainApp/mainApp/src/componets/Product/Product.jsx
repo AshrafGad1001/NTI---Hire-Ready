@@ -1,6 +1,6 @@
 export default function Product({ p }) {
     return (
-        <div className="card border-0 shadow-sm rounded-4 h-100">
+        <div className="     border-0 shadow-sm rounded-4 h-100">
 
 
             <div style={{ height: "220px", overflow: "hidden" }} className="rounded-top-4">
