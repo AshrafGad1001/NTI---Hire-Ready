@@ -28,7 +28,7 @@ export default function Projects() {
                         <div className="card border-0 shadow-sm p-3 rounded-4">
 
                             <p className="fw-bold text-uppercase text-primary mb-3 small">
-                                Categories
+                                App Categories
                             </p>
 
                             <ul className="list-unstyled d-flex flex-column gap-2 mb-0">
