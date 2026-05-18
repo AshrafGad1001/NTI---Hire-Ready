@@ -8,7 +8,7 @@ import { Register } from './componets/Register/Register';
 import { Hero } from './componets/hero/Hero';
 import Products from './componets/Products/Products';
 import Categories from './componets/Categories/Categories';
-import Men from './componets/Men/Men';
+import {Men} from './componets/Men/Men';
 import Women from './componets/Women/Women';
 
 
