@@ -10,7 +10,7 @@ export default function Clothes() {
                 <div className="text-center mb-5">
                     <p className="fw-bold text-uppercase text-primary mb-2 small">Clothes</p>
                     <h2 className="display-5 fw-bold text-dark">
-                        Shop By <span className="text-primary">Gender</span>
+                        Categories by <span className="text-primary">Gender</span>
                     </h2>
                 </div>
 

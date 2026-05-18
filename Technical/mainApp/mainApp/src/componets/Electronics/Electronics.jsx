@@ -10,7 +10,7 @@ export default function Electronics() {
                 <div className="text-center mb-5">
                     <p className="fw-bold text-uppercase text-primary mb-2 small">Electronics</p>
                     <h2 className="display-5 fw-bold text-dark">
-                        Shop By <span className="text-primary">Device</span>
+                        Categories by <span className="text-primary">Device</span>
                     </h2>
                 </div>
 

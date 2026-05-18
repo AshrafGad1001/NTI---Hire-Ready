@@ -3,8 +3,8 @@ import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './componets/Layout/Layout';
 import { NotFound } from './componets/NotFound/NotFound';
-import { Login } from './componets/Login/Login';
-import { Register } from './componets/Register/Register';
+import Login from './componets/Login/Login';
+import  Register  from './componets/Register/Register';
 import { Hero } from './componets/hero/Hero';
 import Products from './componets/Products/Products';
 import { Men } from './componets/Men/Men';
