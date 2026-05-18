@@ -1,21 +1,44 @@
+import { Link } from 'react-router-dom';
+
 export function Hero() {
     return (
         <>
-            <section id="hero" className="hero">
+            <section
+                id="hero"
+                className="d-flex align-items-center justify-content-center text-center text-white"
+                style={{
+                    minHeight: "100vh",
+                    background: "linear-gradient(135deg, #0a0a2e, #1a1a6e, #4a0080)"
+                }}
+            >
 
-                <div className="hero-content">
+                <div className="container">
 
-                    <h1>
-                        Welcome To React App
-                    </h1>
-
-                    <p>
-                        Learn React From Zero To Hero
+                    <p className="text-uppercase fw-bold mb-2" style={{ letterSpacing: "4px", color: "#a78bfa" }}>
+                        Start Your Journey
                     </p>
 
-                    <button>
-                        Get Started
-                    </button>
+                    <h1 className="display-3 fw-bold mb-3">
+                        Build Amazing Apps <br />
+                        <span style={{ color: "#a78bfa" }}>With React</span>
+                    </h1>
+
+                    <p className="lead mb-5 mx-auto" style={{ maxWidth: "550px", color: "#cbd5e1" }}>
+                        Master React step by step — from components and hooks
+                        to full real-world projects
+                    </p>
+
+                    <div className="d-flex gap-3 justify-content-center">
+
+                        <Link to="/register" className="btn btn-lg px-4" style={{ background: "#7c3aed", color: "#fff" }}>
+                            Get Started →
+                        </Link>
+
+                        <Link to="/login" className="btn btn-outline-light btn-lg px-4">
+                            Login
+                        </Link>
+
+                    </div>
 
                 </div>
 

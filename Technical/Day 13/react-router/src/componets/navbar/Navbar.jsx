@@ -1,21 +1,47 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 export function Navbar() {
+
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+            <nav
+                className="navbar navbar-expand-lg navbar-dark px-4"
+                style={{ background: "linear-gradient(135deg, #0a0a2e, #1a1a6e, #4a0080)" }}
+            >
 
-                <div className="navbar-brand fw-bold">MyLogo</div>
+                <div
+                    className="navbar-brand fw-bold fs-4"
+                    style={{ color: "#a78bfa" }}
+                >
+                    MyLogo
+                </div>
 
-                <ul className="navbar-nav me-auto d-flex flex-row gap-3">
-                    <li className="nav-item"><Link to="" className="nav-link">Home</Link></li>
-                    <li className="nav-item"><Link to="about" className="nav-link">About</Link></li>
-                    <li className="nav-item"><Link to="gallery" className="nav-link">Gallery</Link></li>
-                </ul>
+                {/* Hamburger Button */}
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    <span className="navbar-toggler-icon"></span>
+                </button>
 
-                <div className="d-flex gap-2">
-                    <Link to="/login" className="btn btn-primary">Login</Link>
-                    <Link to="/register" className="btn btn-success">Register</Link>
+                {/* Links */}
+                <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
+
+                    <ul className="navbar-nav me-auto d-flex gap-3">
+                        <li className="nav-item"><Link to="home" className="nav-link text-white">Home</Link></li>
+                        <li className="nav-item"><Link to="about" className="nav-link text-white">About</Link></li>
+                        <li className="nav-item"><Link to="gallery" className="nav-link text-white">Gallery</Link></li>
+                    </ul>
+
+                    <div className="d-flex gap-2 mt-2 mt-lg-0">
+                        <Link to="/login" className="btn btn-outline-light">Login</Link>
+                        <Link to="/register" className="btn" style={{ background: "#7c3aed", color: "#fff" }}>Register</Link>
+                    </div>
+
                 </div>
 
             </nav>

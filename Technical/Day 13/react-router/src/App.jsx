@@ -8,6 +8,7 @@ import Layout from './componets/Layout/Layout';
 import { Login } from './componets/Login/Login';
 import { NotFound } from './componets/NotFound/NotFound';
 import { Register } from './componets/Register/Register';
+import { Home } from './componets/Home/Home';
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
     {
       path: "", element: <Layout />, children: [
         { path: "", element: <Hero /> },
-        { path: "home", element: <Hero /> },
+        { path: "home", element: <Home /> },
         { path: "about", element: <About /> },
         { path: "gallery", element: <Gallery /> },
         { path: "login", element: <Login /> },
@@ -25,9 +26,9 @@ function App() {
     },
     {
       path: "*",
-      element: <NotFound />}
+      element: <NotFound />
+    }
   ]);
-  console.log(typeof (router));
 
   return (
     <>
