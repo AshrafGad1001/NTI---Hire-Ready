@@ -7,9 +7,14 @@ import { Login } from './componets/Login/Login';
 import { Register } from './componets/Register/Register';
 import { Hero } from './componets/hero/Hero';
 import Products from './componets/Products/Products';
-import Categories from './componets/Categories/Categories';
-import {Men} from './componets/Men/Men';
+import { Men } from './componets/Men/Men';
 import Women from './componets/Women/Women';
+import Categories from './componets/Categories/Categories';
+import Clothes from './componets/Clothes/Clothes';
+import Electronics from './componets/Electronics/Electronics';
+import SmartAccessories from './componets/SmartAccessories/SmartAccessories';
+import Laptop from './componets/Laptop/Laptop';
+import Mobile from './componets/Mobile/Mobile';
 
 
 
@@ -66,8 +71,21 @@ function App() {
         { path: "Products", element: <Products /> },
         {
           path: "Categories", element: <Categories />, children: [
-            { path: "Men", element: <Men /> },
-            { path: "Women", element: <Women /> }
+            {
+              path: "clothes", element: <Clothes />, children: [
+                { path: "men", element: <Men /> },
+                { path: "women", element: <Women /> }
+              ],
+            },
+            {
+              path: "electronics", element: <Electronics />, children: [
+                { path: "mobile", element: <Mobile /> },
+                { path: "laptops", element: <Laptop /> },
+                { path: "SmartAccessories", element: <SmartAccessories /> }
+
+
+              ]
+            }
           ]
         },
         { path: "login", element: <Login /> },
