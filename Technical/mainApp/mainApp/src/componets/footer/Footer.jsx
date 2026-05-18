@@ -12,13 +12,13 @@ export function Footer() {
 
                     <div className="row g-4">
 
-                        {/* Logo */}
+
                         <div className="col-md-4">
                             <h2 className="fw-bold fs-4" style={{ color: "#a78bfa" }}>
-                                MyWebsite
+                                E-Commerce
                             </h2>
                             <p style={{ color: "#cbd5e1" }}>
-                                Learn React Step By Step
+                                E-Commerce -Learn React
                             </p>
                         </div>
 
@@ -40,8 +40,8 @@ export function Footer() {
                             <h3 className="fw-bold fs-5 mb-3" style={{ color: "#a78bfa" }}>
                                 Contact
                             </h3>
-                            <p style={{ color: "#cbd5e1" }}>Email: test@gmail.com</p>
-                            <p style={{ color: "#cbd5e1" }}>Phone: 0123456789</p>
+                            <p style={{ color: "#cbd5e1" }}>Email: ashrafgad542@gmail.com</p>
+                            <p style={{ color: "#cbd5e1" }}>Phone: 01553585239</p>
                         </div>
 
                     </div>

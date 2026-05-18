@@ -63,7 +63,7 @@ export default function Electronics() {
 
                 </div>
 
-                {/* Outlet هنا */}
+
                 <div className="mt-5">
                     <Outlet />
                 </div>
