@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import axios from 'axios';
 
 export default function Register() {
@@ -15,6 +16,17 @@ export default function Register() {
         }
     }
 
+
+
+
+    let UserSchema = Yup.object().shape({
+        name: Yup.string().min(3, "Name must be at least 3 characters").required("Name is required"),
+        email: Yup.string().email("Invalid email").required("Email is required"),
+        password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+        rePassword: Yup.string().oneOf([Yup.ref('password')], "Passwords do not match").required("Confirm password is required"),
+        phone: Yup.string().matches(/^01[0125][0-9]{8}$/, "Invalid phone number").required("Phone is required")
+    });
+
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -23,43 +35,45 @@ export default function Register() {
             rePassword: '',
             phone: ''
         },
-        validate(values) {
-            let errors = {};
+        validationSchema: UserSchema
+        ,
+        // validate(values) {
+        //     let errors = {};
 
-            if (!values.name) {
-                errors.name = "Name is required";
-            }
+        //     if (!values.name) {
+        //         errors.name = "Name is required";
+        //     }
 
-            if (!values.email) {
-                errors.email = "Email is required";
-            }
+        //     if (!values.email) {
+        //         errors.email = "Email is required";
+        //     }
 
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-                errors.email = "Invalid email";
-            }
+        //     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+        //         errors.email = "Invalid email";
+        //     }
 
-            if (!values.phone) {
-                errors.phone = "Phone is required";
-            }
+        //     if (!values.phone) {
+        //         errors.phone = "Phone is required";
+        //     }
 
-            if (!/^01[0125][0-9]{8}$/.test(values.phone)) {
-                errors.phone = "Invalid phone number";
-            }
+        //     if (!/^01[0125][0-9]{8}$/.test(values.phone)) {
+        //         errors.phone = "Invalid phone number";
+        //     }
 
-            if (!values.password) {
-                errors.password = "Password is required";
-            }
+        //     if (!values.password) {
+        //         errors.password = "Password is required";
+        //     }
 
-            if (values.password.length < 6) {
-                errors.password = "Password must be at least 6 chars";
-            }
+        //     if (values.password.length < 6) {
+        //         errors.password = "Password must be at least 6 chars";
+        //     }
 
-            if (values.rePassword !== values.password) {
-                errors.rePassword = "Passwords do not match";
-            }
+        //     if (values.rePassword !== values.password) {
+        //         errors.rePassword = "Passwords do not match";
+        //     }
 
-            return errors;
-        },
+        //     return errors;
+        // },
         onSubmit: handelRegister
     });
 
@@ -171,4 +185,5 @@ export default function Register() {
 
         </section>
     )
+
 }
