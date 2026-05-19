@@ -1,5 +1,3 @@
-// src/componets/Login/Login.jsx
-
 export default function Login() {
     return (
         <section className="min-vh-100 d-flex align-items-center justify-content-center bg-light">

@@ -1,5 +1,3 @@
-// src/componets/Services/Services.jsx
-
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
