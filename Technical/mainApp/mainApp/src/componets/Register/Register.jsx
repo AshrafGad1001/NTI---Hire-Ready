@@ -1,23 +1,53 @@
-import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useState } from 'react';
 
 export default function Register() {
 
-    async function handelRegister(values) {
+    // async function handelRegister(values) {
+    //     try {
+    //         const { data } = await axios.post('https://ecommerce.routemisr.com/api/v1/auth/signup',
+    //             values
+    //         );
+    //         console.log(data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+
+    // }
+
+
+
+
+    let navigate = useNavigate();
+    const [apiError, setApiError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function handelRegister(formikValues) {
+        setIsLoading(true);
+        setApiError("");
+
         try {
-            const { data } = await axios.post('https://ecommerce.routemisr.com/api/v1/auth/signup',
-                values
+            let { data } = await axios.post(
+                "https://ecommerce.routemisr.com/api/v1/auth/signup",
+                formikValues
             );
-            console.log(data);
+
+            if (data.message === "success") {
+                navigate("/login");
+            }
         } catch (error) {
-            console.log(error);
+            setApiError(
+                error.response?.data?.message || "Something went wrong"
+            );
         }
+
+        setIsLoading(false);
     }
-
-
-
 
     let UserSchema = Yup.object().shape({
         name: Yup.string().min(3, "Name must be at least 3 characters").required("Name is required"),
@@ -83,6 +113,8 @@ export default function Register() {
             <div className="card shadow p-4" style={{ width: "450px" }}>
 
                 <h2 className="text-center fw-bold mb-4">Register</h2>
+
+                {apiError && <div className="alert alert-danger">{apiError}</div>}
 
                 <form onSubmit={formik.handleSubmit}>
 
@@ -170,9 +202,8 @@ export default function Register() {
                             <span className="text-danger small">{formik.errors.phone}</span>
                         }
                     </div>
-
                     <button type="submit" className="btn btn-success w-100 mt-2">
-                        Register
+                        {isLoading && <FontAwesomeIcon icon={faSpinner} spin className="ms-2" />} {isLoading ? "Registering..." : "Register"}
                     </button>
 
                 </form>
