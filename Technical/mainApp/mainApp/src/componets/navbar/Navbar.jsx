@@ -44,12 +44,13 @@ export function Navbar() {
                     <ul className="navbar-nav me-auto d-flex gap-3">
                         {/* <li className="nav-item"><Link to="home" className="nav-link text-white">Home</Link></li> */}
                         {/* <li className="nav-item"><Link to="about" className="nav-link text-white">About</Link></li> */}
-                        {/* <li className="nav-item"><Link to="gallery" className="nav-link text-white">Gallery</Link></li> */}
+
                         {/* <li className="nav-item"><Link to="services" className="nav-link text-white">Services</Link></li> */}
                         {/* <li className="nav-item"><Link to="contact" className="nav-link text-white">Contact</Link></li> */}
                         {/* <li className="nav-item"><Link to="Projects" className="nav-link text-white">Projects</Link></li> */}
                         {token ? (
                             <>
+                                <li className="nav-item"><Link to="gallery" className="nav-link text-white">Gallery</Link></li>
                                 <li className="nav-item"><Link to="Products" className="nav-link text-white">Products</Link></li>
                                 <li className="nav-item"><Link to="Categories" className="nav-link text-white">Categories</Link></li>
                             </>

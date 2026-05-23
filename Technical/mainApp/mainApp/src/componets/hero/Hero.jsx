@@ -20,7 +20,7 @@ export function Hero() {
 
                     <h1 className="display-3 fw-bold mb-3">
                         Home Page <br />
-                        <span style={{ color: "#a78bfa" }}>With React</span>
+                        <span style={{ color: "#a78bfa" }}>Using React</span>
                     </h1>
 
                     <div className="d-flex gap-3 justify-content-center">
