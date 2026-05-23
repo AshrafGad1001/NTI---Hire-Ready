@@ -40,7 +40,7 @@ export function Navbar() {
 
                 <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
 
-                    {/* Links على الشمال */}
+
                     <ul className="navbar-nav me-auto d-flex gap-3">
                         {/* <li className="nav-item"><Link to="home" className="nav-link text-white">Home</Link></li> */}
                         {/* <li className="nav-item"><Link to="about" className="nav-link text-white">About</Link></li> */}
@@ -57,12 +57,13 @@ export function Navbar() {
                         ) : null}
                     </ul>
 
-                    {/* Buttons على اليمين */}
+
                     <div className="d-flex gap-2 mt-2 mt-lg-0">
                         {token ? (
                             <button
                                 onClick={handleLogout}
-                                className="btn btn-danger"
+                                className="btn text-white"
+                                style={{ backgroundColor: "#DB1A1A", borderColor: "#1E3A8A" }}
                             >
                                 <FontAwesomeIcon icon={faRightFromBracket} className="me-2" />
                                 Logout

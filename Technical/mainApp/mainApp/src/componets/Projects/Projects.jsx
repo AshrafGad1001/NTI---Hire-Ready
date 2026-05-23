@@ -7,7 +7,7 @@ export default function Projects() {
         <section className="py-5 bg-light min-vh-100">
             <div className="container">
 
-                {/* Header */}
+                
                 <div className="text-center mb-5">
                     <p className="fw-bold text-uppercase mb-2 text-primary small">
                         Our Work
@@ -23,7 +23,7 @@ export default function Projects() {
 
                 <div className="row g-4">
 
-                    {/* Sidebar */}
+                    
                     <div className="col-md-3">
                         <div className="card border-0 shadow-sm p-3 rounded-4">
 
@@ -55,7 +55,7 @@ export default function Projects() {
                         </div>
                     </div>
 
-                    {/* Content */}
+                    
                     <div className="col-md-9">
                         <div className="card border-0 shadow-sm p-4 rounded-4" style={{ minHeight: "400px" }}>
                             <Outlet />
