@@ -5,10 +5,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useState } from 'react';
+import { useContext } from "react"
+import { tokenContext } from './../../Context/userContext';
 
 export default function Login() {
 
     const navigate = useNavigate();
+    const { setToken } = useContext(tokenContext);
     const [apiError, setApiError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -23,6 +26,8 @@ export default function Login() {
             );
 
             if (data.message === "success") {
+                localStorage.setItem("userToken", data.token);
+                setToken(data.token); 
                 navigate("/");
             }
         } catch (error) {

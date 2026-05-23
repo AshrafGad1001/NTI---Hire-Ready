@@ -14,7 +14,7 @@ import Electronics from './componets/Electronics/Electronics';
 import SmartAccessories from './componets/SmartAccessories/SmartAccessories';
 import Laptop from './componets/Laptop/Laptop';
 import Mobile from './componets/Mobile/Mobile';
-
+import UserContextProvider from './Context/userContext';
 
 
 function App() {
@@ -101,7 +101,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} ></RouterProvider>
+      <UserContextProvider>
+        <RouterProvider router={router} ></RouterProvider>
+      </UserContextProvider>
     </>
   )
 }
