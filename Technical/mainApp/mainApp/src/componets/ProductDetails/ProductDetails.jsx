@@ -9,7 +9,7 @@ export default function ProductDetails() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [selectedImage, setSelectedImage] = useState(null); // ✅ للصور الصغيرة
+    const [selectedImage, setSelectedImage] = useState(null); 
 
     useEffect(() => {
         async function getProduct() {
@@ -18,7 +18,7 @@ export default function ProductDetails() {
                     `https://ecommerce.routemisr.com/api/v1/products/${id}`
                 );
                 setProduct(data.data);
-                setSelectedImage(data.data.imageCover); // ✅ الصورة الافتراضية
+                setSelectedImage(data.data.imageCover);
             } catch (error) {
                 console.log(error);
             } finally {
@@ -40,7 +40,7 @@ export default function ProductDetails() {
         );
     }
 
-    // ✅ لو المنتج مش موجود
+    
     if (!product) {
         return (
             <div className="min-vh-100 d-flex flex-column align-items-center justify-content-center gap-3">
@@ -57,7 +57,7 @@ export default function ProductDetails() {
         <section className="py-5 bg-light min-vh-100">
             <div className="container">
 
-                {/* ✅ Back Button — يرجع لـ /Products */}
+                
                 <Link to="/Products" className="btn btn-outline-secondary mb-4">
                     <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
                     Back To Products
@@ -65,14 +65,14 @@ export default function ProductDetails() {
 
                 <div className="row g-5 align-items-center">
 
-                    {/* Image */}
+                    
                     <div className="col-md-6">
                         <div style={{
                             borderRadius: "16px",
                             overflow: "hidden",
                             boxShadow: "0 8px 30px rgba(74,0,128,0.15)"
                         }}>
-                            {/* ✅ بيعرض الصورة المختارة */}
+                            
                             <img
                                 src={selectedImage}
                                 alt={product.title}
@@ -81,10 +81,10 @@ export default function ProductDetails() {
                             />
                         </div>
 
-                        {/* ✅ Sub Images — بتغير الصورة الرئيسية عند الضغط */}
+                        
                         {product.images?.length > 0 && (
                             <div className="d-flex gap-2 mt-3 flex-wrap">
-                                {/* الصورة الرئيسية */}
+                                
                                 <img
                                     src={product.imageCover}
                                     alt="cover"
@@ -100,7 +100,7 @@ export default function ProductDetails() {
                                             : "2px solid #ede9fe"
                                     }}
                                 />
-                                {/* باقي الصور */}
+                                
                                 {product.images.map((img, i) => (
                                     <img
                                         key={i}
@@ -123,10 +123,10 @@ export default function ProductDetails() {
                         )}
                     </div>
 
-                    {/* Details */}
+                    
                     <div className="col-md-6">
 
-                        {/* Category */}
+                        
                         <span
                             className="badge bg-primary bg-opacity-10 text-primary mb-3"
                             style={{ fontSize: "13px", padding: "8px 14px" }}
@@ -134,10 +134,10 @@ export default function ProductDetails() {
                             {product.category?.name}
                         </span>
 
-                        {/* Title */}
+                        
                         <h2 className="fw-bold text-dark mb-3">{product.title}</h2>
 
-                        {/* Rating */}
+                        
                         <div className="d-flex align-items-center gap-2 mb-3">
                             <span className="text-warning fs-5">★</span>
                             <span className="fw-bold">{product.ratingsAverage}</span>
@@ -146,12 +146,12 @@ export default function ProductDetails() {
                             </span>
                         </div>
 
-                        {/* Description */}
+                        
                         <p className="text-secondary mb-4" style={{ lineHeight: "1.8" }}>
                             {product.description}
                         </p>
 
-                        {/* Brand */}
+                        
                         {product.brand && (
                             <div className="d-flex align-items-center gap-2 mb-4">
                                 <span className="fw-bold text-dark">Brand:</span>
@@ -164,7 +164,6 @@ export default function ProductDetails() {
                             <span className="fw-bold fs-3" style={{ color: "#7c3aed" }}>
                                 {product.price} EGP
                             </span>
-                            {/* ✅ التصحيح: priceAfterDiscount مش الـ original price */}
                             {product.priceAfterDiscount > 0 && (
                                 <span className="text-decoration-line-through text-secondary fs-5">
                                     {product.priceAfterDiscount} EGP
@@ -172,7 +171,6 @@ export default function ProductDetails() {
                             )}
                         </div>
 
-                        {/* Add To Cart */}
                         <button
                             className="btn btn-lg w-100"
                             style={{
