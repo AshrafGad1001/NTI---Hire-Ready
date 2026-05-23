@@ -1,11 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStore } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { faStore, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 export function Navbar() {
 
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        localStorage.removeItem('token');
+        navigate('/login');
+    }
+
 
     return (
         <>
@@ -48,6 +55,13 @@ export function Navbar() {
                     <div className="d-flex gap-2 mt-2 mt-lg-0">
                         <Link to="/login" className="btn btn-outline-light">Login</Link>
                         <Link to="/register" className="btn" style={{ background: "#7c3aed", color: "#fff" }}>Register</Link>
+                        <button
+                            onClick={handleLogout}
+                            className="btn btn-danger"
+                        >
+                            <FontAwesomeIcon icon={faRightFromBracket} className="me-2" />
+                            Logout
+                        </button>
                     </div>
 
                 </div>
