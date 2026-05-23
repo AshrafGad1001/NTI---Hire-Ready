@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -11,6 +11,8 @@ import { tokenContext } from './../../Context/userContext';
 export default function Login() {
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const message = location.state?.message;
     const { setToken } = useContext(tokenContext);
     const [apiError, setApiError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +29,7 @@ export default function Login() {
 
             if (data.message === "success") {
                 localStorage.setItem("userToken", data.token);
-                setToken(data.token); 
+                setToken(data.token);
                 navigate("/");
             }
         } catch (error) {
@@ -60,10 +62,16 @@ export default function Login() {
 
                 <h2 className="text-center fw-bold mb-4">Login</h2>
 
+                {/* رسالة الـ RoutingGuards */}
+                {message &&
+                    <div className="alert alert-warning text-center">
+                        🔒 {message}
+                    </div>
+                }
+
                 {apiError && <div className="alert alert-danger">{apiError}</div>}
 
                 <form onSubmit={formik.handleSubmit}>
-
 
                     <div className="mb-3">
                         <label className="form-label">Email</label>
@@ -80,7 +88,6 @@ export default function Login() {
                             <span className="text-danger small">{formik.errors.email}</span>
                         }
                     </div>
-
 
                     <div className="mb-3">
                         <label className="form-label">Password</label>

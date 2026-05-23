@@ -16,6 +16,7 @@ import Laptop from './componets/Laptop/Laptop';
 import Mobile from './componets/Mobile/Mobile';
 import UserContextProvider from './Context/userContext';
 import { Gallery } from './componets/gallery/Gallery';
+import RoutingGuards from './componets/RoutingGuards/RoutingGuards';
 
 
 function App() {
@@ -69,7 +70,7 @@ function App() {
       path: "", element: <Layout />, children: [
         { path: "", element: <Hero /> },
         { path: "gallery", element: <Gallery /> },
-        { path: "Products", element: <Products /> },
+        { path: "Products", element: <RoutingGuards  ><Products /> </RoutingGuards> },
         {
           path: "Categories", element: <Categories />, children: [
             {
