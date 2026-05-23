@@ -15,17 +15,13 @@ export function Hero() {
                 <div className="container">
 
                     <p className="text-uppercase fw-bold mb-2" style={{ letterSpacing: "4px", color: "#a78bfa" }}>
-                        Start Your Journey
+                        Start Journey
                     </p>
 
                     <h1 className="display-3 fw-bold mb-3">
-                        Build Amazing Apps <br />
+                        Home Page <br />
                         <span style={{ color: "#a78bfa" }}>With React</span>
                     </h1>
-
-                    <p className="lead mb-5 mx-auto" style={{ maxWidth: "550px", color: "#cbd5e1" }}>
-                        Master React step by step
-                    </p>
 
                     <div className="d-flex gap-3 justify-content-center">
 

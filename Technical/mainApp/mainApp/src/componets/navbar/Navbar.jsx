@@ -12,23 +12,18 @@ export function Navbar() {
     const navigate = useNavigate();
     const { setToken, token } = useContext(tokenContext);
 
-
-
-
-
     function handleLogout() {
         localStorage.removeItem("userToken");
         setToken(null);
         navigate('/login');
     }
 
-
     return (
         <>
             <nav
-
                 className="navbar navbar-expand-lg navbar-dark px-4"
                 style={{ background: "linear-gradient(135deg, #0a0a2e, #1a1a6e, #4a0080)" }}>
+
                 <div className="navbar-brand fw-bold fs-4" style={{ color: "#ffffff" }}>
                     <Link to="/" className="text-decoration-none" style={{ color: "#ffffff" }}>
                         <FontAwesomeIcon icon={faStore} className="ms-5 me-5" />
@@ -45,6 +40,7 @@ export function Navbar() {
 
                 <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
 
+                    {/* Links على الشمال */}
                     <ul className="navbar-nav me-auto d-flex gap-3">
                         {/* <li className="nav-item"><Link to="home" className="nav-link text-white">Home</Link></li> */}
                         {/* <li className="nav-item"><Link to="about" className="nav-link text-white">About</Link></li> */}
@@ -52,32 +48,31 @@ export function Navbar() {
                         {/* <li className="nav-item"><Link to="services" className="nav-link text-white">Services</Link></li> */}
                         {/* <li className="nav-item"><Link to="contact" className="nav-link text-white">Contact</Link></li> */}
                         {/* <li className="nav-item"><Link to="Projects" className="nav-link text-white">Projects</Link></li> */}
-                        {
-                            token ? (   // ✅ ? instead of &&
-                                <>
-                                    <li className="nav-item"><Link to="Products" className="nav-link text-white">Products</Link></li>
-                                    <li className="nav-item"><Link to="Categories" className="nav-link text-white">Categories</Link></li>
-                                    <button
-                                        onClick={handleLogout}
-                                        className="btn btn-danger"
-                                    >
-                                        <FontAwesomeIcon icon={faRightFromBracket} className="me-2" />
-                                        Logout
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="d-flex gap-2 mt-2 mt-lg-0">
-                                        <Link to="/login" className="btn btn-outline-light">Login</Link>
-                                        <Link to="/register" className="btn" style={{ background: "#7c3aed", color: "#fff" }}>Register</Link>
-                                    </div>
-                                </>
-                            )
-                        }
-
-
+                        {token ? (
+                            <>
+                                <li className="nav-item"><Link to="Products" className="nav-link text-white">Products</Link></li>
+                                <li className="nav-item"><Link to="Categories" className="nav-link text-white">Categories</Link></li>
+                            </>
+                        ) : null}
                     </ul>
 
+                    {/* Buttons على اليمين */}
+                    <div className="d-flex gap-2 mt-2 mt-lg-0">
+                        {token ? (
+                            <button
+                                onClick={handleLogout}
+                                className="btn btn-danger"
+                            >
+                                <FontAwesomeIcon icon={faRightFromBracket} className="me-2" />
+                                Logout
+                            </button>
+                        ) : (
+                            <>
+                                <Link to="/login" className="btn btn-outline-light">Login</Link>
+                                <Link to="/register" className="btn" style={{ background: "#7c3aed", color: "#fff" }}>Register</Link>
+                            </>
+                        )}
+                    </div>
 
                 </div>
 
