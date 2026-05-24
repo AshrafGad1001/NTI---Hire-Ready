@@ -38,6 +38,9 @@ export default function Navbar() {
                         <li className="nav-item">
                             <Link href="/contact" className="nav-link text-secondary">Contact</Link>
                         </li>
+                        <li className="nav-item">
+                            <Link href="/nti" className="nav-link text-secondary">NTI</Link>
+                        </li>
                     </ul>
 
                     <ul className="navbar-nav gap-2 align-items-center">
