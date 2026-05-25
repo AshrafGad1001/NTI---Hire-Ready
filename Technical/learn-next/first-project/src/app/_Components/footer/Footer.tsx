@@ -18,12 +18,12 @@ export default function Footer() {
         >
             <Toolbar>
 
-                {/* Brand */}
+                
                 <Typography variant="h6" sx={{ flexGrow: 0, mr: 2 }}>
                     <FontAwesomeIcon icon={faCartShopping} />
                 </Typography>
 
-                {/* Quick Links - Center */}
+                
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <Button color="inherit" component={Link} href="/">Home</Button>
                     <Button color="inherit" component={Link} href="/about">About</Button>
@@ -31,7 +31,7 @@ export default function Footer() {
                     <Button color="inherit" component={Link} href="/contact">Contact</Button>
                 </Box>
 
-                {/* Social Icons - Right */}
+                
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button color="inherit" component={Link} href="#">
                         <FontAwesomeIcon icon={faFacebook} />
@@ -46,7 +46,7 @@ export default function Footer() {
 
             </Toolbar>
 
-            {/* Bottom Bar */}
+            
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
             <Typography
                 variant="body2"
