@@ -17,11 +17,12 @@ export default function Navbar() {
                 </Typography>
 
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button color="inherit" component={Link} href="/">Home</Button>
+                    <Button color="inherit" component={Link} href="/home">Home</Button>
                     <Button color="inherit" component={Link} href="/about">About</Button>
                     <Button color="inherit" component={Link} href="/services">Services</Button>
                     <Button color="inherit" component={Link} href="/contact">Contact</Button>
                     <Button color="inherit" component={Link} href="/products">Products</Button>
+                    <Button color="inherit" component={Link} href="/brands">Brands</Button>
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: 1 }}>

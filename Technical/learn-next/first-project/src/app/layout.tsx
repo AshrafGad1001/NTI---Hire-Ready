@@ -31,12 +31,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" style={{ height: '100%' }}>
-      <body >
+      <body suppressHydrationWarning={true} style={{ height: '100%' }}>
 
 
         <ThemeRegistry>
           <Navbar />
-          <main className="flex-grow-1">
+          <main >
             {children}
           </main>
           <Footer />
