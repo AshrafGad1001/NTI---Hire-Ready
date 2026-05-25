@@ -1,60 +1,35 @@
-import Link from "next/link";
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+'use client'
+
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Link from 'next/link'
+import { Box } from '@mui/material'
 
 export default function Navbar() {
     return (
-        <nav className="navbar navbar-expand-lg  navbar-dark bg-dark">
-            <div className="container">
+        <AppBar position="static" color="primary">
+            <Toolbar>
 
+                <Typography variant="h6" sx={{ flexGrow: 0, mr: 2 }}>
+                    MyApp
+                </Typography>
 
-                <Link href="/" className="navbar-brand">
-                    <FontAwesomeIcon icon={faCartShopping} size="xl" className="text-secondary" />
-                </Link>
+                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
+                    <Button color="inherit" component={Link} href="/">Home</Button>
+                    <Button color="inherit" component={Link} href="/about">About</Button>
+                    <Button color="inherit" component={Link} href="/services">Services</Button>
+                    <Button color="inherit" component={Link} href="/contact">Contact</Button>
+                    <Button color="inherit" component={Link} href="/products">Products</Button>
+                </Box>
 
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button color="inherit" component={Link} href="/login">Login</Button>
+                    <Button variant="outlined" color="inherit" component={Link} href="/register">Register</Button>
+                </Box>
 
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-
-                <div className="collapse navbar-collapse align-items-center" id="navbarNav">
-
-
-                    <ul className="navbar-nav mx-auto gap-2">
-                        <li className="nav-item">
-                            <Link href="/home" className="nav-link text-secondary">Home</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link href="/about" className="nav-link text-secondary">About</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link href="/services" className="nav-link text-secondary">Services</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link href="/contact" className="nav-link text-secondary">Contact</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link href="/nti" className="nav-link text-secondary">NTI</Link>
-                        </li>
-                    </ul>
-
-                    <ul className="navbar-nav gap-2 align-items-center">
-                        <li className="nav-item">
-                            <Link href="/login" className="nav-link text-secondary">Login</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link href="/register" className="btn btn-outline-secondary btn-sm px-3">Register</Link>
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-        </nav>
+            </Toolbar>
+        </AppBar>
     )
 }

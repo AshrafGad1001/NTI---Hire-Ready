@@ -1,62 +1,61 @@
-import Link from "next/link";
+'use client'
+
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
 
 export default function Footer() {
     return (
-        <footer className="bg-dark text-white mt-auto py-4">
-            <div className="container">
-                <div className="row">
+        <Box
+            component="footer"
+            sx={{ bgcolor: 'primary.main', color: 'white', mt: 'auto' }}
+        >
+            <Toolbar>
 
+                {/* Brand */}
+                <Typography variant="h6" sx={{ flexGrow: 0, mr: 2 }}>
+                    <FontAwesomeIcon icon={faCartShopping} />
+                </Typography>
 
-                    <div className="col-md-4 mb-3">
-                        <Link href="/" className="navbar-brand">
-                            <FontAwesomeIcon icon={faCartShopping} size="xl" className="text-secondary" />
-                        </Link>
-                        <div>
-                            <p className="text-secondary mt-2">
-                                Shopping made easy.
-                            </p>
-                        </div>
-                    </div>
+                {/* Quick Links - Center */}
+                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
+                    <Button color="inherit" component={Link} href="/">Home</Button>
+                    <Button color="inherit" component={Link} href="/about">About</Button>
+                    <Button color="inherit" component={Link} href="/services">Services</Button>
+                    <Button color="inherit" component={Link} href="/contact">Contact</Button>
+                </Box>
 
+                {/* Social Icons - Right */}
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button color="inherit" component={Link} href="#">
+                        <FontAwesomeIcon icon={faFacebook} />
+                    </Button>
+                    <Button color="inherit" component={Link} href="#">
+                        <FontAwesomeIcon icon={faTwitter} />
+                    </Button>
+                    <Button color="inherit" component={Link} href="#">
+                        <FontAwesomeIcon icon={faLinkedin} />
+                    </Button>
+                </Box>
 
-                    <div className="col-md-4 mb-3">
-                        <h6 className="fw-bold">Quick Links</h6>
-                        <ul className="list-unstyled">
-                            <li><Link href="/home" className="text-secondary text-decoration-none">Home</Link></li>
-                            <li><Link href="/about" className="text-secondary text-decoration-none">About</Link></li>
-                            <li><Link href="/services" className="text-secondary text-decoration-none">Services</Link></li>
-                            <li><Link href="/contact" className="text-secondary text-decoration-none">Contact</Link></li>
-                        </ul>
-                    </div>
+            </Toolbar>
 
+            {/* Bottom Bar */}
+            <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
+            <Typography
+                variant="body2"
+                suppressHydrationWarning
+                sx={{ textAlign: 'center', py: 1, opacity: 0.7 }}
+            >
+                © {new Date().getFullYear()} MyApp. All rights reserved.
+            </Typography>
 
-                    <div className="col-md-4 mb-3">
-                        <h6 className="fw-bold">Follow Us</h6>
-                        <div className="d-flex gap-3">
-                            <Link href="#" className="text-secondary">
-                                <FontAwesomeIcon icon={faFacebook} size="lg" />
-                            </Link>
-
-                            <Link href="#" className="text-secondary">
-                                <FontAwesomeIcon icon={faTwitter} size="lg" />
-                            </Link>
-
-                            <Link href="#" className="text-secondary">
-                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
-                            </Link>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div className="border-top border-secondary pt-3 text-center text-secondary">
-                    <small>© {new Date().getFullYear()} MyApp. All rights reserved.</small>
-                </div>
-            </div>
-        </footer>
+        </Box>
     )
 }
