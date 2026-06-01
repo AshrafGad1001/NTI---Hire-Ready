@@ -4,6 +4,7 @@ import Navbar from "./_Components/navbar/Navbar";
 import Footer from "./_Components/footer/Footer";
 import { store } from '../lib/store'
 import { Provider } from 'react-redux'
+import './globals.css'
 
 
 
