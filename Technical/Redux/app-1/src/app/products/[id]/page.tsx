@@ -65,11 +65,7 @@ export default function ProductDetails() {
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 6, alignItems: 'center' }}>
 
                     {/* Image */}
-                    <Box sx={{
-                        flex: 1,
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}>
+                    <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
                         <Box sx={{
                             position: 'relative',
                             width: '100%',
@@ -79,61 +75,44 @@ export default function ProductDetails() {
                             overflow: 'hidden',
                             boxShadow: '0 20px 60px rgba(124,58,237,0.15)',
                         }}>
-                            <Image
-                                src={product.imageCover}
-                                alt={product.title}
-                                fill
-                                style={{ objectFit: 'cover' }}
-                            />
+                            {product?.imageCover && (
+                                <Image
+                                    src={product.imageCover}
+                                    alt={product?.title ?? ''}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                />
+                            )}
                         </Box>
                     </Box>
 
                     {/* Info */}
                     <Box sx={{ flex: 1 }}>
                         <Chip
-                            label={product.category?.name}
-                            sx={{
-                                mb: 2,
-                                bgcolor: '#ede9fe',
-                                color: '#7c3aed',
-                                fontWeight: 600,
-                                fontSize: '12px',
-                            }}
+                            label={product?.category?.name}
+                            sx={{ mb: 2, bgcolor: '#ede9fe', color: '#7c3aed', fontWeight: 600, fontSize: '12px' }}
                         />
-
                         <Typography variant="h4" sx={{ fontWeight: 800, color: '#1a1a2e', mb: 2 }}>
-                            {product.title}
+                            {product?.title}
                         </Typography>
-
                         <Typography variant="body1" sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.8 }}>
-                            {product.description}
+                            {product?.description}
                         </Typography>
-
-                        {/* Rating */}
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-                            <Rating
-                                value={product.ratingsAverage}
-                                precision={0.1}
-                                readOnly
-                                size="small"
-                            />
+                            <Rating value={product?.ratingsAverage ?? 0} precision={0.1} readOnly size="small" />
                             <Typography variant="body2" sx={{ fontWeight: 700, color: '#1a1a2e' }}>
-                                {product.ratingsAverage}
+                                {product?.ratingsAverage}
                             </Typography>
                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                ({product.ratingsQuantity} reviews)
+                                ({product?.ratingsQuantity} reviews)
                             </Typography>
                         </Box>
-
-                        {/* Price */}
                         <Typography variant="h4" sx={{ fontWeight: 800, color: '#7c3aed', mb: 4 }}>
-                            {product.price}{' '}
+                            {product?.price}{' '}
                             <Typography component="span" variant="body1" sx={{ color: 'text.secondary', fontWeight: 400 }}>
                                 EGP
                             </Typography>
                         </Typography>
-
-                        {/* Button */}
                         <Button
                             onClick={handleAddToCart}
                             disabled={isLoading}
@@ -152,21 +131,16 @@ export default function ProductDetails() {
                                 fontWeight: 700,
                                 fontSize: '15px',
                                 textTransform: 'none',
-                                '&:hover': {
-                                    bgcolor: added ? '#059669' : '#6d28d9',
-                                },
-                                '&:disabled': {
-                                    bgcolor: '#9ca3af',
-                                    color: '#fff',
-                                },
+                                '&:hover': { bgcolor: added ? '#059669' : '#6d28d9' },
+                                '&:disabled': { bgcolor: '#9ca3af', color: '#fff' },
                             }}
                         >
                             {isLoading ? 'Adding...' : added ? 'Added ✓' : 'Add to Cart'}
                         </Button>
-
                     </Box>
+
                 </Box>
             </Container>
         </Box>
     )
-}
+}   

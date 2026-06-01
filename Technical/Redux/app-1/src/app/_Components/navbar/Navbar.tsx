@@ -9,14 +9,19 @@ import { Box, Badge, IconButton } from '@mui/material'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState, AppDispatch } from '@/lib/store'
-import { logout } from '@/lib/authSlice'
+import { logout, loadToken } from '@/lib/authSlice'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function Navbar() {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
     const token = useSelector((state: RootState) => state.auth.token)
     const cartCount = useSelector((state: RootState) => state.cart.cartCount)
+
+    useEffect(() => {
+        dispatch(loadToken())
+    }, [dispatch])
 
     function handleLogout() {
         dispatch(logout())
