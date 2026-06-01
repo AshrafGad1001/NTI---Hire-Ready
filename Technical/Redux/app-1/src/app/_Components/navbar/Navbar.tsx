@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Link from 'next/link'
 import { Box, Badge, IconButton } from '@mui/material'
+import LogoutIcon from '@mui/icons-material/Logout'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState, AppDispatch } from '@/lib/store'
@@ -17,6 +18,7 @@ export default function Navbar() {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
     const token = useSelector((state: RootState) => state.auth.token)
+    const username = useSelector((state: RootState) => state.auth.username)
     const cartCount = useSelector((state: RootState) => state.cart.cartCount)
 
     useEffect(() => {
@@ -38,33 +40,42 @@ export default function Navbar() {
 
                 {/* Nav Links */}
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button color="inherit" component={Link} href="/profile">Profile</Button>
-                    <Button color="inherit" component={Link} href="/posts">Posts</Button>
-                    <Button color="inherit" component={Link} href="/counter">Counter</Button>
                     <Button color="inherit" component={Link} href="/products">Products</Button>
                 </Box>
 
                 {/* Auth Buttons */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
 
-                    {/* Cart */}
                     {token && (
-                        <IconButton color="inherit" component={Link} href="/cart">
-                            <Badge badgeContent={cartCount} color="error">
-                                <ShoppingCartIcon />
-                            </Badge>
-                        </IconButton>
+                        <>
+                            {/* Username */}
+                            <Typography sx={{
+                                color: 'rgba(255,255,255,0.9)',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                            }}>
+                                Hi, {username}
+                            </Typography>
+
+                            {/* Cart */}
+                            <IconButton color="inherit" component={Link} href="/cart">
+                                <Badge badgeContent={cartCount} color="error">
+                                    <ShoppingCartIcon />
+                                </Badge>
+                            </IconButton>
+                        </>
                     )}
 
                     {token ? (
-                        <Button
-                            color="inherit"
-                            variant="outlined"
+                        <IconButton
                             onClick={handleLogout}
-                            sx={{ borderColor: 'rgba(255,255,255,0.5)' }}
+                            sx={{
+                                color: 'rgba(255,255,255,0.9)',
+                                '&:hover': { color: '#fff', bgcolor: 'rgba(255,255,255,0.1)' },
+                            }}
                         >
-                            Logout
-                        </Button>
+                            <LogoutIcon />
+                        </IconButton>
                     ) : (
                         <>
                             <Button color="inherit" component={Link} href="/login">

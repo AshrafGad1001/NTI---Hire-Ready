@@ -40,7 +40,7 @@ export default function LoginPage() {
                     'https://ecommerce.routemisr.com/api/v1/auth/signin',
                     values
                 )
-                dispatch(setToken(data.token))
+                dispatch(setToken({ token: data.token, username: data.user.name }))
                 router.push('/products')
             } catch (err: any) {
                 setError(err.response?.data?.message || 'Login failed')

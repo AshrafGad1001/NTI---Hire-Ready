@@ -21,6 +21,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined'
+import { CartItem } from '@/lib/types'
 
 export default function CartPage() {
     const dispatch = useDispatch<AppDispatch>()
@@ -67,7 +68,7 @@ export default function CartPage() {
 
                 {/* Header */}
                 <Typography variant="h4" sx={{ fontWeight: 800, color: '#1a1a2e', mb: 4 }}>
-                    My Cart{' '}
+                    Cart Items{' '}
                     <Chip
                         label={`${cartCount} items`}
                         size="small"
@@ -79,7 +80,7 @@ export default function CartPage() {
 
                     {/* Products */}
                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {cartData.data.products.map((item) => (
+                        {cartData.data.products.map((item: CartItem) => (
                             <Paper key={item._id} elevation={0} sx={{
                                 p: 2.5,
                                 borderRadius: 3,
@@ -140,14 +141,15 @@ export default function CartPage() {
                                     <Typography variant="body1" sx={{ fontWeight: 800, color: '#1a1a2e' }}>
                                         {item.price * item.count} EGP
                                     </Typography>
-                                    <IconButton
-                                        size="small"
+                                    
+                                </Box>
+                                <IconButton
+                                        size="large"
                                         onClick={() => dispatch(removeItem(item.product._id))}
                                         sx={{ color: '#ef4444' }}
                                     >
-                                        <DeleteOutlinedIcon fontSize="small" />
+                                        <DeleteOutlinedIcon fontSize="large" />
                                     </IconButton>
-                                </Box>
 
                             </Paper>
                         ))}
@@ -164,7 +166,7 @@ export default function CartPage() {
                             top: 20,
                         }}>
                             <Typography variant="h6" sx={{ fontWeight: 800, color: '#1a1a2e', mb: 3 }}>
-                                Order Summary
+                                Order Details
                             </Typography>
 
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>

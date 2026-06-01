@@ -27,9 +27,6 @@ export default function ProductsPage() {
                         Latest{' '}
                         <Box component="span" sx={{ color: '#7c3aed' }}>Products</Box>
                     </Typography>
-                    <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                        Discover our newest arrivals
-                    </Typography>
                 </Box>
 
                 {loading || products.length === 0 ? (
