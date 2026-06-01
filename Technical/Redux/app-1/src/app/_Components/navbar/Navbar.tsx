@@ -17,8 +17,9 @@ export default function Navbar() {
                 </Typography>
 
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button color="inherit" component={Link} href="/home">Home</Button>
-                    <Button color="inherit" component={Link} href="/about">About</Button>
+                    <Button color="inherit" component={Link} href="/profile">profile</Button>
+                    <Button color="inherit" component={Link} href="/posts">posts</Button>
+                    <Button color="inherit" component={Link} href="/counter">Counter</Button>
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: 1 }}>
