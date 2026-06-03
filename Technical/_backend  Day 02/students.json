@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "name": "Ashraf Gad",
+        "age": 22,
+        "phone": "01012345678",
+        "address": "Menoufia, Egypt"
+    },
+    {
+        "id": 2,
+        "name": "Ahmed Ali",
+        "age": 24,
+        "phone": "01198765432",
+        "address": "Cairo, Egypt"
+    }
+]
