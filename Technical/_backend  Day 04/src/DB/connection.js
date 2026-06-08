@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const connectDB = async () => {
+const DBConnection = async () => {
     try {
         await mongoose.connect('mongodb://localhost:27017/backendDay04');
         console.log('Database Connected Successfully ');
@@ -9,4 +9,4 @@ const connectDB = async () => {
     }
 };
 
-export default connectDB;
+export default DBConnection;
