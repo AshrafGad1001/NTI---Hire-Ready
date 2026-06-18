@@ -1,0 +1,11 @@
+Name: Ashraf
+Age: 25
+Email: ashraf@example.com
+Is Active: true
+
+Skills:
+- HTML
+- CSS
+- JavaScript
+- React
+- Node.js
