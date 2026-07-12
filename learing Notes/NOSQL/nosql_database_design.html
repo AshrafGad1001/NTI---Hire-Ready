@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>NoSQL Database Design — Foundations &amp; Process</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.8pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Study Guide</p>
+  <h1>NoSQL Database Design</h1>
+  <h2>Foundations, Design Patterns &amp; the Schema Design Process</h2>
+  <p class="meta">Technical Reference · MongoDB Schema Design</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>SQL Mindset vs. NoSQL Mindset</li>
+    <li>Design Pattern 1 — Embedding</li>
+    <li>Design Pattern 2 — Referencing</li>
+    <li>Design Pattern 3 — Subset Pattern</li>
+    <li>Design Pattern 4 — Bucket Pattern</li>
+    <li>Design Pattern 5 — Computed Pattern</li>
+    <li>Relationship Types</li>
+    <li>The Schema Design Process (Steps 1–4)</li>
+    <li>Step 5 — Avoiding Common Mistakes</li>
+    <li>Step 6 — Auditing a Real Project</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic One</p>
+    <h1 class="topic-title">SQL Mindset vs. NoSQL Mindset</h1>
+  </div>
+
+  <h3 class="sub">SQL: Think "Normalization" First</h3>
+  <p>The philosophy: split data into the smallest possible units, avoid any duplication, and link everything with Foreign Keys. This decision is made while designing the tables — often before you even know which queries will run against them.</p>
+  <pre>-- SQL: three separate tables, linked by Foreign Keys
+Users (id, name, email)
+Orders (id, user_id, date)
+OrderItems (id, order_id, product_id, quantity)</pre>
+  <p>Whenever a query needs combined data, you run a <strong>JOIN</strong> at query time.</p>
+
+  <h3 class="sub">NoSQL: Think "Query Patterns" First</h3>
+  <p>The philosophy: design the schema around how you'll read the data, not around how "clean" it looks in theory. The question isn't "what's the correct relationship between the data?" — it's <strong>"what query will run most often, and how do I make it fast?"</strong></p>
+  <pre>// NoSQL: order data and its related product info are grouped together
+{
+  _id: 1,
+  user: { name: "Ashraf", email: "..." },  // Embedded
+  date: "...",
+  items: [
+    { productName: "Laptop", quantity: 1, price: 15000 }
+  ]
+}</pre>
+  <p>No JOIN needed at read time — everything is already available in a single document.</p>
+
+  <h3 class="sub">The Core Difference</h3>
+  <table>
+    <thead><tr><th></th><th>SQL</th><th>NoSQL</th></tr></thead>
+    <tbody>
+      <tr><td>Starting point</td><td>Relationships between entities</td><td>Actual queries that will run (access patterns)</td></tr>
+      <tr><td>Primary goal</td><td>Avoid data duplication (integrity)</td><td>Read performance</td></tr>
+      <tr><td>Schema flexibility</td><td>Fixed, hard to migrate</td><td>Flexible — add fields to any document independently</td></tr>
+      <tr><td>Decision timing</td><td>Tables designed first, queries come later</td><td>Queries must be known first, then the schema is designed</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warning-box"><strong>Most common mistake:</strong> bringing the full SQL mindset into NoSQL — referencing everything like Foreign Keys and joining ($lookup) on every query. The result is poor performance, because you lose NoSQL's biggest advantage: keeping related data together from the start.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Golden rule: "Data that is accessed together should be stored together."</li>
+      <li>Before writing a single line of schema code, write down the top 5–10 queries your app will actually run.</li>
+      <li>If you find yourself justifying a schema decision with "because that's how it'd work in SQL," stop and re-check against your access patterns.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic One — SQL Mindset vs. NoSQL Mindset</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Two</p>
+    <h1 class="topic-title">Design Pattern 1 — Embedding</h1>
+  </div>
+  <p><strong>The idea:</strong> place related data directly inside the same document, instead of a separate collection.</p>
+  <pre>{
+  _id: 1,
+  name: "Ashraf",
+  addresses: [
+    { city: "Shebin El-Kom", street: "Main St", isDefault: true },
+    { city: "Cairo", street: "Nasr City", isDefault: false }
+  ]
+}</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>The relationship is <strong>one-to-few</strong> (e.g., a user has 2–3 addresses, not thousands).</li>
+    <li>The related data is <strong>almost always read together</strong> (there's no scenario where you fetch the user without their addresses).</li>
+    <li>The data <strong>doesn't change frequently or independently</strong> of the parent.</li>
+  </ul>
+
+  <h3 class="sub">Pros</h3>
+  <ul>
+    <li>A single query retrieves everything (no $lookup needed).</li>
+    <li>Excellent read performance.</li>
+    <li>Atomic updates — parent and embedded data update together in one operation.</li>
+  </ul>
+
+  <h3 class="sub">Cons</h3>
+  <ul>
+    <li>If the array grows too large, the document size grows with it (risking the 16MB limit).</li>
+    <li>If the embedded data is shared across multiple parents, duplication occurs.</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>A good rule of thumb: embed when the array size is bounded and predictable (rarely exceeds a few dozen items).</li>
+      <li>If you're unsure whether to embed, ask: "Will I ever need this child data without its parent?" If no — embed.</li>
+      <li>Embedding read-only "snapshot" data (e.g., a price at time of purchase) is safe even if the source can change later — see the Computed/Snapshot note in the Common Mistakes section.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Two — Embedding Pattern</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Three</p>
+    <h1 class="topic-title">Design Pattern 2 — Referencing</h1>
+  </div>
+  <p><strong>The idea:</strong> store just a reference (ID) instead of the full data, similar to a Foreign Key.</p>
+  <pre>// in users
+{ _id: 1, name: "Ashraf" }
+
+// in projects
+{ _id: 101, title: "GoRent", ownerId: 1 }</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>The relationship is a <strong>large one-to-many</strong> or <strong>many-to-many</strong>.</li>
+    <li>The related data <strong>changes frequently and independently</strong> of the other side.</li>
+    <li>The related data is <strong>shared</strong> across multiple documents (e.g., one product referenced by many orders).</li>
+    <li>The array could <strong>grow without bound</strong> (e.g., a very large number of comments).</li>
+  </ul>
+
+  <h3 class="sub">Pros</h3>
+  <ul>
+    <li>Documents stay small and organized.</li>
+    <li>Updating shared data (e.g., a user's profile) only requires updating one place.</li>
+    <li>No data duplication.</li>
+  </ul>
+
+  <h3 class="sub">Cons</h3>
+  <ul>
+    <li>Requires a $lookup (like a JOIN) at read time — slower than embedding.</li>
+    <li>Not atomic — updating two related documents together requires a transaction.</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Always index the field you're referencing by (e.g., <code>ownerId</code>), since it's effectively your "foreign key lookup" field.</li>
+      <li>If you find yourself doing $lookup on the same field in almost every query, consider whether a Subset or Computed pattern could reduce that need.</li>
+      <li>Two-way referencing (both sides store each other's IDs) is fine for many-to-many, as long as you pick a clear "primary" side to update first in your application logic.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Three — Referencing Pattern</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Four</p>
+    <h1 class="topic-title">Design Pattern 3 — Subset Pattern</h1>
+  </div>
+  <p><strong>The idea:</strong> instead of fully embedding or fully referencing, use a middle ground — store only a small portion of the related data (e.g., the most recent/most relevant items), while the full data lives in a separate collection with a reference.</p>
+  <pre>// Product document holds only the latest 5 reviews, not all of them
+{
+  _id: 1,
+  title: "Laptop HP",
+  price: 15000,
+  recentReviews: [   // Subset only — latest 5
+    { user: "Sara", rating: 5, comment: "Great!" },
+    { user: "Omar", rating: 4, comment: "Good" }
+  ],
+  totalReviewsCount: 230  // pre-computed total
+}
+
+// The full set of reviews lives in a separate collection
+db.reviews.find({ productId: 1 })</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <p>When you have a large amount of related data (like reviews), but you also need a small portion of it to appear instantly alongside the parent (e.g., showing the latest 3 ratings on a product page without an extra query).</p>
+
+  <div class="note"><strong>Practical example:</strong> in an e-commerce API, this is the ideal solution for displaying "latest 3 reviews" on a product page without running an aggregation on every page load.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Keep the subset small and purpose-built (e.g., "latest 3–5 items") — it's a display optimization, not a full copy.</li>
+      <li>Update the subset only when new data is added to the full collection (e.g., a background job or an application-level trigger), not on every read.</li>
+      <li>Combine this pattern with the Computed Pattern: store both a small subset (recentReviews) and a pre-calculated aggregate (averageRating) side by side.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Four — Subset Pattern</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Five</p>
+    <h1 class="topic-title">Design Pattern 4 — Bucket Pattern</h1>
+  </div>
+  <p><strong>The idea:</strong> instead of creating a separate document for every single reading/event, group a batch of readings from the same time window into one document — commonly used with time-series data.</p>
+  <pre>// Instead of one document per second (thousands of documents)
+// group all readings for one hour into a single document
+{
+  sensorId: "sensor_001",
+  date: "2026-07-12",
+  hour: 14,
+  readings: [
+    { minute: 0, temp: 25.3 },
+    { minute: 1, temp: 25.5 },
+    { minute: 2, temp: 25.4 }
+    // ... rest of the hour's minutes
+  ],
+  avgTemp: 25.4,
+  maxTemp: 26.1,
+  minTemp: 24.8
+}</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>Time-series data (IoT sensor readings, logs, analytics events).</li>
+    <li>A massive number of closely-spaced-in-time readings.</li>
+  </ul>
+
+  <h3 class="sub">Pros</h3>
+  <ul>
+    <li>Dramatically reduces the total number of documents (thousands instead of millions).</li>
+    <li>Indexes stay smaller and faster.</li>
+    <li>Easy to pre-compute aggregates (avg, max, min) and store them inside the bucket itself.</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Pick a bucket window (hour, day) based on your query patterns — how granular do reads actually need to be?</li>
+      <li>MongoDB's native Time Series Collections (available since v5.0) automate much of this pattern — worth checking if your MongoDB version supports it before hand-rolling buckets.</li>
+      <li>Watch out for buckets that grow unbounded within the time window if the event rate spikes unexpectedly.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Five — Bucket Pattern</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Six</p>
+    <h1 class="topic-title">Design Pattern 5 — Computed Pattern</h1>
+  </div>
+  <p><strong>The idea:</strong> instead of recalculating a value every time it's requested (e.g., averaging all reviews on every page load), calculate it once and store it as a ready-made field, updating it only when the underlying data changes.</p>
+  <pre>// Instead of running an aggregation every time the product page loads
+{
+  _id: 1,
+  title: "Laptop HP",
+  price: 15000,
+  averageRating: 4.5,     // pre-computed
+  totalReviews: 230       // pre-computed
+}
+
+// When a new review is added, only these two fields get updated —
+// not recalculated from all 230 reviews on every page view</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>A calculation is <strong>read very frequently</strong> (every time a product page opens) but <strong>changes relatively rarely</strong> (a new review every so often).</li>
+    <li>You want to avoid an expensive aggregation (e.g., averaging across thousands of documents) on every request.</li>
+  </ul>
+
+  <div class="note"><strong>Practical example:</strong> in an e-commerce API, instead of running the aggregation pipeline that computes <code>avgRating</code> every time a product page loads, store the result directly on the Product document and update it only when a review is added or removed.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Update computed fields via application logic right after the write that changes them (e.g., inside the same request that creates a review), not through a separate cron job unless near-real-time accuracy isn't required.</li>
+      <li>For high write volume, consider using MongoDB transactions to keep the computed field and the source data consistent.</li>
+      <li>This pattern trades a small amount of write complexity for a large gain in read performance — worth it wherever reads vastly outnumber writes.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Six — Computed Pattern</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Seven</p>
+    <h1 class="topic-title">Relationship Types</h1>
+  </div>
+
+  <h3 class="sub">One-to-One</h3>
+  <p>One entity is linked to exactly one entity of another type.</p>
+  <pre>// A user and their detailed profile info (rarely read together)
+{ _id: 1, name: "Ashraf", profileDetails: { bio: "...", cv: "..." } }</pre>
+  <p><strong>Decision:</strong> usually embed, unless the data is very large or rarely read alongside the parent.</p>
+
+  <h3 class="sub">One-to-Few</h3>
+  <p>One entity is linked to a small number (2–100) of entities of another type.</p>
+  <pre>// A user and their addresses (2–3 addresses)</pre>
+  <p><strong>Decision:</strong> <strong>Embed</strong> — the count is small and stable.</p>
+
+  <h3 class="sub">One-to-Many</h3>
+  <p>One entity is linked to a relatively large number (hundreds to thousands) of entities of another type.</p>
+  <pre>// A category and its products (could be thousands)</pre>
+  <p><strong>Decision:</strong> <strong>Reference</strong>, usually — the count is large and constantly changing.</p>
+
+  <h3 class="sub">One-to-Squillions</h3>
+  <p>One entity is linked to a massive (millions) number of entities of another type.</p>
+  <pre>// A single server and its millions of log entries</pre>
+  <p><strong>Decision:</strong> <strong>Referencing is mandatory</strong> — likely combined with the <strong>Bucket Pattern</strong> to reduce document count.</p>
+
+  <h3 class="sub">Many-to-Many</h3>
+  <p>Each entity of one type can be linked to multiple entities of the other type, and vice versa.</p>
+  <pre>// Students and Courses — each student is enrolled in several courses,
+// and each course has many students
+{ _id: 1, name: "Ashraf", enrolledCourseIds: [101, 102, 103] }
+{ _id: 101, title: "React Basics", enrolledStudentIds: [1, 5, 9] }</pre>
+  <p><strong>Decision:</strong> usually <strong>two-way referencing</strong>, or referencing from a single direction based on which direction is queried more often.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>When in doubt about a relationship's cardinality, estimate the maximum realistic count over the object's lifetime — that number alone often decides between embed and reference.</li>
+      <li>For many-to-many, if one direction is queried far more often than the other, consider referencing only in that direction and using a $lookup for the rare reverse query instead of maintaining both arrays.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Seven — Relationship Types</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Eight</p>
+    <h1 class="topic-title">The Schema Design Process (Steps 1–4)</h1>
+  </div>
+
+  <h3 class="sub">Step 1 — Identify the Entities</h3>
+  <p>Write a list of every core "thing" in your system.</p>
+  <pre>Example: User, Product, Order, Review, Category</pre>
+
+  <h3 class="sub">Step 2 — Identify the Most Common Queries (Access Patterns)</h3>
+  <p>This is <strong>the most important step in NoSQL design</strong>. Before writing any schema, ask yourself:</p>
+  <ul>
+    <li>What query will run most often? (e.g., "get all products in a given category")</li>
+    <li>What actions do users perform frequently? (e.g., "open a product page, view its reviews")</li>
+    <li>What's the read-to-write ratio? Is this workload read-heavy or write-heavy?</li>
+  </ul>
+  <p>Write these queries down explicitly before designing anything:</p>
+  <pre>1. Get all products in a category, sorted by price
+2. Get a single product with its latest 5 reviews
+3. Get all orders for a specific user
+4. Search products by name</pre>
+
+  <h3 class="sub">Step 3 — Identify the Relationships Between Entities</h3>
+  <p>For each pair of entities, determine the type (one-to-one, one-to-few, one-to-many, many-to-many).</p>
+  <pre>User → Orders: One-to-Many
+Order → Products: Many-to-Many
+Product → Reviews: One-to-Squillions</pre>
+
+  <h3 class="sub">Step 4 — Apply the Right Pattern to Each Relationship</h3>
+  <p>Ask three questions for every relationship:</p>
+  <ol class="plain">
+    <li><strong>Growth rate</strong> — is the count small and stable, or large and increasing?</li>
+    <li><strong>Update frequency</strong> — does the data change often, or rarely?</li>
+    <li><strong>Read-together frequency</strong> — is the child data needed every time the parent is fetched?</li>
+  </ol>
+  <p>Based on the answers, choose: Embed / Reference / Subset / Bucket / Computed.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Keep your access-pattern list as a living document — revisit it whenever a new feature changes how data is queried.</li>
+      <li>It's fine to mix patterns within the same schema — e.g., embed addresses, reference orders, and use a computed field for ratings, all in the same User/Product design.</li>
+      <li>When two access patterns conflict (one favors embedding, another favors referencing), prioritize whichever query runs more frequently or is more performance-critical for the user experience.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Eight — The Schema Design Process</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Nine</p>
+    <h1 class="topic-title">Step 5 — Avoiding Common Mistakes</h1>
+  </div>
+  <p>This isn't a "design" step — it's a <strong>review and critique</strong> step. After designing a schema, go back and check it against these common pitfalls.</p>
+
+  <h3 class="sub">Mistake 1 — Unbounded Arrays</h3>
+  <pre>// ❌ Very common mistake
+{
+  productId: 1,
+  reviews: [ /* thousands of reviews embedded directly in the product */ ]
+}</pre>
+  <p><strong>Problem:</strong> this will eventually hit the 16MB limit, and the document becomes slow to read and write well before that limit is even reached.</p>
+  <p><strong>Fix:</strong> use Referencing or the Subset Pattern instead.</p>
+
+  <h3 class="sub">Mistake 2 — Deeply Nested Documents</h3>
+  <pre>// ❌ Common mistake
+{
+  user: {
+    profile: {
+      settings: {
+        preferences: {
+          notifications: {
+            email: { enabled: true }
+          }
+        }
+      }
+    }
+  }
+}</pre>
+  <p><strong>Problem:</strong> deeply nested fields are hard to update, and queries become unwieldy (<code>user.profile.settings.preferences.notifications.email.enabled</code>).</p>
+  <p><strong>Fix:</strong> try to keep nesting to 2–3 levels at most.</p>
+
+  <h3 class="sub">Mistake 3 — Over-Embedding to "Avoid SQL-Style Joins"</h3>
+  <p>This is the most dangerous mistake — beginners often feel that every embed is a "performance win," so they embed everything even when it doesn't make sense.</p>
+  <pre>// ❌ Mistake — embedding data that changes constantly and is shared across many documents
+{
+  orderId: 1,
+  productDetails: { name: "Laptop", price: 15000, stock: 45 }  // full copy of product data
+}</pre>
+  <p><strong>Problem:</strong> if the product's price changes, you'd need to update every past order containing that product — a disaster.</p>
+  <p><strong>Fix:</strong> the order should store only a <strong>snapshot</strong> of relevant data at the moment of purchase (e.g., the price at sale time), not a live copy that's expected to stay in sync with changes.</p>
+
+  <div class="warning-box"><strong>Key distinction:</strong> embedding a snapshot (immutable, point-in-time data) is safe and often correct. Embedding a live copy of mutable data that's also stored elsewhere is the actual mistake.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Before finalizing any schema, explicitly write "is this field a snapshot or a live copy?" next to every embedded object that duplicates data from elsewhere.</li>
+      <li>Run <code>db.collection.find(...).explain("executionStats")</code> against your top access-pattern queries to catch accidental COLLSCANs early.</li>
+      <li>Periodically check actual document sizes in production (<code>db.collection.stats()</code>) — unbounded arrays often creep up slowly before becoming a real problem.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Nine — Avoiding Common Mistakes</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Ten</p>
+    <h1 class="topic-title">Step 6 — Auditing a Real Project</h1>
+  </div>
+  <p>This is a <strong>real, practical application step</strong> — not a hypothetical exercise. Take an actual schema from a live project you've built (e.g., GoRent or an e-commerce API) and run a full audit on it.</p>
+
+  <h3 class="sub">How to Run the Audit</h3>
+  <ol class="plain">
+    <li>Open every schema you have (Product, Order, Review, etc.).</li>
+    <li>For each one, ask: "Why did I choose to embed here? Why did I choose to reference there?" If the honest answer is "I'm not sure, it just felt easier at the time," that decision was made without real analysis.</li>
+    <li>Go back to your project's real access-pattern list — what queries actually run often on the live site?</li>
+    <li>Compare: does the current schema serve those queries efficiently, or is it doing unnecessary $lookups?</li>
+  </ol>
+
+  <div class="note"><strong>Possible real example:</strong> in an e-commerce API, if the <code>Review</code> schema fully references both <code>Product</code> and <code>User</code>, and every fetch runs two $lookups — it's worth asking whether the Computed Pattern would be a better fit, storing a ready-made <code>averageRating</code> directly on the Product instead of recalculating it via aggregation every time.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Turn the audit into a recurring habit — revisit schemas every few months as usage patterns evolve, not just once at project launch.</li>
+      <li>Use MongoDB's <code>$indexStats</code> aggregation stage to see which indexes are actually being used in production — drop the ones that aren't.</li>
+      <li>Document each schema decision with a one-line comment in code (e.g., <code>// embedded: 1-to-few, always read together</code>) so future-you (or teammates) understand the reasoning without re-deriving it.</li>
+      <li>When migrating a schema decision (e.g., from embed to reference), plan a data migration script and test it on a copy of production data first.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Ten — Auditing a Real Project</p>
+</section>
+
+</body>
+</html>

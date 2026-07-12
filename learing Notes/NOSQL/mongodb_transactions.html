@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>MongoDB Transactions — Complete Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.5pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .scenario {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+    border-top: 0.75px dotted #666;
+    padding-top: 8px;
+    margin-top: 10px;
+    color: #222;
+  }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>MongoDB Transactions</h1>
+  <h2>Multi-Document ACID Guarantees — Concepts, Mechanics &amp; Real-World Usage</h2>
+  <p class="meta">Technical Reference · MongoDB / Mongoose</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Why Transactions Are Needed</li>
+    <li>How Transactions Solve the Problem (ACID Guarantee)</li>
+    <li>The Core Steps of Any Transaction</li>
+    <li>Requirements to Run Transactions</li>
+    <li>Write Conflicts &amp; Retry Logic</li>
+    <li>Read Concern &amp; Write Concern Inside Transactions</li>
+    <li>When to Use Transactions (and When Not To)</li>
+    <li>Real-World Example — Cash Order Checkout</li>
+    <li>The Performance Cost of Transactions</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Why Transactions Are Needed</h1>
+  </div>
+  <p>In NoSQL, a single document is inherently <strong>atomic</strong> — updating one document is guaranteed to happen entirely or not at all. The problem appears when an operation needs to update <strong>more than one document across more than one collection</strong> at the same time.</p>
+
+  <h3 class="sub">The Classic Problem Example</h3>
+  <p>Consider a "purchase a product" operation:</p>
+  <ol class="plain">
+    <li>Decrease stock quantity in <code>products</code></li>
+    <li>Create a new order in <code>orders</code></li>
+    <li>Deduct funds from the user's balance in <code>users</code></li>
+  </ol>
+
+  <pre>// ❌ Without a transaction — a real risk
+await Product.updateOne({ _id: productId }, { $inc: { stock: -1 } });
+// The server crashes right here!
+await Order.create({ userId, productId, status: "confirmed" });
+await User.updateOne({ _id: userId }, { $inc: { balance: -price } });</pre>
+
+  <p>If the server crashes right after the first step, the result is: <strong>stock was decremented, but no order was ever created, and no money was deducted</strong> — a product vanished for no reason, and the customer never paid. This is exactly what transactions prevent.</p>
+  <p class="page-footer">Section One — Why Transactions Are Needed</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">How Transactions Solve the Problem (ACID Guarantee)</h1>
+  </div>
+  <p>A transaction guarantees that all these operations execute as <strong>a single unit (all or nothing)</strong>:</p>
+  <ul>
+    <li>If everything succeeds → <code>commit</code> (all changes are persisted together)</li>
+    <li>If anything fails at any step → <code>abort</code> (everything is rolled back, including steps that had already succeeded)</li>
+  </ul>
+
+  <pre>const session = await mongoose.startSession();
+session.startTransaction();
+
+try {
+  await Product.updateOne(
+    { _id: productId },
+    { $inc: { stock: -1 } },
+    { session }
+  );
+
+  await Order.create(
+    [{ userId, productId, status: "confirmed" }],
+    { session }
+  );
+
+  await User.updateOne(
+    { _id: userId },
+    { $inc: { balance: -price } },
+    { session }
+  );
+
+  await session.commitTransaction();
+  console.log("Transaction succeeded");
+} catch (error) {
+  await session.abortTransaction();
+  console.log("Transaction failed, everything rolled back:", error);
+} finally {
+  session.endSession();
+}</pre>
+
+  <div class="note"><strong>Important:</strong> every operation must pass the same <code>session</code> as an option, or it won't be treated as part of the same transaction.</div>
+  <p class="page-footer">Section Two — How Transactions Solve the Problem</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">The Core Steps of Any Transaction</h1>
+  </div>
+  <table>
+    <thead><tr><th>Step</th><th>Command</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><code>startSession()</code></td><td>Begins a new session tied to the transaction</td></tr>
+      <tr><td>2</td><td><code>startTransaction()</code></td><td>Actually starts the transaction</td></tr>
+      <tr><td>3</td><td>Run operations passing <code>{ session }</code></td><td>Each operation is recorded as part of the transaction, not applied to real data immediately</td></tr>
+      <tr><td>4</td><td><code>commitTransaction()</code></td><td>Persists all changes at once</td></tr>
+      <tr><td>5</td><td><code>abortTransaction()</code> (on error)</td><td>Rolls back everything</td></tr>
+      <tr><td>6</td><td><code>endSession()</code></td><td>Closes the session and frees resources</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — The Core Steps of Any Transaction</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Requirements to Run Transactions</h1>
+  </div>
+  <div class="warning-box"><strong>Critical:</strong> transactions are <strong>not available in every MongoDB setup</strong>.</div>
+  <ul>
+    <li>MongoDB must be running as a <strong>Replica Set</strong> (even a single-node replica set for local development) or a <strong>Sharded Cluster</strong>.</li>
+    <li><strong>Not available on a standalone MongoDB instance</strong> (a plain server with no replica set).</li>
+    <li>Supported from <strong>MongoDB 4.0</strong> onward for replica sets, and from <strong>4.2</strong> onward for sharded clusters.</li>
+  </ul>
+  <pre>// For local development, run a single-node replica set:
+mongod --replSet rs0
+// then initiate it:
+rs.initiate()</pre>
+  <p>Attempting to use a transaction on a standalone instance results in a clear error stating the feature isn't supported.</p>
+  <p class="page-footer">Section Four — Requirements to Run Transactions</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Write Conflicts &amp; Retry Logic</h1>
+  </div>
+  <p>If another transaction tries to modify the same document at the same time, MongoDB throws a <strong>Write Conflict Error</strong>. This is part of the <strong>Isolation</strong> guarantee in ACID.</p>
+  <pre>try {
+  // the operation
+} catch (error) {
+  if (error.errorLabels && error.errorLabels.includes("TransientTransactionError")) {
+    // safe to retry — this error is temporary
+  }
+  await session.abortTransaction();
+}</pre>
+  <div class="tip-box">
+    <span class="tip-label">Best Practice</span>
+    <ul>
+      <li>Your code should be prepared to <strong>retry</strong> when a <code>TransientTransactionError</code> occurs, since it indicates a temporary conflict between transactions, not an actual logic error.</li>
+      <li>MongoDB drivers provide helper wrappers (e.g., <code>withTransaction()</code> in the native driver) that automatically handle retry logic for transient errors — worth using instead of hand-rolling retry loops.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Five — Write Conflicts &amp; Retry Logic</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">Read Concern &amp; Write Concern Inside Transactions</h1>
+  </div>
+  <p>You can control the accuracy-vs-speed trade-off explicitly:</p>
+  <pre>session.startTransaction({
+  readConcern: { level: "snapshot" },     // read a fixed snapshot of data as of transaction start
+  writeConcern: { w: "majority" }         // writes must be acknowledged by a majority of nodes before success
+});</pre>
+  <p><code>readConcern: "snapshot"</code> matters a lot because it guarantees you're reading the <strong>same version of the data</strong> throughout the transaction's lifetime, even if someone else modifies the data at the same moment.</p>
+  <p class="page-footer">Section Six — Read Concern &amp; Write Concern</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">When to Use Transactions (and When Not To)</h1>
+  </div>
+  <h3 class="sub">Use Them When:</h3>
+  <ul>
+    <li>An operation touches <strong>more than one collection</strong> and all parts must succeed or fail together (like the purchase example above).</li>
+    <li>Financial operations (transferring balance, deducting/adding credit).</li>
+    <li>Operations with a serious <strong>race condition</strong> risk (e.g., booking the last available ticket or the last item in stock).</li>
+  </ul>
+
+  <h3 class="sub">Avoid Them When:</h3>
+  <ul>
+    <li>The operation touches <strong>a single document only</strong> — MongoDB documents are already atomic, so an extra transaction adds nothing.</li>
+    <li>You have very high throughput (many operations per second) — transactions add noticeable performance overhead.</li>
+    <li>The problem can be solved with a better schema design instead (e.g., embedding) rather than needing coordination across separate collections in the first place.</li>
+  </ul>
+  <p class="page-footer">Section Seven — When to Use Transactions</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">Real-World Example — Cash Order Checkout</h1>
+  </div>
+  <p>In an e-commerce API, the <strong>Cash Order</strong> scenario is one of the best real-world fits for a transaction.</p>
+  <pre>const createCashOrder = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const cart = await Cart.findById(req.params.cartId).session(session);
+
+    const order = await Order.create(
+      [{
+        user: req.user._id,
+        cartItems: cart.cartItems,
+        totalOrderPrice: cart.totalPriceAfterDiscount || cart.totalPrice,
+        paymentMethodType: "cash"
+      }],
+      { session }
+    );
+
+    const bulkOptions = cart.cartItems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product, quantity: { $gte: item.quantity } },
+        update: { $inc: { quantity: -item.quantity, sold: +item.quantity } }
+      }
+    }));
+
+    const bulkResult = await Product.bulkWrite(bulkOptions, { session });
+
+    // If any product didn't have enough stock, bulkWrite won't update it at all
+    if (bulkResult.modifiedCount !== cart.cartItems.length) {
+      throw new Error("Insufficient stock for one or more products");
+    }
+
+    await Cart.findByIdAndDelete(req.params.cartId).session(session);
+
+    await session.commitTransaction();
+    res.status(201).json({ status: "success", data: order });
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(400).json({ status: "fail", message: error.message });
+  } finally {
+    session.endSession();
+  }
+};</pre>
+  <div class="scenario"><strong>Why this matters here specifically:</strong> if any error occurs after the order was already created (e.g., a stock update failure), without a transaction the customer could end up with a confirmed order while the product was never actually deducted from stock — a genuine data inconsistency.</div>
+  <p class="page-footer">Section Eight — Real-World Example</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">The Performance Cost of Transactions</h1>
+  </div>
+  <p>Transactions aren't "free" — they take longer than regular operations and hold resources on the server until they're closed (commit/abort). Using them for every simple operation without real need will negatively affect overall system performance.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Golden Rule</span>
+    <ul>
+      <li>Only use a transaction when you genuinely need an "all or nothing" guarantee across more than one document/collection — not as a default solution for every update.</li>
+      <li>Keep transactions short-lived: avoid slow operations (like external API calls or heavy computation) inside a transaction block, since long-running transactions hold locks longer and increase the chance of write conflicts with other operations.</li>
+      <li>For single-document updates, rely on MongoDB's built-in document-level atomicity — no transaction wrapper needed.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Nine — The Performance Cost of Transactions</p>
+</section>
+
+</body>
+</html>

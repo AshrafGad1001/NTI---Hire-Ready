@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>MongoDB Shell Reference Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12.5pt;
+    line-height: 1.6;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+
+  .cover h1 {
+    font-size: 30pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+
+  .cover h2 {
+    font-size: 15pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .cover .meta {
+    margin-top: 60px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  section.category {
+    padding: 60px 55px 40px 55px;
+  }
+
+  .cat-header {
+    margin-bottom: 28px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+
+  .cat-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+
+  .cat-title {
+    font-size: 20pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 9px 10px;
+    background: #fff;
+  }
+
+  tbody td {
+    padding: 10px 10px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11.5pt;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 1.5px solid #000;
+  }
+
+  td.func-name {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-weight: 700;
+    white-space: nowrap;
+    width: 24%;
+  }
+
+  td.func-input {
+    width: 38%;
+  }
+
+  td.func-return {
+    width: 38%;
+  }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+  }
+
+  @media print {
+    @page {
+      size: A4;
+      margin: 20mm 18mm 22mm 18mm;
+    }
+
+    .cover {
+      page-break-after: always;
+    }
+
+    section.category {
+      page-break-before: always;
+      padding: 0;
+    }
+
+    section.category:first-of-type {
+      page-break-before: auto;
+    }
+
+    table {
+      page-break-inside: auto;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference Manual</p>
+  <h1>MongoDB Shell Command Reference</h1>
+  <h2>Complete Function List — Inputs and Return Values</h2>
+  <p class="meta">Technical Reference · MongoDB / mongosh</p>
+</div>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section One</p>
+    <h1 class="cat-title">Database-Level Commands</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">show dbs</td><td class="func-input">None</td><td class="func-return">List of all databases with each one's size</td></tr>
+      <tr><td class="func-name">use &lt;dbName&gt;</td><td class="func-input">Database name</td><td class="func-return">Switches the current database (text confirmation)</td></tr>
+      <tr><td class="func-name">db</td><td class="func-input">None</td><td class="func-return">Name of the current database</td></tr>
+      <tr><td class="func-name">show collections</td><td class="func-input">None</td><td class="func-return">List of all collections in the current database</td></tr>
+      <tr><td class="func-name">db.dropDatabase()</td><td class="func-input">None</td><td class="func-return">Object containing ok: 1 and dropped: dbName</td></tr>
+      <tr><td class="func-name">db.stats()</td><td class="func-input">scale (optional)</td><td class="func-return">Object with database statistics (size, collection count)</td></tr>
+      <tr><td class="func-name">db.createCollection()</td><td class="func-input">Collection name + options (optional)</td><td class="func-return">Confirmation that the collection was created</td></tr>
+      <tr><td class="func-name">db.getCollectionNames()</td><td class="func-input">None</td><td class="func-return">Array of all collection names</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section One — Database-Level Commands</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Two</p>
+    <h1 class="cat-title">Create / Insert</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">insertOne()</td><td class="func-input">A single object (document)</td><td class="func-return">Object containing acknowledged and insertedId</td></tr>
+      <tr><td class="func-name">insertMany()</td><td class="func-input">Array of objects</td><td class="func-return">Object containing acknowledged and insertedIds (array of IDs)</td></tr>
+      <tr><td class="func-name">insert() (Deprecated)</td><td class="func-input">Object or array</td><td class="func-return">Write result information (WriteResult)</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Two — Create / Insert</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Three</p>
+    <h1 class="cat-title">Read / Find</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">find()</td><td class="func-input">Filter object (optional) + projection object (optional)</td><td class="func-return">Cursor pointing to multiple documents</td></tr>
+      <tr><td class="func-name">findOne()</td><td class="func-input">Filter object (optional) + projection object (optional)</td><td class="func-return">A single document, or null</td></tr>
+      <tr><td class="func-name">countDocuments()</td><td class="func-input">Filter object (optional)</td><td class="func-return">Integer count of matching documents</td></tr>
+      <tr><td class="func-name">estimatedDocumentCount()</td><td class="func-input">None</td><td class="func-return">Fast approximate count of all documents</td></tr>
+      <tr><td class="func-name">distinct()</td><td class="func-input">Field name + filter (optional)</td><td class="func-return">Array of unique values for a given field</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — Read / Find</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Four</p>
+    <h1 class="cat-title">Update</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">updateOne()</td><td class="func-input">Filter object + update object (+ options)</td><td class="func-return">Object with matchedCount and modifiedCount</td></tr>
+      <tr><td class="func-name">updateMany()</td><td class="func-input">Filter object + update object (+ options)</td><td class="func-return">Object with matchedCount and modifiedCount</td></tr>
+      <tr><td class="func-name">replaceOne()</td><td class="func-input">Filter object + full replacement document</td><td class="func-return">Object with matchedCount and modifiedCount</td></tr>
+      <tr><td class="func-name">findOneAndUpdate()</td><td class="func-input">Filter + update + options</td><td class="func-return">The document (before or after update, per options) or null</td></tr>
+      <tr><td class="func-name">findOneAndReplace()</td><td class="func-input">Filter + replacement document + options</td><td class="func-return">The old/new document, or null</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Four — Update</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Five</p>
+    <h1 class="cat-title">Delete</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">deleteOne()</td><td class="func-input">Filter object</td><td class="func-return">Object with deletedCount (0 or 1)</td></tr>
+      <tr><td class="func-name">deleteMany()</td><td class="func-input">Filter object</td><td class="func-return">Object with deletedCount (integer)</td></tr>
+      <tr><td class="func-name">findOneAndDelete()</td><td class="func-input">Filter object (+ options)</td><td class="func-return">The deleted document, or null</td></tr>
+      <tr><td class="func-name">drop()</td><td class="func-input">None</td><td class="func-return">true on success, or an error if the collection does not exist</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Five — Delete</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Six</p>
+    <h1 class="cat-title">Cursor Modifiers</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">sort()</td><td class="func-input">Object specifying field and direction (1 or -1)</td><td class="func-return">Cursor modified with the sort order</td></tr>
+      <tr><td class="func-name">limit()</td><td class="func-input">Integer</td><td class="func-return">Cursor limited to a set number of results</td></tr>
+      <tr><td class="func-name">skip()</td><td class="func-input">Integer</td><td class="func-return">Cursor after skipping a given number of results</td></tr>
+      <tr><td class="func-name">toArray()</td><td class="func-input">None</td><td class="func-return">Array containing all documents</td></tr>
+      <tr><td class="func-name">forEach()</td><td class="func-input">Callback function</td><td class="func-return">None — executes the function on each document</td></tr>
+      <tr><td class="func-name">count() (Deprecated)</td><td class="func-input">None</td><td class="func-return">Count of documents in the cursor</td></tr>
+      <tr><td class="func-name">hasNext()</td><td class="func-input">None</td><td class="func-return">true/false — whether a next document exists</td></tr>
+      <tr><td class="func-name">next()</td><td class="func-input">None</td><td class="func-return">The next document in the cursor</td></tr>
+      <tr><td class="func-name">pretty()</td><td class="func-input">None</td><td class="func-return">Same cursor with clearer formatting for display</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Six — Cursor Modifiers</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Seven</p>
+    <h1 class="cat-title">Aggregation</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">aggregate()</td><td class="func-input">Array of pipeline stages</td><td class="func-return">Cursor with the pipeline result</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Seven — Aggregation</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Eight</p>
+    <h1 class="cat-title">Indexes</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">createIndex()</td><td class="func-input">Object specifying field and type (+ options)</td><td class="func-return">Name of the created index</td></tr>
+      <tr><td class="func-name">createIndexes()</td><td class="func-input">Array of index objects</td><td class="func-return">Array of index names</td></tr>
+      <tr><td class="func-name">getIndexes()</td><td class="func-input">None</td><td class="func-return">Array of all indexes on the collection</td></tr>
+      <tr><td class="func-name">dropIndex()</td><td class="func-input">Index name or field object</td><td class="func-return">Confirmation of deletion</td></tr>
+      <tr><td class="func-name">dropIndexes()</td><td class="func-input">None</td><td class="func-return">Confirmation that all indexes except _id were dropped</td></tr>
+      <tr><td class="func-name">reIndex()</td><td class="func-input">None</td><td class="func-return">Rebuilds all indexes</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Eight — Indexes</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Nine</p>
+    <h1 class="cat-title">Collection Info &amp; Stats</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">stats()</td><td class="func-input">Options (optional)</td><td class="func-return">Object with collection statistics (size, document count)</td></tr>
+      <tr><td class="func-name">totalSize()</td><td class="func-input">None</td><td class="func-return">Total size in bytes</td></tr>
+      <tr><td class="func-name">dataSize()</td><td class="func-input">None</td><td class="func-return">Data-only size in bytes</td></tr>
+      <tr><td class="func-name">validate()</td><td class="func-input">Options (optional)</td><td class="func-return">Report on the structural integrity of the collection</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Nine — Collection Info &amp; Stats</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Ten</p>
+    <h1 class="cat-title">Bulk Operations</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">bulkWrite()</td><td class="func-input">Array of operations (insert/update/delete)</td><td class="func-return">Object summarizing all operations (insertedCount, modifiedCount, etc.)</td></tr>
+      <tr><td class="func-name">initializeUnorderedBulkOp()</td><td class="func-input">None</td><td class="func-return">Bulk operation object (executed with no specific order)</td></tr>
+      <tr><td class="func-name">initializeOrderedBulkOp()</td><td class="func-input">None</td><td class="func-return">Bulk operation object (executed in order)</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Ten — Bulk Operations</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Eleven</p>
+    <h1 class="cat-title">Transactions</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">db.getMongo().startSession()</td><td class="func-input">None</td><td class="func-return">Session object</td></tr>
+      <tr><td class="func-name">session.startTransaction()</td><td class="func-input">Options (optional)</td><td class="func-return">Starts the transaction</td></tr>
+      <tr><td class="func-name">session.commitTransaction()</td><td class="func-input">None</td><td class="func-return">Confirms and persists all transaction operations</td></tr>
+      <tr><td class="func-name">session.abortTransaction()</td><td class="func-input">None</td><td class="func-return">Cancels all transaction operations</td></tr>
+      <tr><td class="func-name">session.endSession()</td><td class="func-input">None</td><td class="func-return">Ends the session</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Eleven — Transactions</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Twelve</p>
+    <h1 class="cat-title">User &amp; Role Management</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">db.createUser()</td><td class="func-input">Object with user, pwd, roles</td><td class="func-return">Confirmation that the user was created</td></tr>
+      <tr><td class="func-name">db.dropUser()</td><td class="func-input">Username</td><td class="func-return">Confirmation of deletion</td></tr>
+      <tr><td class="func-name">show users</td><td class="func-input">None</td><td class="func-return">List of all users on the database</td></tr>
+      <tr><td class="func-name">db.grantRolesToUser()</td><td class="func-input">Username + array of roles</td><td class="func-return">Confirmation that privileges were granted</td></tr>
+      <tr><td class="func-name">db.revokeRolesFromUser()</td><td class="func-input">Username + array of roles</td><td class="func-return">Confirmation that privileges were revoked</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Twelve — User &amp; Role Management</p>
+</section>
+
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Thirteen</p>
+    <h1 class="cat-title">Watch / Change Streams</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">watch()</td><td class="func-input">Pipeline (optional) + options</td><td class="func-return">Change stream cursor that monitors changes live</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Thirteen — Watch / Change Streams</p>
+</section>
+
+</body>
+</html>

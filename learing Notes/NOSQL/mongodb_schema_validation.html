@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>MongoDB Schema Validation — Complete Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.6pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .scenario {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+    border-top: 0.75px dotted #666;
+    padding-top: 8px;
+    margin-top: 10px;
+    color: #222;
+  }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>MongoDB Schema Validation</h1>
+  <h2>Complete Guide — Rules, Options &amp; a Real-World Hiring Platform Example</h2>
+  <p class="meta">Technical Reference · MongoDB Document Validation</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>The Core Idea</li>
+    <li>$jsonSchema — The Recommended Approach</li>
+    <li>validationLevel — How Strictly Rules Apply</li>
+    <li>validationAction — What Happens on Violation</li>
+    <li>Adding Validation to an Existing Collection</li>
+    <li>Real-World Example — Training &amp; Hiring Platform</li>
+    <li>Bypassing Validation (bypassDocumentValidation)</li>
+    <li>Inspecting &amp; Testing Validation Rules</li>
+    <li>Validation vs. Application-Level Validation</li>
+    <li>Important Notes &amp; Limitations</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">The Core Idea</h1>
+  </div>
+  <p>Since NoSQL databases are flexible by nature, that flexibility is both a strength and a risk — anyone can insert a document in almost any shape, even one missing essential fields or containing the wrong data types. <strong>Schema Validation</strong> is MongoDB's built-in mechanism for enforcing rules at the collection level, without fully sacrificing NoSQL's flexibility.</p>
+
+  <p>Rules are attached to a collection, and any document being inserted or updated must comply with them, or MongoDB rejects the operation.</p>
+
+  <pre>db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "email", "age"],
+      properties: {
+        name: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        email: {
+          bsonType: "string",
+          pattern: "^.+@.+$",
+          description: "must be a valid email format"
+        },
+        age: {
+          bsonType: "int",
+          minimum: 18,
+          maximum: 100,
+          description: "must be an integer between 18 and 100"
+        }
+      }
+    }
+  }
+})</pre>
+
+  <p>Attempting this insert:</p>
+  <pre>db.users.insertOne({ name: "Ashraf", age: 15 })</pre>
+  <p>...would be rejected for two reasons: <code>email</code> is missing (required), and <code>age</code> is below the minimum (18).</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Validation is enforced at the database engine level — it applies regardless of which application, script, or admin tool is writing the data.</li>
+      <li>You can add validation to a brand-new collection (via <code>createCollection</code>) or retrofit it onto an existing one (via <code>collMod</code>), covered in Section Five.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section One — The Core Idea</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">$jsonSchema — The Recommended Approach</h1>
+  </div>
+  <p>This is the official standard (JSON Schema) that MongoDB supports for validation. It's more expressive and portable than MongoDB's older query-operator-based validators.</p>
+
+  <h3 class="sub">Key Properties</h3>
+  <table>
+    <thead><tr><th>Property</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>bsonType</code></td><td>The data type (string, int, double, array, object, date, objectId, etc.)</td></tr>
+      <tr><td><code>required</code></td><td>An array of field names that must be present</td></tr>
+      <tr><td><code>properties</code></td><td>Defines each field and its constraints</td></tr>
+      <tr><td><code>minimum</code> / <code>maximum</code></td><td>Numeric bounds</td></tr>
+      <tr><td><code>minLength</code> / <code>maxLength</code></td><td>String length bounds</td></tr>
+      <tr><td><code>pattern</code></td><td>Regex used to validate string format</td></tr>
+      <tr><td><code>enum</code></td><td>A fixed list of allowed values</td></tr>
+      <tr><td><code>additionalProperties</code></td><td>Whether undefined extra fields are allowed (true/false)</td></tr>
+      <tr><td><code>items</code></td><td>Validation rules applied to each element of an array field</td></tr>
+      <tr><td><code>minItems</code> / <code>maxItems</code></td><td>Bounds on array length</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">A Fuller Example</h3>
+  <pre>db.createCollection("products", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title", "price", "category"],
+      additionalProperties: false,
+      properties: {
+        _id: {},
+        title: { bsonType: "string", minLength: 3, maxLength: 100 },
+        price: { bsonType: "double", minimum: 0 },
+        category: {
+          enum: ["Electronics", "Clothing", "Books", "Food"]
+        },
+        stock: { bsonType: "int", minimum: 0 },
+        tags: {
+          bsonType: "array",
+          items: { bsonType: "string" },
+          maxItems: 10
+        }
+      }
+    }
+  }
+})</pre>
+
+  <div class="warning-box"><strong>Note:</strong> setting <code>additionalProperties: false</code> is strict — any field not explicitly declared in <code>properties</code> will cause the document to be rejected. Use it carefully on collections where the schema is expected to evolve frequently.</div>
+  <p class="page-footer">Section Two — $jsonSchema</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">validationLevel — How Strictly Rules Apply</h1>
+  </div>
+  <p>Determines whether the rule is enforced on everything, or only on new writes.</p>
+  <pre>db.runCommand({
+  collMod: "products",
+  validationLevel: "strict"   // or "moderate"
+})</pre>
+
+  <table>
+    <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>strict</code> (default)</td><td>Applied to all inserts and updates, even on existing documents that don't already comply with the rule</td></tr>
+      <tr><td><code>moderate</code></td><td>Applied to new inserts, but allows updates to existing non-compliant documents as long as the update doesn't make them worse</td></tr>
+    </tbody>
+  </table>
+
+  <div class="scenario"><strong>Practical use:</strong> if an existing collection has legacy data that doesn't match a newly added rule, use <code>moderate</code> so you don't break anything currently working, then clean up the old data gradually.</div>
+  <p class="page-footer">Section Three — validationLevel</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">validationAction — What Happens on Violation</h1>
+  </div>
+  <pre>db.runCommand({
+  collMod: "products",
+  validationAction: "warn"   // or "error"
+})</pre>
+
+  <table>
+    <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>error</code> (default)</td><td>Rejects the operation entirely</td></tr>
+      <tr><td><code>warn</code></td><td>Allows the operation but logs a warning — useful during initial testing before enforcing the rule strictly</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>A common rollout strategy: deploy new validation rules with <code>validationAction: "warn"</code> first, monitor the logs for a few days to see how many existing writes would have failed, then switch to <code>"error"</code> once you're confident nothing legitimate gets blocked.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Four — validationAction</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Adding Validation to an Existing Collection</h1>
+  </div>
+  <p>If the collection already exists and you need to add rules to it:</p>
+  <pre>db.runCommand({
+  collMod: "users",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["email"],
+      properties: {
+        email: { bsonType: "string" }
+      }
+    }
+  },
+  validationLevel: "moderate"
+})</pre>
+  <p>This is the safer path for production collections that already contain live data — combining <code>collMod</code> with <code>validationLevel: "moderate"</code> avoids suddenly breaking writes to older, non-compliant documents.</p>
+  <p class="page-footer">Section Five — Adding Validation to an Existing Collection</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">Real-World Example — Training &amp; Hiring Platform</h1>
+  </div>
+  <p>Continuing the same platform scenario used in the aggregation examples: a training and hiring platform with trainees, mentors, and admins, each carrying different required fields.</p>
+
+  <pre>db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "email", "role", "joinDate"],
+      properties: {
+        name: { bsonType: "string", minLength: 2, maxLength: 60 },
+        email: {
+          bsonType: "string",
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          description: "must be a valid email address"
+        },
+        role: {
+          enum: ["trainee", "mentor", "admin"],
+          description: "must be one of the three defined roles"
+        },
+        age: {
+          bsonType: "int",
+          minimum: 16,
+          maximum: 70
+        },
+        city: { bsonType: "string" },
+        track: {
+          bsonType: ["string", "null"],
+          description: "trainees/mentors have a track; admins have null"
+        },
+        isActive: { bsonType: "bool" },
+        joinDate: { bsonType: "date" },
+        completedCourses: {
+          bsonType: "int",
+          minimum: 0
+        },
+        monthlyIncome: {
+          bsonType: ["int", "double"],
+          minimum: 0
+        },
+        skills: {
+          bsonType: "array",
+          items: { bsonType: "string" },
+          maxItems: 30
+        },
+        appliedJobsCount: {
+          bsonType: "int",
+          minimum: 0
+        }
+      }
+    }
+  },
+  validationLevel: "strict",
+  validationAction: "error"
+})</pre>
+
+  <p>Notice <code>bsonType: ["string", "null"]</code> on the <code>track</code> field — this allows the field to be either a string or null, matching the earlier scenario where an admin user has no track at all.</p>
+
+  <h3 class="sub">What This Prevents in Practice</h3>
+  <table>
+    <thead><tr><th>Attempted Insert</th><th>Why It's Rejected</th></tr></thead>
+    <tbody>
+      <tr><td><code>{ name: "Test", email: "not-an-email", role: "trainee" }</code></td><td>Fails the <code>email</code> pattern check, and is missing the required <code>joinDate</code></td></tr>
+      <tr><td><code>{ name: "A", email: "a@b.com", role: "supervisor", joinDate: new Date() }</code></td><td><code>role</code> isn't one of the allowed enum values</td></tr>
+      <tr><td><code>{ name: "Karim", email: "k@x.com", role: "trainee", age: 12, joinDate: new Date() }</code></td><td><code>age</code> is below the minimum of 16</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Rolling Out Safely on a Live Collection</h3>
+  <p>If the <code>users</code> collection already has thousands of live records when this rule is introduced, apply it gradually:</p>
+  <pre>db.runCommand({
+  collMod: "users",
+  validator: { $jsonSchema: { /* same schema as above */ } },
+  validationLevel: "moderate",
+  validationAction: "warn"
+})</pre>
+  <p>Then monitor the MongoDB logs for validation warnings over a few days, fix any legacy records that would fail, and only then switch to <code>validationLevel: "strict"</code> and <code>validationAction: "error"</code> for full enforcement.</p>
+  <p class="page-footer">Section Six — Real-World Example</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">Bypassing Validation (bypassDocumentValidation)</h1>
+  </div>
+  <p>Sometimes you need to intentionally skip validation — for example, during a one-off data migration or bulk import where you know the format temporarily differs from the current rules.</p>
+  <pre>db.users.insertMany(
+  [ /* legacy documents */ ],
+  { bypassDocumentValidation: true }
+)</pre>
+  <div class="warning-box"><strong>Caution:</strong> this flag requires specific privileges in a production MongoDB deployment (typically restricted to admin-level roles), and should be used deliberately, not as a routine workaround for failing validation.</div>
+  <p class="page-footer">Section Seven — Bypassing Validation</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">Inspecting &amp; Testing Validation Rules</h1>
+  </div>
+  <h3 class="sub">Viewing the Current Validator</h3>
+  <pre>db.getCollectionInfos({ name: "users" })</pre>
+  <p>This returns the validator currently applied to the collection, along with its <code>validationLevel</code> and <code>validationAction</code>.</p>
+
+  <h3 class="sub">Testing Before Enforcing</h3>
+  <p>A practical workflow for introducing validation on a collection already in production:</p>
+  <ol class="plain">
+    <li>Add the validator with <code>validationAction: "warn"</code> so nothing breaks immediately.</li>
+    <li>Run typical application traffic for a few days and check the logs for validation warnings.</li>
+    <li>Identify and fix (or migrate) documents that would fail under the new rule.</li>
+    <li>Switch to <code>validationAction: "error"</code> once confident the rule won't block legitimate operations.</li>
+  </ol>
+  <p class="page-footer">Section Eight — Inspecting &amp; Testing Validation Rules</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">Validation vs. Application-Level Validation</h1>
+  </div>
+  <table>
+    <thead><tr><th></th><th>MongoDB Schema Validation</th><th>Application-Level (Mongoose/Joi)</th></tr></thead>
+    <tbody>
+      <tr><td>Where it runs</td><td>Inside the database engine itself</td><td>Inside your Node.js/Express backend</td></tr>
+      <tr><td>Coverage</td><td>Protects against <em>any</em> write, including direct DB access, scripts, and migrations</td><td>Only protects writes that go through your application code</td></tr>
+      <tr><td>Error messages</td><td>Generic MongoDB validation errors</td><td>Can be customized with detailed, user-friendly messages</td></tr>
+      <tr><td>Business logic</td><td>Not suited for complex conditional rules</td><td>Well suited for rich business logic and cross-field conditional checks</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note"><strong>Best practice:</strong> use both together. Application-level validation (e.g., Mongoose schemas) gives fast, user-friendly feedback during normal app usage. MongoDB schema validation acts as a last line of defense at the database layer, catching anything that bypasses the application — a rogue script, a direct database console session, or a bug in the backend logic.</div>
+  <p class="page-footer">Section Nine — Validation vs. Application-Level Validation</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Ten</p>
+    <h1 class="topic-title">Important Notes &amp; Limitations</h1>
+  </div>
+  <ul>
+    <li><strong>Not a replacement for backend validation</strong> (e.g., Mongoose schemas or Joi) — it's an additional layer of protection at the database level, not a substitute. If someone accesses the database directly (an admin, a script, a migration), database-level validation still protects data integrity even if the backend was bypassed.</li>
+    <li><strong>Performance</strong> — validation adds a small overhead to every insert/update, but this is usually negligible compared to the benefit of guaranteed data integrity.</li>
+    <li><strong>Not meant for complex business logic</strong> — rules like "this product can only be sold if there's an active promotional offer" are application logic, not something that belongs in schema validation.</li>
+    <li><strong>Schema evolution</strong> — as your application changes, remember to update the validator too; a forgotten stale validator can silently block legitimate new fields.</li>
+    <li><strong>No cross-document rules</strong> — <code>$jsonSchema</code> validates a document against itself; it cannot enforce rules that depend on data in other documents or collections (e.g., "this email must be unique across the whole collection" — that still requires a unique index).</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Combine schema validation with a <code>unique</code> index where needed — validation checks shape and type, indexes enforce uniqueness across documents.</li>
+      <li>Keep a copy of every collection's validator schema in your project's codebase (e.g., a <code>/schemas</code> folder) so it's version-controlled alongside your Mongoose models, not just living invisibly inside the database.</li>
+      <li>When adding a new required field to a schema that already has production data, always roll out with <code>moderate</code> + <code>warn</code> first — treat it the same as a database migration, not a simple config change.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Ten — Important Notes &amp; Limitations</p>
+</section>
+
+</body>
+</html>

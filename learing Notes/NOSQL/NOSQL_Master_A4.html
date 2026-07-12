@@ -1,0 +1,3139 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Ultimate NoSQL & MongoDB Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  /* A4 Print & Screen styling */
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+    font-size: 12pt;
+    line-height: 1.65;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Wrap main sections in an A4 container for screen preview */
+  .a4-page {
+    background: #fff;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 20px auto;
+    padding: 20mm;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
+    page-break-after: always;
+  }
+
+  @media print {
+    body {
+      background: none;
+      padding: 0;
+    }
+    .a4-page {
+      margin: 0;
+      box-shadow: none;
+      width: auto;
+      min-height: auto;
+      padding: 0;
+    }
+    @page {
+      size: A4;
+      margin: 20mm;
+    }
+  }
+
+  /* Navy Design Variables */
+  :root {
+    --primary: navy;
+    --secondary: #001f3f;
+    --accent: #003366;
+    --border: #999;
+  }
+
+  .cover {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double var(--primary);
+    min-height: 220mm;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: var(--secondary);
+  }
+  .cover h1 {
+    font-size: 30pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 18px;
+    display: inline-block;
+    color: var(--primary);
+  }
+  .cover h2 {
+    font-size: 16pt;
+    font-weight: 400;
+    color: var(--secondary);
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 11pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: var(--primary);
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 10px; }
+
+  .topic-header, .cat-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 12px;
+  }
+  .topic-number, .cat-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title, .cat-title {
+    font-size: 20pt;
+    font-weight: 700;
+    margin: 0;
+    color: var(--primary);
+  }
+
+  h3.sub {
+    font-size: 14pt;
+    font-weight: 700;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: var(--primary);
+  }
+
+  p { margin: 10px 0; }
+  ul, ol.plain { margin: 10px 0; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    page-break-inside: auto;
+  }
+  tr { page-break-inside: avoid; page-break-after: auto; }
+  thead { display: table-header-group; }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid var(--primary);
+    border-bottom: 1.5px solid var(--primary);
+    padding: 10px;
+    color: var(--primary);
+  }
+  tbody td {
+    padding: 10px;
+    border-bottom: 0.75px solid var(--border);
+    vertical-align: top;
+    font-size: 11.5pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid var(--primary); }
+
+  pre {
+    background: #f4f6f9;
+    border: 0.75px solid var(--border);
+    border-left: 3px solid var(--primary);
+    padding: 12px 16px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+    overflow-x: auto;
+    margin: 14px 0;
+    white-space: pre-wrap;
+    page-break-inside: avoid;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11pt;
+    color: var(--primary);
+  }
+
+  .note, .scenario {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    border-top: 0.75px dotted var(--primary);
+    border-bottom: 0.75px dotted var(--primary);
+    padding: 10px 0;
+    margin-top: 16px;
+    color: var(--secondary);
+    page-break-inside: avoid;
+  }
+  .scenario strong { font-weight: 700; color: var(--primary); }
+
+  .tip-box {
+    border: 1px solid var(--primary);
+    padding: 14px 18px;
+    margin-top: 18px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    page-break-inside: avoid;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10pt;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 4px;
+    color: var(--primary);
+  }
+
+  .warning-box {
+    border-left: 3px solid #800000;
+    background: #fff0f0;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    page-break-inside: avoid;
+  }
+  .warning-box strong { color: #800000; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9.5pt;
+    color: #666;
+    text-align: center;
+    margin-top: 40px;
+    border-top: 0.5px solid var(--primary);
+    padding-top: 10px;
+  }
+
+  .module-title {
+    font-family: 'Source Sans Pro', sans-serif;
+    text-align: center;
+    font-size: 24pt;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+    padding: 40px 0;
+    border-bottom: 4px solid var(--primary);
+  }
+</style>
+</head>
+<body>
+
+<div class="a4-page">
+  <div class="cover">
+    <p class="kicker">Ultimate Reference Guide</p>
+    <h1>NoSQL & MongoDB Mastery</h1>
+    <h2>The Complete Course Notes (A4 Format)</h2>
+    <p class="meta">Optimized for PDF Printing</p>
+    
+    <div class="tip-box" style="margin-top: 50px; max-width: 400px; text-align: left;">
+      <span class="tip-label">PDF Export Tip</span>
+      <p>When printing or saving to PDF from your browser:</p>
+      <ul>
+        <li>Set Paper Size to <strong>A4</strong></li>
+        <li>Set Margins to <strong>None</strong> (the CSS handles it)</li>
+        <li>Ensure <strong>Background graphics</strong> is checked</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="a4-page">
+  <div class="cover" style="min-height: 100mm;">
+    <p class="kicker">Module 1</p>
+    <h1 class="module-title" style="border: none; padding-bottom: 0;">NOSQL MONGODB SUMMARY</h1>
+  </div>
+</div>
+
+<div class="a4-page">
+<div class="cover">
+  <p class="kicker">Study Summary</p>
+  <h1>NoSQL &amp; MongoDB</h1>
+  <h2>Complete Conversation Recap — Concepts, Commands &amp; Practical Examples</h2>
+  <p class="meta">Technical Reference · Compiled from Study Session</p>
+</div>
+</div>
+
+<div class="a4-page">
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>SQL vs. NoSQL</li>
+    <li>ACID vs. BASE</li>
+    <li>The CAP Theorem</li>
+    <li>NoSQL Database Types</li>
+    <li>BSON (Binary JSON)</li>
+    <li>Embedding vs. Referencing</li>
+    <li>Mongo Shell — Basic Commands</li>
+    <li>Query Operators</li>
+    <li>The Aggregation Pipeline</li>
+    <li>Sort, Skip &amp; Limit</li>
+    <li>find() vs. findOne()</li>
+    <li>Projection</li>
+    <li>Index Properties</li>
+    <li>Indexing — Pros &amp; Cons</li>
+  </ol>
+</div>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic One</p>
+    <h1 class="topic-title">SQL vs. NoSQL</h1>
+  </div>
+
+  <h3 class="sub">SQL (Relational Databases)</h3>
+  <p>Examples: SQL Server, MySQL, PostgreSQL.</p>
+  <ul>
+    <li><strong>Structured</strong> — data lives in tables with a fixed, predefined schema (columns and types).</li>
+    <li><strong>Relations</strong> — tables are linked via Foreign Keys.</li>
+    <li><strong>ACID compliant</strong> — very high accuracy in transactions (critical for banking, e-commerce transactions).</li>
+    <li><strong>Vertical Scaling</strong> — scale by upgrading a single server (RAM/CPU).</li>
+    <li>A unified query language (SQL) across implementations.</li>
+  </ul>
+
+  <h3 class="sub">NoSQL (Non-Relational Databases)</h3>
+  <p>Example: MongoDB.</p>
+  <ul>
+    <li><strong>Unstructured / Flexible Schema</strong> — each document in a collection can have a different shape.</li>
+    <li><strong>No fixed relations</strong> — instead of JOINs, data uses Embedding or Referencing.</li>
+    <li><strong>BASE model</strong> instead of ACID: Basically Available, Soft state, Eventually consistent — faster, less strict on immediate consistency.</li>
+    <li><strong>Horizontal Scaling</strong> — add more servers (Sharding), easier to scale with massive data volumes.</li>
+    <li>Multiple types exist: Document (MongoDB), Key-Value (Redis), Column-family (Cassandra), Graph (Neo4j).</li>
+  </ul>
+
+  <h3 class="sub">When to Use Which</h3>
+  <table>
+    <thead><tr><th>Scenario</th><th>Better Fit</th></tr></thead>
+    <tbody>
+      <tr><td>Complex, stable relationships (financial transactions)</td><td>SQL</td></tr>
+      <tr><td>Frequently changing data shape, fast development needs</td><td>NoSQL</td></tr>
+      <tr><td>Massive scale (millions of users)</td><td>Usually NoSQL</td></tr>
+      <tr><td>Complex reports requiring many joins</td><td>SQL</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Topic One — SQL vs. NoSQL</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Two</p>
+    <h1 class="topic-title">ACID vs. BASE</h1>
+  </div>
+
+  <h3 class="sub">ACID (SQL Model)</h3>
+  <p>Philosophy: accuracy and consistency come first, even at the cost of speed.</p>
+  <table>
+    <thead><tr><th>Letter</th><th>Meaning</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Atomicity</td><td>All-or-nothing</td><td>A transaction either completes fully or is fully rolled back — no partial state.</td></tr>
+      <tr><td>Consistency</td><td>Valid state transitions</td><td>Data moves from one valid state to another; no rule/constraint violations.</td></tr>
+      <tr><td>Isolation</td><td>Concurrent safety</td><td>Concurrent transactions behave as though each runs alone, with no interference.</td></tr>
+      <tr><td>Durability</td><td>Permanence</td><td>Once committed, data is guaranteed to persist even after a crash.</td></tr>
+    </tbody>
+  </table>
+  <p><em>Example:</em> transferring money between two bank accounts — ACID is mandatory, since a partial transfer (money leaving one account but never arriving at the other) is unacceptable.</p>
+
+  <h3 class="sub">BASE (NoSQL Model)</h3>
+  <p>Philosophy: prioritize availability and speed, accepting that data may take a moment to fully synchronize.</p>
+  <table>
+    <thead><tr><th>Letter</th><th>Meaning</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Basically Available</td><td>Always responds</td><td>The system responds to every request, even if part of it is degraded.</td></tr>
+      <tr><td>Soft state</td><td>Not fixed</td><td>Data state can change over time even without new input, due to replica synchronization.</td></tr>
+      <tr><td>Eventually consistent</td><td>Converges over time</td><td>Replicas aren't instantly identical, but will converge within a short time.</td></tr>
+    </tbody>
+  </table>
+  <p><em>Example:</em> a Like count on a social media post — a brief delay in updating the number across viewers is harmless. Speed matters more than instant accuracy.</p>
+
+  <h3 class="sub">MongoDB in Practice</h3>
+  <p>MongoDB supports multi-document transactions since version 4.0, giving a choice: use ACID transactions when accuracy is essential, or rely on eventual consistency when speed matters more.</p>
+  <pre>const session = await mongoose.startSession();
+session.startTransaction();
+try {
+  await Order.create([orderData], { session });
+  await Product.updateMany(..., { session });
+  await session.commitTransaction();
+} catch (err) {
+  await session.abortTransaction();
+}</pre>
+  <p class="page-footer">Topic Two — ACID vs. BASE</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Three</p>
+    <h1 class="topic-title">The CAP Theorem</h1>
+  </div>
+  <p>In any distributed database, a system cannot simultaneously guarantee all three of the following once a network issue occurs — it can guarantee at most two.</p>
+
+  <h3 class="sub">The Three Properties</h3>
+  <ul>
+    <li><strong>Consistency (C)</strong> — every node returns the exact same data at the same moment.</li>
+    <li><strong>Availability (A)</strong> — every request receives a response (success or failure), even if it isn't the newest data.</li>
+    <li><strong>Partition Tolerance (P)</strong> — the system keeps functioning even if nodes lose the ability to communicate with each other.</li>
+  </ul>
+
+  <h3 class="sub">Why Not All Three?</h3>
+  <p>Network partitions are inevitable in distributed systems. So the real trade-off during a partition is between Consistency and Availability — Partition Tolerance isn't optional, since network failures will happen regardless.</p>
+  <ul>
+    <li><strong>Choosing Consistency</strong> — some nodes must stop responding (reject requests) until data is synchronized, to avoid returning incorrect data.</li>
+    <li><strong>Choosing Availability</strong> — requests are served from every node, but data may briefly differ between nodes (not fully consistent).</li>
+  </ul>
+
+  <h3 class="sub">Real-World Examples</h3>
+  <table>
+    <thead><tr><th>System</th><th>Choice</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>MongoDB (default)</td><td>CP</td><td>Prefers to pause writes on the primary rather than risk inconsistency across replicas.</td></tr>
+      <tr><td>Cassandra</td><td>AP</td><td>Prefers to always respond, even with slightly stale data, then reconciles eventually.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Read/Write Concerns in MongoDB</h3>
+  <pre>// Write Concern - confirms the write reached a certain number of nodes
+db.orders.insertOne(order, { writeConcern: { w: "majority" } })
+
+// Read Concern - ensures reads come from a synchronized copy
+db.orders.find().readConcern("majority")</pre>
+  <p>Using <code>w: "majority"</code> sacrifices a bit of speed to guarantee higher consistency — CAP trade-offs are configuration decisions you make directly in your project.</p>
+  <p class="page-footer">Topic Three — The CAP Theorem</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Four</p>
+    <h1 class="topic-title">NoSQL Database Types</h1>
+  </div>
+
+  <h3 class="sub">1. Key-Value Store</h3>
+  <p>The simplest type — every entry is a unique key mapped to a value (string, number, JSON, binary). Like a distributed HashMap/Dictionary.</p>
+  <p><em>Examples:</em> Redis, Riak. <em>Use cases:</em> caching, session storage, real-time leaderboards, temporary shopping carts.</p>
+
+  <h3 class="sub">2. Wide Column Store</h3>
+  <p>Similar to tables, but each row can have different columns from the next. Data is stored column-by-column rather than row-by-row, making it very fast for reading specific columns across millions of rows.</p>
+  <p><em>Examples:</em> Apache HBase, Cassandra. <em>Use cases:</em> Big Data analytics, time-series data (IoT sensors, logs), systems requiring massive high-speed writes.</p>
+
+  <h3 class="sub">3. Document Store</h3>
+  <p>Data is stored as documents (typically JSON/BSON), each with a flexible structure.</p>
+  <p><em>Examples:</em> MongoDB, CouchDB. <em>Use cases:</em> general web/mobile applications, variable-shaped content (CMS, catalogs) — the most common NoSQL type in MERN-stack projects.</p>
+
+  <h3 class="sub">4. Graph Store</h3>
+  <p>Data is represented as Nodes (entities) and Edges (relationships), designed specifically to query complex relationships quickly — something SQL and MongoDB struggle with.</p>
+  <p><em>Examples:</em> Neo4j, InfiniteGraph. <em>Use cases:</em> social networks (friend recommendations), recommendation engines, fraud detection, knowledge graphs.</p>
+
+  <h3 class="sub">Quick Comparison</h3>
+  <table>
+    <thead><tr><th>Type</th><th>Strongest At</th><th>Weakest At</th></tr></thead>
+    <tbody>
+      <tr><td>Key-Value</td><td>Lookup by key</td><td>Complex queries</td></tr>
+      <tr><td>Wide Column</td><td>Reading/writing single columns at massive scale</td><td>Complex relationships</td></tr>
+      <tr><td>Document</td><td>Flexibility + medium-complexity queries</td><td>Many joins between collections</td></tr>
+      <tr><td>Graph</td><td>Relationships and traversal</td><td>Simple flat data at huge scale</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Topic Four — NoSQL Database Types</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Five</p>
+    <h1 class="topic-title">BSON (Binary JSON)</h1>
+  </div>
+  <p>BSON stands for Binary JSON — the format MongoDB actually uses to store documents on disk, not plain JSON.</p>
+
+  <h3 class="sub">Why Not Plain JSON?</h3>
+  <table>
+    <thead><tr><th>Problem with JSON</th><th>BSON's Solution</th></tr></thead>
+    <tbody>
+      <tr><td>No precise data types (every number is just "number")</td><td>Specific types: Int32, Int64, Double, Decimal128</td></tr>
+      <tr><td>No dedicated date type</td><td>Native Date type stored directly as binary</td></tr>
+      <tr><td>No binary data type (images, files)</td><td>Native Binary Data type</td></tr>
+      <tr><td>Slow parsing (must be read as text first)</td><td>Faster traversal — field lengths are known upfront without reading the entire string</td></tr>
+      <tr><td>No ObjectId type</td><td>ObjectId is a native BSON type (used for MongoDB's <code>_id</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Important Note</h3>
+  <p>The JSON you see in a response (Postman, frontend, etc.) is a textual representation automatically converted from BSON. BSON itself is stored as binary inside MongoDB's <code>.wt</code> files (WiredTiger storage engine).</p>
+
+  <h3 class="sub">The 16MB Document Limit</h3>
+  <p>This is a direct consequence of BSON's design: it uses an Int32 to store document size, capping the maximum possible size at 16MB. This is why arrays that can grow unbounded (e.g., a huge number of comments) should use Referencing instead of Embedding.</p>
+  <p class="page-footer">Topic Five — BSON (Binary JSON)</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Six</p>
+    <h1 class="topic-title">Embedding vs. Referencing</h1>
+  </div>
+  <p>The most important design decision in MongoDB schema design.</p>
+
+  <h3 class="sub">Embedding</h3>
+  <p>Nesting related data directly inside the parent document.</p>
+  <pre>{
+  name: "Ashraf",
+  addresses: [
+    { city: "Shebin El-Kom", street: "..." }
+  ]
+}</pre>
+  <p>Use it when the relationship is "one-to-few" and the data is almost always read together.</p>
+
+  <h3 class="sub">Referencing</h3>
+  <p>Similar to a Foreign Key — storing a reference (ID) to another document instead of embedding it.</p>
+  <pre>{
+  name: "Ashraf",
+  projectId: ObjectId("...")
+}</pre>
+  <p>Use it when the relationship is "one-to-many" at scale, or the data changes frequently, or it's shared across multiple parents.</p>
+
+  <div class="note">Golden Rule: if an array can grow without bound (e.g., comments on a viral post), never embed it — MongoDB documents are capped at 16MB.</div>
+  <p class="page-footer">Topic Six — Embedding vs. Referencing</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Seven</p>
+    <h1 class="topic-title">Mongo Shell — Basic Commands</h1>
+  </div>
+
+  <h3 class="sub">Connecting &amp; Navigation</h3>
+  <pre>mongosh
+mongosh "mongodb://localhost:27017/mydb"
+mongosh "mongodb+srv://cluster.mongodb.net/mydb" -u user -p</pre>
+  <pre>show dbs
+use myDatabase
+db
+show collections</pre>
+
+  <h3 class="sub">Insert</h3>
+  <pre>db.projects.insertOne({ title: "GoRent" })
+db.projects.insertMany([{ title: "GoRent" }, { title: "Portfolio" }])</pre>
+
+  <h3 class="sub">Find</h3>
+  <pre>db.projects.find()
+db.projects.findOne({ title: "GoRent" })
+db.projects.find({ createdAt: { $gt: new Date("2025-01-01") } })
+db.projects.find({}, { title: 1, techStack: 1, _id: 0 })</pre>
+
+  <h3 class="sub">Update</h3>
+  <pre>db.projects.updateOne({ title: "GoRent" }, { $set: { status: "completed" } })
+db.products.updateOne({ _id: id }, { $inc: { stock: -1 } })
+db.projects.updateOne({ _id: id }, { $push: { challenges: "New challenge" } })</pre>
+
+  <h3 class="sub">Delete</h3>
+  <pre>db.projects.deleteOne({ title: "GoRent" })
+db.projects.deleteMany({ status: "archived" })
+db.projects.drop()</pre>
+
+  <h3 class="sub">Indexes</h3>
+  <pre>db.projects.createIndex({ title: 1 })
+db.projects.getIndexes()
+db.projects.dropIndex("title_1")</pre>
+
+  <h3 class="sub">User Management</h3>
+  <pre>use admin
+db.createUser({
+  user: "ashraf",
+  pwd: "securePassword",
+  roles: [{ role: "readWrite", db: "myapp" }]
+})</pre>
+  <p class="page-footer">Topic Seven — Mongo Shell Basic Commands</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Eight</p>
+    <h1 class="topic-title">Query Operators</h1>
+  </div>
+
+  <h3 class="sub">Comparison Operators</h3>
+  <pre>db.products.find({ price: { $gt: 200 } })
+db.products.find({ price: { $gte: 200 } })
+db.products.find({ price: { $lt: 500 } })
+db.products.find({ price: { $lte: 500 } })
+db.products.find({ price: { $ne: 100 } })
+db.products.find({ category: { $in: ["Electronics", "Books"] } })
+db.products.find({ category: { $nin: ["Electronics", "Books"] } })</pre>
+
+  <h3 class="sub">Logical Operators</h3>
+  <pre>// $and — all conditions must be true
+db.posts.find({ $and: [{ likes: { $gt: 200 } }, { likes: { $lt: 500 } }] })
+
+// Simpler equivalent when on the same field
+db.posts.find({ likes: { $gt: 200, $lt: 500 } })
+
+// $or — at least one condition true
+db.posts.find({ $or: [{ likes: { $gt: 500 } }, { category: "Trending" }] })
+
+// $nor — neither condition true
+db.posts.find({ $nor: [{ likes: { $gt: 500 } }, { category: "Trending" }] })</pre>
+
+  <h3 class="sub">Element Operators</h3>
+  <pre>db.products.find({ discount: { $exists: true } })
+db.products.find({ price: { $type: "double" } })</pre>
+
+  <h3 class="sub">Array Operators</h3>
+  <pre>db.projects.find({ techStack: { $all: ["Next.js", "TypeScript"] } })
+db.projects.find({ techStack: { $size: 3 } })
+db.orders.find({ items: { $elemMatch: { productId: id, quantity: { $gte: 2 } } } })</pre>
+
+  <h3 class="sub">Evaluation Operators</h3>
+  <pre>db.products.find({ title: { $regex: "^Laptop", $options: "i" } })
+db.products.find({ $expr: { $gt: ["$price", "$discountPrice"] } })
+db.products.find({ price: { $mod: [5, 0] } })</pre>
+  <p class="page-footer">Topic Eight — Query Operators</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Nine</p>
+    <h1 class="topic-title">The Aggregation Pipeline</h1>
+  </div>
+
+  <h3 class="sub">Core Stages</h3>
+  <pre>// $match — filtering, like WHERE
+{ $match: { status: "completed", totalPrice: { $gte: 100 } } }
+
+// $group — grouping, like GROUP BY
+{ $group: {
+    _id: "$userId",
+    totalSpent: { $sum: "$totalPrice" },
+    orderCount: { $sum: 1 },
+    avgOrder: { $avg: "$totalPrice" }
+}}
+
+// $sort / $limit / $skip
+{ $sort: { price: -1 } }
+{ $skip: 10 }
+{ $limit: 5 }
+
+// $project — reshaping fields, like SELECT
+{ $project: { title: 1, price: 1, priceAfterTax: { $multiply: ["$price", 1.14] }, _id: 0 } }
+
+// $lookup — join across collections
+{ $lookup: { from: "products", localField: "productId", foreignField: "_id", as: "productDetails" } }
+
+// $unwind — flatten an array into separate documents
+{ $unwind: "$items" }
+
+// $addFields — add computed fields without removing existing ones
+{ $addFields: { finalPrice: { $subtract: ["$price", "$discount"] } } }
+
+// $count
+{ $count: "totalElectronics" }</pre>
+
+  <h3 class="sub">Advanced Stages</h3>
+  <pre>// $facet — run multiple sub-pipelines at once (useful for dashboards)
+{ $facet: {
+    priceStats: [{ $group: { _id: null, avgPrice: { $avg: "$price" } } }],
+    categoryCounts: [{ $group: { _id: "$category", count: { $sum: 1 } } }]
+}}
+
+// $bucket — group data into ranges
+{ $bucket: { groupBy: "$price", boundaries: [0, 100, 500, 1000], default: "Other" } }
+
+// $replaceRoot — reshape the root document
+{ $replaceRoot: { newRoot: "$items" } }
+
+// $out / $merge — write pipeline results to a collection
+{ $merge: { into: "userTotals", whenMatched: "merge" } }
+
+// $sample — random documents
+{ $sample: { size: 3 } }</pre>
+
+  <h3 class="sub">Common Group/Project Operators</h3>
+  <table>
+    <thead><tr><th>Operator</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>$sum</td><td>Sum values</td></tr>
+      <tr><td>$avg</td><td>Average</td></tr>
+      <tr><td>$max / $min</td><td>Highest / lowest value</td></tr>
+      <tr><td>$push</td><td>Collect values into an array</td></tr>
+      <tr><td>$addToSet</td><td>Like $push, but without duplicates</td></tr>
+      <tr><td>$first / $last</td><td>First / last document in the group</td></tr>
+      <tr><td>$cond</td><td>If/else expression</td></tr>
+      <tr><td>$ifNull</td><td>Default value if null</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Topic Nine — The Aggregation Pipeline</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Ten</p>
+    <h1 class="topic-title">Sort, Skip &amp; Limit</h1>
+  </div>
+
+  <h3 class="sub">sort()</h3>
+  <pre>db.products.find().sort({ price: 1 })   // ascending
+db.products.find().sort({ price: -1 })  // descending
+db.products.find().sort({ category: 1, price: -1 })  // multi-field</pre>
+
+  <h3 class="sub">limit() &amp; skip()</h3>
+  <pre>db.products.find().limit(5)
+db.products.find().skip(10)</pre>
+
+  <h3 class="sub">Pagination — All Three Together</h3>
+  <pre>const page = 2;
+const limitPerPage = 10;
+
+db.products.find()
+  .sort({ createdAt: -1 })
+  .skip((page - 1) * limitPerPage)
+  .limit(limitPerPage);</pre>
+  <div class="note">Order matters: always sort first, then skip, then limit — otherwise pagination results can be inconsistent across pages.</div>
+
+  <h3 class="sub">Mongoose Example</h3>
+  <pre>const products = await Product.find({ category: "Electronics" })
+  .sort({ ratingsAverage: -1 })
+  .skip((page - 1) * limit)
+  .limit(limit);</pre>
+  <p class="page-footer">Topic Ten — Sort, Skip &amp; Limit</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Eleven</p>
+    <h1 class="topic-title">find() vs. findOne()</h1>
+  </div>
+
+  <h3 class="sub">find()</h3>
+  <p>Returns a cursor pointing to every document matching the filter — could be zero, one, or millions of documents.</p>
+  <pre>db.products.find({ category: "Electronics" })</pre>
+  <ul>
+    <li>Returns an array-like cursor, not a plain array.</li>
+    <li>Supports chaining <code>.sort()</code>, <code>.limit()</code>, <code>.skip()</code>.</li>
+    <li>Returns an empty cursor (not null) if nothing matches.</li>
+  </ul>
+
+  <h3 class="sub">findOne()</h3>
+  <p>Returns only the first matching document, even if multiple documents match.</p>
+  <pre>db.products.findOne({ category: "Electronics" })</pre>
+  <ul>
+    <li>Returns a single object directly (not an array, not a cursor).</li>
+    <li>Returns <code>null</code> if no match is found.</li>
+  </ul>
+
+  <h3 class="sub">When to Use Which</h3>
+  <table>
+    <thead><tr><th>Scenario</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>Need a full list (e.g., all products in a category)</td><td>find()</td></tr>
+      <tr><td>Check if a document exists (e.g., email lookup at signup)</td><td>findOne()</td></tr>
+      <tr><td>Fetch a user by a unique field (_id, email)</td><td>findOne() / findById()</td></tr>
+      <tr><td>Pagination / paged listings</td><td>find()</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">Mongoose adds <code>findById()</code> as shorthand for <code>findOne({ _id: id })</code>.</div>
+  <p class="page-footer">Topic Eleven — find() vs. findOne()</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Twelve</p>
+    <h1 class="topic-title">Projection</h1>
+  </div>
+  <p>The second parameter of <code>find()</code>, used to control which fields are returned instead of the entire document.</p>
+  <pre>db.Posts.find(
+  { Sticker: { $nin: ["Happy Bear", "Angry Bear"] } },
+  { UID: 1, Comments: 1 }
+)</pre>
+
+  <h3 class="sub">Inclusion (value: 1)</h3>
+  <p>Specify only the fields you want; everything else is excluded automatically.</p>
+  <pre>db.Posts.find({}, { UID: 1, Comments: 1 })</pre>
+
+  <h3 class="sub">Exclusion (value: 0)</h3>
+  <p>Specify fields to exclude; everything else is returned.</p>
+  <pre>db.Posts.find({}, { Sticker: 0 })</pre>
+
+  <h3 class="sub">Excluding _id</h3>
+  <pre>db.Posts.find({}, { UID: 1, Comments: 1, _id: 0 })</pre>
+
+  <div class="note">Important rule: you cannot mix inclusion and exclusion in the same query, except for <code>_id</code>, which is always allowed as an exception.</div>
+
+  <h3 class="sub">Practical Example</h3>
+  <pre>db.products.find(
+  { category: "Electronics" },
+  { title: 1, price: 1, imageCover: 1, ratingsAverage: 1 }
+)</pre>
+  <p>Reduces the amount of data transferred over the network and speeds up response time, especially with large datasets.</p>
+  <p class="page-footer">Topic Twelve — Projection</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Thirteen</p>
+    <h1 class="topic-title">Index Properties</h1>
+  </div>
+
+  <h3 class="sub">1. Unique</h3>
+  <p>Prevents duplicate values in a field across all documents.</p>
+  <pre>db.users.createIndex({ email: 1 }, { unique: true })</pre>
+  <p><em>Use case:</em> email or username fields in an auth system, to prevent duplicate account registration.</p>
+
+  <h3 class="sub">2. Sparse</h3>
+  <p>The index ignores documents where the field is missing entirely, instead of indexing them as null.</p>
+  <pre>db.users.createIndex({ phoneNumber: 1 }, { sparse: true })</pre>
+  <p><em>Use case:</em> optional fields (e.g., not every user provides a phone number). Combining sparse with unique avoids conflicts that would otherwise occur when many documents share a null value.</p>
+
+  <h3 class="sub">3. Partial</h3>
+  <p>Similar to sparse but more precise — lets you define a custom filter expression, so the index only covers documents matching that condition.</p>
+  <pre>db.orders.createIndex(
+  { customerId: 1 },
+  { partialFilterExpression: { status: "completed" } }
+)</pre>
+  <p><em>Use case:</em> indexing only completed orders instead of all orders, reducing index size and speeding up frequently filtered queries.</p>
+
+  <h3 class="sub">4. Compound</h3>
+  <p>A single index built from more than one field.</p>
+  <pre>db.products.createIndex({ category: 1, price: -1 })</pre>
+  <p><em>Use case:</em> filtering products by category while sorting by price simultaneously — much faster than two separate indexes.</p>
+  <div class="note">The ESR Rule (Equality, Sort, Range) determines the best field order inside a compound index: equality fields first, then sort fields, then range fields.</div>
+  <p class="page-footer">Topic Thirteen — Index Properties</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Fourteen</p>
+    <h1 class="topic-title">Indexing — Pros &amp; Cons</h1>
+  </div>
+
+  <h3 class="sub">Pros</h3>
+  <table>
+    <thead><tr><th>Benefit</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Read performance</td><td>Instead of a full collection scan, the index jumps directly to the right location.</td></tr>
+      <tr><td>Faster sorting</td><td>If an index exists on the sort field, MongoDB can use the index's existing order instead of sorting all data at query time.</td></tr>
+      <tr><td>Improved aggregation</td><td>Early $match/$sort stages benefit from indexes, reducing documents processed in later stages.</td></tr>
+      <tr><td>Enforcing data rules (unique)</td><td>A unique index prevents duplicate values (e.g., email) without extra application-level validation.</td></tr>
+      <tr><td>Reduced memory pressure</td><td>Index lookups load only a small portion of data into memory compared to scanning the full collection.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Cons</h3>
+  <table>
+    <thead><tr><th>Drawback</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Slower writes</td><td>Every insert, update, or delete must update all related indexes — more indexes mean slower writes.</td></tr>
+      <tr><td>Extra storage usage</td><td>Each index takes up disk space separate from the actual data.</td></tr>
+      <tr><td>RAM consumption</td><td>MongoDB tries to keep active indexes in memory; if indexes exceed available RAM, disk I/O slows things down instead of helping.</td></tr>
+      <tr><td>Maintenance complexity</td><td>Requires ongoing monitoring to identify and remove unused indexes.</td></tr>
+      <tr><td>Hard limit on count</td><td>MongoDB allows a maximum of 64 indexes per collection.</td></tr>
+      <tr><td>Misuse can hurt performance</td><td>A poorly chosen index (rarely filtered field, wrong field order in a compound index) wastes space and resources with little benefit.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Golden Rule</h3>
+  <p><strong>Do index:</strong> fields frequently used in <code>find()</code>/<code>$match</code> conditions, <code>sort()</code>, and foreign-key-like references.</p>
+  <p><strong>Don't index:</strong> rarely filtered/sorted fields, or fields that change value extremely frequently (e.g., counters updated every second), since the write overhead outweighs the benefit.</p>
+
+  <h3 class="sub">Practical Example</h3>
+  <pre>db.products.createIndex({ category: 1, price: -1 })  // frequently filtered and sorted
+db.reviews.createIndex({ productId: 1 })              // foreign-key-like, used in $lookup</pre>
+  <p class="page-footer">Topic Fourteen — Indexing Pros &amp; Cons</p>
+</section>
+</div>
+
+
+<div class="a4-page">
+  <div class="cover" style="min-height: 100mm;">
+    <p class="kicker">Module 2</p>
+    <h1 class="module-title" style="border: none; padding-bottom: 0;">NOSQL DATABASE DESIGN</h1>
+  </div>
+</div>
+
+<div class="a4-page">
+<div class="cover">
+  <p class="kicker">Study Guide</p>
+  <h1>NoSQL Database Design</h1>
+  <h2>Foundations, Design Patterns &amp; the Schema Design Process</h2>
+  <p class="meta">Technical Reference · MongoDB Schema Design</p>
+</div>
+</div>
+
+<div class="a4-page">
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>SQL Mindset vs. NoSQL Mindset</li>
+    <li>Design Pattern 1 — Embedding</li>
+    <li>Design Pattern 2 — Referencing</li>
+    <li>Design Pattern 3 — Subset Pattern</li>
+    <li>Design Pattern 4 — Bucket Pattern</li>
+    <li>Design Pattern 5 — Computed Pattern</li>
+    <li>Relationship Types</li>
+    <li>The Schema Design Process (Steps 1–4)</li>
+    <li>Step 5 — Avoiding Common Mistakes</li>
+    <li>Step 6 — Auditing a Real Project</li>
+  </ol>
+</div>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic One</p>
+    <h1 class="topic-title">SQL Mindset vs. NoSQL Mindset</h1>
+  </div>
+
+  <h3 class="sub">SQL: Think "Normalization" First</h3>
+  <p>The philosophy: split data into the smallest possible units, avoid any duplication, and link everything with Foreign Keys. This decision is made while designing the tables — often before you even know which queries will run against them.</p>
+  <pre>-- SQL: three separate tables, linked by Foreign Keys
+Users (id, name, email)
+Orders (id, user_id, date)
+OrderItems (id, order_id, product_id, quantity)</pre>
+  <p>Whenever a query needs combined data, you run a <strong>JOIN</strong> at query time.</p>
+
+  <h3 class="sub">NoSQL: Think "Query Patterns" First</h3>
+  <p>The philosophy: design the schema around how you'll read the data, not around how "clean" it looks in theory. The question isn't "what's the correct relationship between the data?" — it's <strong>"what query will run most often, and how do I make it fast?"</strong></p>
+  <pre>// NoSQL: order data and its related product info are grouped together
+{
+  _id: 1,
+  user: { name: "Ashraf", email: "..." },  // Embedded
+  date: "...",
+  items: [
+    { productName: "Laptop", quantity: 1, price: 15000 }
+  ]
+}</pre>
+  <p>No JOIN needed at read time — everything is already available in a single document.</p>
+
+  <h3 class="sub">The Core Difference</h3>
+  <table>
+    <thead><tr><th></th><th>SQL</th><th>NoSQL</th></tr></thead>
+    <tbody>
+      <tr><td>Starting point</td><td>Relationships between entities</td><td>Actual queries that will run (access patterns)</td></tr>
+      <tr><td>Primary goal</td><td>Avoid data duplication (integrity)</td><td>Read performance</td></tr>
+      <tr><td>Schema flexibility</td><td>Fixed, hard to migrate</td><td>Flexible — add fields to any document independently</td></tr>
+      <tr><td>Decision timing</td><td>Tables designed first, queries come later</td><td>Queries must be known first, then the schema is designed</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warning-box"><strong>Most common mistake:</strong> bringing the full SQL mindset into NoSQL — referencing everything like Foreign Keys and joining ($lookup) on every query. The result is poor performance, because you lose NoSQL's biggest advantage: keeping related data together from the start.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Golden rule: "Data that is accessed together should be stored together."</li>
+      <li>Before writing a single line of schema code, write down the top 5–10 queries your app will actually run.</li>
+      <li>If you find yourself justifying a schema decision with "because that's how it'd work in SQL," stop and re-check against your access patterns.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic One — SQL Mindset vs. NoSQL Mindset</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Two</p>
+    <h1 class="topic-title">Design Pattern 1 — Embedding</h1>
+  </div>
+  <p><strong>The idea:</strong> place related data directly inside the same document, instead of a separate collection.</p>
+  <pre>{
+  _id: 1,
+  name: "Ashraf",
+  addresses: [
+    { city: "Shebin El-Kom", street: "Main St", isDefault: true },
+    { city: "Cairo", street: "Nasr City", isDefault: false }
+  ]
+}</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>The relationship is <strong>one-to-few</strong> (e.g., a user has 2–3 addresses, not thousands).</li>
+    <li>The related data is <strong>almost always read together</strong> (there's no scenario where you fetch the user without their addresses).</li>
+    <li>The data <strong>doesn't change frequently or independently</strong> of the parent.</li>
+  </ul>
+
+  <h3 class="sub">Pros</h3>
+  <ul>
+    <li>A single query retrieves everything (no $lookup needed).</li>
+    <li>Excellent read performance.</li>
+    <li>Atomic updates — parent and embedded data update together in one operation.</li>
+  </ul>
+
+  <h3 class="sub">Cons</h3>
+  <ul>
+    <li>If the array grows too large, the document size grows with it (risking the 16MB limit).</li>
+    <li>If the embedded data is shared across multiple parents, duplication occurs.</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>A good rule of thumb: embed when the array size is bounded and predictable (rarely exceeds a few dozen items).</li>
+      <li>If you're unsure whether to embed, ask: "Will I ever need this child data without its parent?" If no — embed.</li>
+      <li>Embedding read-only "snapshot" data (e.g., a price at time of purchase) is safe even if the source can change later — see the Computed/Snapshot note in the Common Mistakes section.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Two — Embedding Pattern</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Three</p>
+    <h1 class="topic-title">Design Pattern 2 — Referencing</h1>
+  </div>
+  <p><strong>The idea:</strong> store just a reference (ID) instead of the full data, similar to a Foreign Key.</p>
+  <pre>// in users
+{ _id: 1, name: "Ashraf" }
+
+// in projects
+{ _id: 101, title: "GoRent", ownerId: 1 }</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>The relationship is a <strong>large one-to-many</strong> or <strong>many-to-many</strong>.</li>
+    <li>The related data <strong>changes frequently and independently</strong> of the other side.</li>
+    <li>The related data is <strong>shared</strong> across multiple documents (e.g., one product referenced by many orders).</li>
+    <li>The array could <strong>grow without bound</strong> (e.g., a very large number of comments).</li>
+  </ul>
+
+  <h3 class="sub">Pros</h3>
+  <ul>
+    <li>Documents stay small and organized.</li>
+    <li>Updating shared data (e.g., a user's profile) only requires updating one place.</li>
+    <li>No data duplication.</li>
+  </ul>
+
+  <h3 class="sub">Cons</h3>
+  <ul>
+    <li>Requires a $lookup (like a JOIN) at read time — slower than embedding.</li>
+    <li>Not atomic — updating two related documents together requires a transaction.</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Always index the field you're referencing by (e.g., <code>ownerId</code>), since it's effectively your "foreign key lookup" field.</li>
+      <li>If you find yourself doing $lookup on the same field in almost every query, consider whether a Subset or Computed pattern could reduce that need.</li>
+      <li>Two-way referencing (both sides store each other's IDs) is fine for many-to-many, as long as you pick a clear "primary" side to update first in your application logic.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Three — Referencing Pattern</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Four</p>
+    <h1 class="topic-title">Design Pattern 3 — Subset Pattern</h1>
+  </div>
+  <p><strong>The idea:</strong> instead of fully embedding or fully referencing, use a middle ground — store only a small portion of the related data (e.g., the most recent/most relevant items), while the full data lives in a separate collection with a reference.</p>
+  <pre>// Product document holds only the latest 5 reviews, not all of them
+{
+  _id: 1,
+  title: "Laptop HP",
+  price: 15000,
+  recentReviews: [   // Subset only — latest 5
+    { user: "Sara", rating: 5, comment: "Great!" },
+    { user: "Omar", rating: 4, comment: "Good" }
+  ],
+  totalReviewsCount: 230  // pre-computed total
+}
+
+// The full set of reviews lives in a separate collection
+db.reviews.find({ productId: 1 })</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <p>When you have a large amount of related data (like reviews), but you also need a small portion of it to appear instantly alongside the parent (e.g., showing the latest 3 ratings on a product page without an extra query).</p>
+
+  <div class="note"><strong>Practical example:</strong> in an e-commerce API, this is the ideal solution for displaying "latest 3 reviews" on a product page without running an aggregation on every page load.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Keep the subset small and purpose-built (e.g., "latest 3–5 items") — it's a display optimization, not a full copy.</li>
+      <li>Update the subset only when new data is added to the full collection (e.g., a background job or an application-level trigger), not on every read.</li>
+      <li>Combine this pattern with the Computed Pattern: store both a small subset (recentReviews) and a pre-calculated aggregate (averageRating) side by side.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Four — Subset Pattern</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Five</p>
+    <h1 class="topic-title">Design Pattern 4 — Bucket Pattern</h1>
+  </div>
+  <p><strong>The idea:</strong> instead of creating a separate document for every single reading/event, group a batch of readings from the same time window into one document — commonly used with time-series data.</p>
+  <pre>// Instead of one document per second (thousands of documents)
+// group all readings for one hour into a single document
+{
+  sensorId: "sensor_001",
+  date: "2026-07-12",
+  hour: 14,
+  readings: [
+    { minute: 0, temp: 25.3 },
+    { minute: 1, temp: 25.5 },
+    { minute: 2, temp: 25.4 }
+    // ... rest of the hour's minutes
+  ],
+  avgTemp: 25.4,
+  maxTemp: 26.1,
+  minTemp: 24.8
+}</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>Time-series data (IoT sensor readings, logs, analytics events).</li>
+    <li>A massive number of closely-spaced-in-time readings.</li>
+  </ul>
+
+  <h3 class="sub">Pros</h3>
+  <ul>
+    <li>Dramatically reduces the total number of documents (thousands instead of millions).</li>
+    <li>Indexes stay smaller and faster.</li>
+    <li>Easy to pre-compute aggregates (avg, max, min) and store them inside the bucket itself.</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Pick a bucket window (hour, day) based on your query patterns — how granular do reads actually need to be?</li>
+      <li>MongoDB's native Time Series Collections (available since v5.0) automate much of this pattern — worth checking if your MongoDB version supports it before hand-rolling buckets.</li>
+      <li>Watch out for buckets that grow unbounded within the time window if the event rate spikes unexpectedly.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Five — Bucket Pattern</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Six</p>
+    <h1 class="topic-title">Design Pattern 5 — Computed Pattern</h1>
+  </div>
+  <p><strong>The idea:</strong> instead of recalculating a value every time it's requested (e.g., averaging all reviews on every page load), calculate it once and store it as a ready-made field, updating it only when the underlying data changes.</p>
+  <pre>// Instead of running an aggregation every time the product page loads
+{
+  _id: 1,
+  title: "Laptop HP",
+  price: 15000,
+  averageRating: 4.5,     // pre-computed
+  totalReviews: 230       // pre-computed
+}
+
+// When a new review is added, only these two fields get updated —
+// not recalculated from all 230 reviews on every page view</pre>
+
+  <h3 class="sub">When to Use It</h3>
+  <ul>
+    <li>A calculation is <strong>read very frequently</strong> (every time a product page opens) but <strong>changes relatively rarely</strong> (a new review every so often).</li>
+    <li>You want to avoid an expensive aggregation (e.g., averaging across thousands of documents) on every request.</li>
+  </ul>
+
+  <div class="note"><strong>Practical example:</strong> in an e-commerce API, instead of running the aggregation pipeline that computes <code>avgRating</code> every time a product page loads, store the result directly on the Product document and update it only when a review is added or removed.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Update computed fields via application logic right after the write that changes them (e.g., inside the same request that creates a review), not through a separate cron job unless near-real-time accuracy isn't required.</li>
+      <li>For high write volume, consider using MongoDB transactions to keep the computed field and the source data consistent.</li>
+      <li>This pattern trades a small amount of write complexity for a large gain in read performance — worth it wherever reads vastly outnumber writes.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Six — Computed Pattern</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Seven</p>
+    <h1 class="topic-title">Relationship Types</h1>
+  </div>
+
+  <h3 class="sub">One-to-One</h3>
+  <p>One entity is linked to exactly one entity of another type.</p>
+  <pre>// A user and their detailed profile info (rarely read together)
+{ _id: 1, name: "Ashraf", profileDetails: { bio: "...", cv: "..." } }</pre>
+  <p><strong>Decision:</strong> usually embed, unless the data is very large or rarely read alongside the parent.</p>
+
+  <h3 class="sub">One-to-Few</h3>
+  <p>One entity is linked to a small number (2–100) of entities of another type.</p>
+  <pre>// A user and their addresses (2–3 addresses)</pre>
+  <p><strong>Decision:</strong> <strong>Embed</strong> — the count is small and stable.</p>
+
+  <h3 class="sub">One-to-Many</h3>
+  <p>One entity is linked to a relatively large number (hundreds to thousands) of entities of another type.</p>
+  <pre>// A category and its products (could be thousands)</pre>
+  <p><strong>Decision:</strong> <strong>Reference</strong>, usually — the count is large and constantly changing.</p>
+
+  <h3 class="sub">One-to-Squillions</h3>
+  <p>One entity is linked to a massive (millions) number of entities of another type.</p>
+  <pre>// A single server and its millions of log entries</pre>
+  <p><strong>Decision:</strong> <strong>Referencing is mandatory</strong> — likely combined with the <strong>Bucket Pattern</strong> to reduce document count.</p>
+
+  <h3 class="sub">Many-to-Many</h3>
+  <p>Each entity of one type can be linked to multiple entities of the other type, and vice versa.</p>
+  <pre>// Students and Courses — each student is enrolled in several courses,
+// and each course has many students
+{ _id: 1, name: "Ashraf", enrolledCourseIds: [101, 102, 103] }
+{ _id: 101, title: "React Basics", enrolledStudentIds: [1, 5, 9] }</pre>
+  <p><strong>Decision:</strong> usually <strong>two-way referencing</strong>, or referencing from a single direction based on which direction is queried more often.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>When in doubt about a relationship's cardinality, estimate the maximum realistic count over the object's lifetime — that number alone often decides between embed and reference.</li>
+      <li>For many-to-many, if one direction is queried far more often than the other, consider referencing only in that direction and using a $lookup for the rare reverse query instead of maintaining both arrays.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Seven — Relationship Types</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Eight</p>
+    <h1 class="topic-title">The Schema Design Process (Steps 1–4)</h1>
+  </div>
+
+  <h3 class="sub">Step 1 — Identify the Entities</h3>
+  <p>Write a list of every core "thing" in your system.</p>
+  <pre>Example: User, Product, Order, Review, Category</pre>
+
+  <h3 class="sub">Step 2 — Identify the Most Common Queries (Access Patterns)</h3>
+  <p>This is <strong>the most important step in NoSQL design</strong>. Before writing any schema, ask yourself:</p>
+  <ul>
+    <li>What query will run most often? (e.g., "get all products in a given category")</li>
+    <li>What actions do users perform frequently? (e.g., "open a product page, view its reviews")</li>
+    <li>What's the read-to-write ratio? Is this workload read-heavy or write-heavy?</li>
+  </ul>
+  <p>Write these queries down explicitly before designing anything:</p>
+  <pre>1. Get all products in a category, sorted by price
+2. Get a single product with its latest 5 reviews
+3. Get all orders for a specific user
+4. Search products by name</pre>
+
+  <h3 class="sub">Step 3 — Identify the Relationships Between Entities</h3>
+  <p>For each pair of entities, determine the type (one-to-one, one-to-few, one-to-many, many-to-many).</p>
+  <pre>User → Orders: One-to-Many
+Order → Products: Many-to-Many
+Product → Reviews: One-to-Squillions</pre>
+
+  <h3 class="sub">Step 4 — Apply the Right Pattern to Each Relationship</h3>
+  <p>Ask three questions for every relationship:</p>
+  <ol class="plain">
+    <li><strong>Growth rate</strong> — is the count small and stable, or large and increasing?</li>
+    <li><strong>Update frequency</strong> — does the data change often, or rarely?</li>
+    <li><strong>Read-together frequency</strong> — is the child data needed every time the parent is fetched?</li>
+  </ol>
+  <p>Based on the answers, choose: Embed / Reference / Subset / Bucket / Computed.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Keep your access-pattern list as a living document — revisit it whenever a new feature changes how data is queried.</li>
+      <li>It's fine to mix patterns within the same schema — e.g., embed addresses, reference orders, and use a computed field for ratings, all in the same User/Product design.</li>
+      <li>When two access patterns conflict (one favors embedding, another favors referencing), prioritize whichever query runs more frequently or is more performance-critical for the user experience.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Eight — The Schema Design Process</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Nine</p>
+    <h1 class="topic-title">Step 5 — Avoiding Common Mistakes</h1>
+  </div>
+  <p>This isn't a "design" step — it's a <strong>review and critique</strong> step. After designing a schema, go back and check it against these common pitfalls.</p>
+
+  <h3 class="sub">Mistake 1 — Unbounded Arrays</h3>
+  <pre>// ❌ Very common mistake
+{
+  productId: 1,
+  reviews: [ /* thousands of reviews embedded directly in the product */ ]
+}</pre>
+  <p><strong>Problem:</strong> this will eventually hit the 16MB limit, and the document becomes slow to read and write well before that limit is even reached.</p>
+  <p><strong>Fix:</strong> use Referencing or the Subset Pattern instead.</p>
+
+  <h3 class="sub">Mistake 2 — Deeply Nested Documents</h3>
+  <pre>// ❌ Common mistake
+{
+  user: {
+    profile: {
+      settings: {
+        preferences: {
+          notifications: {
+            email: { enabled: true }
+          }
+        }
+      }
+    }
+  }
+}</pre>
+  <p><strong>Problem:</strong> deeply nested fields are hard to update, and queries become unwieldy (<code>user.profile.settings.preferences.notifications.email.enabled</code>).</p>
+  <p><strong>Fix:</strong> try to keep nesting to 2–3 levels at most.</p>
+
+  <h3 class="sub">Mistake 3 — Over-Embedding to "Avoid SQL-Style Joins"</h3>
+  <p>This is the most dangerous mistake — beginners often feel that every embed is a "performance win," so they embed everything even when it doesn't make sense.</p>
+  <pre>// ❌ Mistake — embedding data that changes constantly and is shared across many documents
+{
+  orderId: 1,
+  productDetails: { name: "Laptop", price: 15000, stock: 45 }  // full copy of product data
+}</pre>
+  <p><strong>Problem:</strong> if the product's price changes, you'd need to update every past order containing that product — a disaster.</p>
+  <p><strong>Fix:</strong> the order should store only a <strong>snapshot</strong> of relevant data at the moment of purchase (e.g., the price at sale time), not a live copy that's expected to stay in sync with changes.</p>
+
+  <div class="warning-box"><strong>Key distinction:</strong> embedding a snapshot (immutable, point-in-time data) is safe and often correct. Embedding a live copy of mutable data that's also stored elsewhere is the actual mistake.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Before finalizing any schema, explicitly write "is this field a snapshot or a live copy?" next to every embedded object that duplicates data from elsewhere.</li>
+      <li>Run <code>db.collection.find(...).explain("executionStats")</code> against your top access-pattern queries to catch accidental COLLSCANs early.</li>
+      <li>Periodically check actual document sizes in production (<code>db.collection.stats()</code>) — unbounded arrays often creep up slowly before becoming a real problem.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Nine — Avoiding Common Mistakes</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Ten</p>
+    <h1 class="topic-title">Step 6 — Auditing a Real Project</h1>
+  </div>
+  <p>This is a <strong>real, practical application step</strong> — not a hypothetical exercise. Take an actual schema from a live project you've built (e.g., GoRent or an e-commerce API) and run a full audit on it.</p>
+
+  <h3 class="sub">How to Run the Audit</h3>
+  <ol class="plain">
+    <li>Open every schema you have (Product, Order, Review, etc.).</li>
+    <li>For each one, ask: "Why did I choose to embed here? Why did I choose to reference there?" If the honest answer is "I'm not sure, it just felt easier at the time," that decision was made without real analysis.</li>
+    <li>Go back to your project's real access-pattern list — what queries actually run often on the live site?</li>
+    <li>Compare: does the current schema serve those queries efficiently, or is it doing unnecessary $lookups?</li>
+  </ol>
+
+  <div class="note"><strong>Possible real example:</strong> in an e-commerce API, if the <code>Review</code> schema fully references both <code>Product</code> and <code>User</code>, and every fetch runs two $lookups — it's worth asking whether the Computed Pattern would be a better fit, storing a ready-made <code>averageRating</code> directly on the Product instead of recalculating it via aggregation every time.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Turn the audit into a recurring habit — revisit schemas every few months as usage patterns evolve, not just once at project launch.</li>
+      <li>Use MongoDB's <code>$indexStats</code> aggregation stage to see which indexes are actually being used in production — drop the ones that aren't.</li>
+      <li>Document each schema decision with a one-line comment in code (e.g., <code>// embedded: 1-to-few, always read together</code>) so future-you (or teammates) understand the reasoning without re-deriving it.</li>
+      <li>When migrating a schema decision (e.g., from embed to reference), plan a data migration script and test it on a copy of production data first.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Topic Ten — Auditing a Real Project</p>
+</section>
+</div>
+
+
+<div class="a4-page">
+  <div class="cover" style="min-height: 100mm;">
+    <p class="kicker">Module 3</p>
+    <h1 class="module-title" style="border: none; padding-bottom: 0;">MONGODB SCHEMA VALIDATION</h1>
+  </div>
+</div>
+
+<div class="a4-page">
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>MongoDB Schema Validation</h1>
+  <h2>Complete Guide — Rules, Options &amp; a Real-World Hiring Platform Example</h2>
+  <p class="meta">Technical Reference · MongoDB Document Validation</p>
+</div>
+</div>
+
+<div class="a4-page">
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>The Core Idea</li>
+    <li>$jsonSchema — The Recommended Approach</li>
+    <li>validationLevel — How Strictly Rules Apply</li>
+    <li>validationAction — What Happens on Violation</li>
+    <li>Adding Validation to an Existing Collection</li>
+    <li>Real-World Example — Training &amp; Hiring Platform</li>
+    <li>Bypassing Validation (bypassDocumentValidation)</li>
+    <li>Inspecting &amp; Testing Validation Rules</li>
+    <li>Validation vs. Application-Level Validation</li>
+    <li>Important Notes &amp; Limitations</li>
+  </ol>
+</div>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">The Core Idea</h1>
+  </div>
+  <p>Since NoSQL databases are flexible by nature, that flexibility is both a strength and a risk — anyone can insert a document in almost any shape, even one missing essential fields or containing the wrong data types. <strong>Schema Validation</strong> is MongoDB's built-in mechanism for enforcing rules at the collection level, without fully sacrificing NoSQL's flexibility.</p>
+
+  <p>Rules are attached to a collection, and any document being inserted or updated must comply with them, or MongoDB rejects the operation.</p>
+
+  <pre>db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "email", "age"],
+      properties: {
+        name: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        email: {
+          bsonType: "string",
+          pattern: "^.+@.+$",
+          description: "must be a valid email format"
+        },
+        age: {
+          bsonType: "int",
+          minimum: 18,
+          maximum: 100,
+          description: "must be an integer between 18 and 100"
+        }
+      }
+    }
+  }
+})</pre>
+
+  <p>Attempting this insert:</p>
+  <pre>db.users.insertOne({ name: "Ashraf", age: 15 })</pre>
+  <p>...would be rejected for two reasons: <code>email</code> is missing (required), and <code>age</code> is below the minimum (18).</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Validation is enforced at the database engine level — it applies regardless of which application, script, or admin tool is writing the data.</li>
+      <li>You can add validation to a brand-new collection (via <code>createCollection</code>) or retrofit it onto an existing one (via <code>collMod</code>), covered in Section Five.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section One — The Core Idea</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">$jsonSchema — The Recommended Approach</h1>
+  </div>
+  <p>This is the official standard (JSON Schema) that MongoDB supports for validation. It's more expressive and portable than MongoDB's older query-operator-based validators.</p>
+
+  <h3 class="sub">Key Properties</h3>
+  <table>
+    <thead><tr><th>Property</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>bsonType</code></td><td>The data type (string, int, double, array, object, date, objectId, etc.)</td></tr>
+      <tr><td><code>required</code></td><td>An array of field names that must be present</td></tr>
+      <tr><td><code>properties</code></td><td>Defines each field and its constraints</td></tr>
+      <tr><td><code>minimum</code> / <code>maximum</code></td><td>Numeric bounds</td></tr>
+      <tr><td><code>minLength</code> / <code>maxLength</code></td><td>String length bounds</td></tr>
+      <tr><td><code>pattern</code></td><td>Regex used to validate string format</td></tr>
+      <tr><td><code>enum</code></td><td>A fixed list of allowed values</td></tr>
+      <tr><td><code>additionalProperties</code></td><td>Whether undefined extra fields are allowed (true/false)</td></tr>
+      <tr><td><code>items</code></td><td>Validation rules applied to each element of an array field</td></tr>
+      <tr><td><code>minItems</code> / <code>maxItems</code></td><td>Bounds on array length</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">A Fuller Example</h3>
+  <pre>db.createCollection("products", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title", "price", "category"],
+      additionalProperties: false,
+      properties: {
+        _id: {},
+        title: { bsonType: "string", minLength: 3, maxLength: 100 },
+        price: { bsonType: "double", minimum: 0 },
+        category: {
+          enum: ["Electronics", "Clothing", "Books", "Food"]
+        },
+        stock: { bsonType: "int", minimum: 0 },
+        tags: {
+          bsonType: "array",
+          items: { bsonType: "string" },
+          maxItems: 10
+        }
+      }
+    }
+  }
+})</pre>
+
+  <div class="warning-box"><strong>Note:</strong> setting <code>additionalProperties: false</code> is strict — any field not explicitly declared in <code>properties</code> will cause the document to be rejected. Use it carefully on collections where the schema is expected to evolve frequently.</div>
+  <p class="page-footer">Section Two — $jsonSchema</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">validationLevel — How Strictly Rules Apply</h1>
+  </div>
+  <p>Determines whether the rule is enforced on everything, or only on new writes.</p>
+  <pre>db.runCommand({
+  collMod: "products",
+  validationLevel: "strict"   // or "moderate"
+})</pre>
+
+  <table>
+    <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>strict</code> (default)</td><td>Applied to all inserts and updates, even on existing documents that don't already comply with the rule</td></tr>
+      <tr><td><code>moderate</code></td><td>Applied to new inserts, but allows updates to existing non-compliant documents as long as the update doesn't make them worse</td></tr>
+    </tbody>
+  </table>
+
+  <div class="scenario"><strong>Practical use:</strong> if an existing collection has legacy data that doesn't match a newly added rule, use <code>moderate</code> so you don't break anything currently working, then clean up the old data gradually.</div>
+  <p class="page-footer">Section Three — validationLevel</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">validationAction — What Happens on Violation</h1>
+  </div>
+  <pre>db.runCommand({
+  collMod: "products",
+  validationAction: "warn"   // or "error"
+})</pre>
+
+  <table>
+    <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>error</code> (default)</td><td>Rejects the operation entirely</td></tr>
+      <tr><td><code>warn</code></td><td>Allows the operation but logs a warning — useful during initial testing before enforcing the rule strictly</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>A common rollout strategy: deploy new validation rules with <code>validationAction: "warn"</code> first, monitor the logs for a few days to see how many existing writes would have failed, then switch to <code>"error"</code> once you're confident nothing legitimate gets blocked.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Four — validationAction</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Adding Validation to an Existing Collection</h1>
+  </div>
+  <p>If the collection already exists and you need to add rules to it:</p>
+  <pre>db.runCommand({
+  collMod: "users",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["email"],
+      properties: {
+        email: { bsonType: "string" }
+      }
+    }
+  },
+  validationLevel: "moderate"
+})</pre>
+  <p>This is the safer path for production collections that already contain live data — combining <code>collMod</code> with <code>validationLevel: "moderate"</code> avoids suddenly breaking writes to older, non-compliant documents.</p>
+  <p class="page-footer">Section Five — Adding Validation to an Existing Collection</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">Real-World Example — Training &amp; Hiring Platform</h1>
+  </div>
+  <p>Continuing the same platform scenario used in the aggregation examples: a training and hiring platform with trainees, mentors, and admins, each carrying different required fields.</p>
+
+  <pre>db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "email", "role", "joinDate"],
+      properties: {
+        name: { bsonType: "string", minLength: 2, maxLength: 60 },
+        email: {
+          bsonType: "string",
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          description: "must be a valid email address"
+        },
+        role: {
+          enum: ["trainee", "mentor", "admin"],
+          description: "must be one of the three defined roles"
+        },
+        age: {
+          bsonType: "int",
+          minimum: 16,
+          maximum: 70
+        },
+        city: { bsonType: "string" },
+        track: {
+          bsonType: ["string", "null"],
+          description: "trainees/mentors have a track; admins have null"
+        },
+        isActive: { bsonType: "bool" },
+        joinDate: { bsonType: "date" },
+        completedCourses: {
+          bsonType: "int",
+          minimum: 0
+        },
+        monthlyIncome: {
+          bsonType: ["int", "double"],
+          minimum: 0
+        },
+        skills: {
+          bsonType: "array",
+          items: { bsonType: "string" },
+          maxItems: 30
+        },
+        appliedJobsCount: {
+          bsonType: "int",
+          minimum: 0
+        }
+      }
+    }
+  },
+  validationLevel: "strict",
+  validationAction: "error"
+})</pre>
+
+  <p>Notice <code>bsonType: ["string", "null"]</code> on the <code>track</code> field — this allows the field to be either a string or null, matching the earlier scenario where an admin user has no track at all.</p>
+
+  <h3 class="sub">What This Prevents in Practice</h3>
+  <table>
+    <thead><tr><th>Attempted Insert</th><th>Why It's Rejected</th></tr></thead>
+    <tbody>
+      <tr><td><code>{ name: "Test", email: "not-an-email", role: "trainee" }</code></td><td>Fails the <code>email</code> pattern check, and is missing the required <code>joinDate</code></td></tr>
+      <tr><td><code>{ name: "A", email: "a@b.com", role: "supervisor", joinDate: new Date() }</code></td><td><code>role</code> isn't one of the allowed enum values</td></tr>
+      <tr><td><code>{ name: "Karim", email: "k@x.com", role: "trainee", age: 12, joinDate: new Date() }</code></td><td><code>age</code> is below the minimum of 16</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Rolling Out Safely on a Live Collection</h3>
+  <p>If the <code>users</code> collection already has thousands of live records when this rule is introduced, apply it gradually:</p>
+  <pre>db.runCommand({
+  collMod: "users",
+  validator: { $jsonSchema: { /* same schema as above */ } },
+  validationLevel: "moderate",
+  validationAction: "warn"
+})</pre>
+  <p>Then monitor the MongoDB logs for validation warnings over a few days, fix any legacy records that would fail, and only then switch to <code>validationLevel: "strict"</code> and <code>validationAction: "error"</code> for full enforcement.</p>
+  <p class="page-footer">Section Six — Real-World Example</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">Bypassing Validation (bypassDocumentValidation)</h1>
+  </div>
+  <p>Sometimes you need to intentionally skip validation — for example, during a one-off data migration or bulk import where you know the format temporarily differs from the current rules.</p>
+  <pre>db.users.insertMany(
+  [ /* legacy documents */ ],
+  { bypassDocumentValidation: true }
+)</pre>
+  <div class="warning-box"><strong>Caution:</strong> this flag requires specific privileges in a production MongoDB deployment (typically restricted to admin-level roles), and should be used deliberately, not as a routine workaround for failing validation.</div>
+  <p class="page-footer">Section Seven — Bypassing Validation</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">Inspecting &amp; Testing Validation Rules</h1>
+  </div>
+  <h3 class="sub">Viewing the Current Validator</h3>
+  <pre>db.getCollectionInfos({ name: "users" })</pre>
+  <p>This returns the validator currently applied to the collection, along with its <code>validationLevel</code> and <code>validationAction</code>.</p>
+
+  <h3 class="sub">Testing Before Enforcing</h3>
+  <p>A practical workflow for introducing validation on a collection already in production:</p>
+  <ol class="plain">
+    <li>Add the validator with <code>validationAction: "warn"</code> so nothing breaks immediately.</li>
+    <li>Run typical application traffic for a few days and check the logs for validation warnings.</li>
+    <li>Identify and fix (or migrate) documents that would fail under the new rule.</li>
+    <li>Switch to <code>validationAction: "error"</code> once confident the rule won't block legitimate operations.</li>
+  </ol>
+  <p class="page-footer">Section Eight — Inspecting &amp; Testing Validation Rules</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">Validation vs. Application-Level Validation</h1>
+  </div>
+  <table>
+    <thead><tr><th></th><th>MongoDB Schema Validation</th><th>Application-Level (Mongoose/Joi)</th></tr></thead>
+    <tbody>
+      <tr><td>Where it runs</td><td>Inside the database engine itself</td><td>Inside your Node.js/Express backend</td></tr>
+      <tr><td>Coverage</td><td>Protects against <em>any</em> write, including direct DB access, scripts, and migrations</td><td>Only protects writes that go through your application code</td></tr>
+      <tr><td>Error messages</td><td>Generic MongoDB validation errors</td><td>Can be customized with detailed, user-friendly messages</td></tr>
+      <tr><td>Business logic</td><td>Not suited for complex conditional rules</td><td>Well suited for rich business logic and cross-field conditional checks</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note"><strong>Best practice:</strong> use both together. Application-level validation (e.g., Mongoose schemas) gives fast, user-friendly feedback during normal app usage. MongoDB schema validation acts as a last line of defense at the database layer, catching anything that bypasses the application — a rogue script, a direct database console session, or a bug in the backend logic.</div>
+  <p class="page-footer">Section Nine — Validation vs. Application-Level Validation</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Ten</p>
+    <h1 class="topic-title">Important Notes &amp; Limitations</h1>
+  </div>
+  <ul>
+    <li><strong>Not a replacement for backend validation</strong> (e.g., Mongoose schemas or Joi) — it's an additional layer of protection at the database level, not a substitute. If someone accesses the database directly (an admin, a script, a migration), database-level validation still protects data integrity even if the backend was bypassed.</li>
+    <li><strong>Performance</strong> — validation adds a small overhead to every insert/update, but this is usually negligible compared to the benefit of guaranteed data integrity.</li>
+    <li><strong>Not meant for complex business logic</strong> — rules like "this product can only be sold if there's an active promotional offer" are application logic, not something that belongs in schema validation.</li>
+    <li><strong>Schema evolution</strong> — as your application changes, remember to update the validator too; a forgotten stale validator can silently block legitimate new fields.</li>
+    <li><strong>No cross-document rules</strong> — <code>$jsonSchema</code> validates a document against itself; it cannot enforce rules that depend on data in other documents or collections (e.g., "this email must be unique across the whole collection" — that still requires a unique index).</li>
+  </ul>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Combine schema validation with a <code>unique</code> index where needed — validation checks shape and type, indexes enforce uniqueness across documents.</li>
+      <li>Keep a copy of every collection's validator schema in your project's codebase (e.g., a <code>/schemas</code> folder) so it's version-controlled alongside your Mongoose models, not just living invisibly inside the database.</li>
+      <li>When adding a new required field to a schema that already has production data, always roll out with <code>moderate</code> + <code>warn</code> first — treat it the same as a database migration, not a simple config change.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Ten — Important Notes &amp; Limitations</p>
+</section>
+</div>
+
+
+<div class="a4-page">
+  <div class="cover" style="min-height: 100mm;">
+    <p class="kicker">Module 4</p>
+    <h1 class="module-title" style="border: none; padding-bottom: 0;">MONGOOSE IN DEPTH</h1>
+  </div>
+</div>
+
+<div class="a4-page">
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>Mongoose In Depth</h1>
+  <h2>Schemas, Instance &amp; Static Methods, Virtuals, Middleware &amp; Population</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+</div>
+
+<div class="a4-page">
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Schema — Beyond Just Defining Fields</li>
+    <li>Important Schema Options Often Overlooked</li>
+    <li>Instance Methods vs. Static Methods vs. Virtuals</li>
+    <li>Middleware (Hooks) — Pre and Post</li>
+    <li>The "this" Context Trap in Middleware</li>
+    <li>Population — Replacing Manual Joins</li>
+    <li>The N+1 Query Problem &amp; When to Avoid Populate</li>
+    <li>Mongoose Validation vs. MongoDB Schema Validation</li>
+    <li>Custom Error Messages with Enum</li>
+    <li>Indexes in Mongoose</li>
+    <li>Summary — What to Use When</li>
+  </ol>
+</div>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Schema — Beyond Just Defining Fields</h1>
+  </div>
+  <h3 class="sub">Basic Definition</h3>
+  <pre>const mongoose = require("mongoose");
+
+const productSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: [true, "Product title is required"],
+    trim: true,
+    minlength: 3,
+    maxlength: 100
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true
+  }
+}, {
+  timestamps: true   // automatically adds createdAt and updatedAt
+});</pre>
+  <p class="page-footer">Section One — Schema Basics</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">Important Schema Options Often Overlooked</h1>
+  </div>
+  <pre>const productSchema = new mongoose.Schema({
+  // ... fields
+}, {
+  timestamps: true,
+
+  toJSON: { virtuals: true },     // makes virtuals appear when converted to JSON
+  toObject: { virtuals: true },
+
+  strict: true,      // (default: true) — any field not defined in the schema is ignored automatically
+
+  versionKey: false, // removes the __v field Mongoose adds automatically for version tracking
+
+  collection: "products"  // manually set the collection name (if different from default)
+});</pre>
+
+  <div class="warning-box"><strong>Important note on "strict":</strong> setting it to <code>false</code> means any field on the document not defined in the schema gets saved anyway — this defeats one of the schema's most valuable protections (guarding against unexpected data). Keep it <code>true</code> unless you have a strong reason not to.</div>
+  <p class="page-footer">Section Two — Schema Options</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Instance Methods vs. Static Methods vs. Virtuals</h1>
+  </div>
+
+  <h3 class="sub">Instance Methods — Operate on a Single Document</h3>
+  <pre>productSchema.methods.isInStock = function() {
+  return this.quantity > 0;
+};
+
+// Usage:
+const product = await Product.findById(id);
+if (product.isInStock()) { ... }</pre>
+
+  <h3 class="sub">Static Methods — Operate on the Model Itself</h3>
+  <pre>productSchema.statics.findByCategory = function(categoryId) {
+  return this.find({ category: categoryId });
+};
+
+// Usage:
+const products = await Product.findByCategory(categoryId);</pre>
+
+  <h3 class="sub">Virtuals — Computed Fields, Not Actually Stored</h3>
+  <pre>productSchema.virtual("priceAfterDiscount").get(function() {
+  return this.price - (this.price * this.discount / 100);
+});
+
+// Or a virtual that pulls data from another collection (reverse population)
+productSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id"
+});</pre>
+
+  <div class="warning-box"><strong>Important:</strong> a virtual is never stored in the database — it's calculated only when accessed. You must enable <code>toJSON: { virtuals: true }</code> for it to show up in responses.</div>
+
+  <table>
+    <thead><tr><th>Concept</th><th>Use It When...</th></tr></thead>
+    <tbody>
+      <tr><td>Instance Methods</td><td>You need an operation tied to a specific document (e.g., <code>comparePassword</code>)</td></tr>
+      <tr><td>Static Methods</td><td>You need a custom query that repeats often (e.g., <code>findActiveUsers</code>)</td></tr>
+      <tr><td>Virtuals</td><td>You need a computed field that shouldn't be stored (e.g., <code>fullName</code>, <code>priceAfterDiscount</code>)</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — Methods &amp; Virtuals</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Middleware (Hooks) — Pre and Post</h1>
+  </div>
+  <p>Middleware functions run <strong>automatically before or after</strong> a given operation (save, find, remove, etc.).</p>
+
+  <table>
+    <thead><tr><th>Type</th><th>When It Runs</th></tr></thead>
+    <tbody>
+      <tr><td><code>pre</code></td><td>Before the operation</td></tr>
+      <tr><td><code>post</code></td><td>After the operation</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Example 1 — pre("save"): Hashing the Password Before Saving</h3>
+  <pre>const bcrypt = require("bcryptjs");
+
+userSchema.pre("save", async function(next) {
+  if (!this.isModified("password")) return next();  // skip re-hashing if password wasn't changed
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});</pre>
+  <div class="note"><strong>A common beginner question:</strong> why <code>this.isModified("password")</code>? Because if you call <code>save()</code> to update a different field (like the name), this check prevents the password from being re-hashed every single time you save, even though it's already hashed from before.</div>
+
+  <h3 class="sub">Example 2 — pre("find"): Hiding Soft-Deleted Products</h3>
+  <pre>productSchema.pre(/^find/, function(next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});</pre>
+  <p><code>/^find/</code> is a regex that covers every operation starting with "find" (<code>find</code>, <code>findOne</code>, <code>findById</code>, etc.) at once.</p>
+
+  <h3 class="sub">Example 3 — post("save"): Logging or Sending an Email</h3>
+  <pre>orderSchema.post("save", function(doc) {
+  console.log(`Order ${doc._id} was created`);
+  // could send a confirmation email here, for example
+});</pre>
+
+  <h3 class="sub">Example 4 — pre("findOneAndDelete"): Cascade Delete</h3>
+  <pre>// If a Category is deleted, delete all products linked to it
+categorySchema.pre("findOneAndDelete", async function(next) {
+  const categoryId = this.getQuery()._id;
+  await Product.deleteMany({ category: categoryId });
+  next();
+});</pre>
+  <p class="page-footer">Section Four — Middleware</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">The "this" Context Trap in Middleware</h1>
+  </div>
+  <p>A point that confuses many beginners: what <code>this</code> refers to changes depending on the middleware type.</p>
+  <pre>// In document middleware (save, validate) — "this" refers to the Document
+userSchema.pre("save", function(next) {
+  console.log(this.name);  // ✅ works
+  next();
+});
+
+// In query middleware (find, findOne, updateOne) — "this" refers to the Query itself, not a Document
+productSchema.pre("find", function(next) {
+  console.log(this.getQuery());  // ✅ works — returns the search condition
+  console.log(this.name);        // ❌ undefined — there's no document yet
+  next();
+});</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Never use arrow functions for middleware callbacks — arrow functions don't bind their own <code>this</code>, so it will point to the surrounding scope instead of the document/query.</li>
+      <li>When debugging middleware behavior, log <code>this.constructor.modelName</code> to confirm which model context you're actually inside.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Five — The "this" Context Trap</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">Population — Replacing Manual Joins</h1>
+  </div>
+  <h3 class="sub">The Core Idea</h3>
+  <p>Once you define a <code>ref</code> in the schema, you can replace an ObjectId with the full referenced document at query time.</p>
+  <pre>const orderSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
+});</pre>
+  <pre>// Without populate
+const order = await Order.findById(id);
+console.log(order.user);  // just the ObjectId
+
+// With populate
+const order = await Order.findById(id).populate("user");
+console.log(order.user);  // the full User document</pre>
+
+  <h3 class="sub">Populate with Field Selection (Like Projection)</h3>
+  <pre>const order = await Order.findById(id).populate("user", "name email");
+// only fetches name and email from User, not everything</pre>
+
+  <h3 class="sub">Multiple Populates Together</h3>
+  <pre>const order = await Order.findById(id)
+  .populate("user", "name email")
+  .populate("products", "title price");</pre>
+
+  <h3 class="sub">Nested Population — When a Reference Itself Has Another Reference</h3>
+  <pre>const review = await Review.findById(id).populate({
+  path: "product",
+  populate: {
+    path: "category",
+    select: "name"
+  }
+});</pre>
+
+  <h3 class="sub">Populate with Filter and Sort</h3>
+  <pre>const category = await Category.findById(id).populate({
+  path: "products",
+  match: { price: { $gte: 100 } },
+  select: "title price",
+  options: { sort: { price: -1 }, limit: 5 }
+});</pre>
+  <p class="page-footer">Section Six — Population</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">The N+1 Query Problem &amp; When to Avoid Populate</h1>
+  </div>
+  <p>Populate performs a <strong>separate additional query</strong> for each reference — it's not a true JOIN like in SQL. If you have an array of 100 orders and each one is populated, this can result in hundreds of queries.</p>
+
+  <div class="warning-box"><strong>The N+1 problem:</strong> one query to get the list, then N additional queries (one per referenced document) to populate each one — performance degrades quickly as the list grows.</div>
+
+  <h3 class="sub">The Better Alternative for High Performance</h3>
+  <p>Use the Aggregation Pipeline with <code>$lookup</code> instead of Populate, especially with large datasets or a high query volume.</p>
+  <pre>// Instead of Populate, you can use:
+Order.aggregate([
+  { $match: { _id: orderId } },
+  { $lookup: { from: "users", localField: "user", foreignField: "_id", as: "user" } }
+])</pre>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Populate is fine for typical CRUD endpoints with reasonable list sizes and pagination — don't over-optimize prematurely.</li>
+      <li>Reach for <code>$lookup</code>-based aggregation when a single request would otherwise trigger dozens or hundreds of populate queries, or when you need to combine population with grouping/filtering logic in the same query.</li>
+      <li>Always paginate lists that use populate — an unbounded list with nested populate is a common source of slow endpoints in production.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Seven — N+1 Query Problem</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">Mongoose Validation vs. MongoDB Schema Validation</h1>
+  </div>
+  <pre>const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    unique: true,
+    lowercase: true,
+    validate: {
+      validator: function(value) {
+        return /^\S+@\S+\.\S+$/.test(value);
+      },
+      message: "Invalid email format"
+    }
+  },
+  age: {
+    type: Number,
+    min: [18, "Must be at least 18 years old"],
+    max: [100, "Age cannot exceed 100"]
+  }
+});</pre>
+
+  <div class="note"><strong>The difference from MongoDB's own $jsonSchema validation:</strong> Mongoose validation runs at the application layer (Node.js), before the data even reaches the database. It responds to the user faster, but doesn't protect you if someone accesses the database directly, bypassing your application entirely.</div>
+  <p class="page-footer">Section Eight — Mongoose Validation vs. DB-Level Validation</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">Custom Error Messages with Enum</h1>
+  </div>
+  <pre>const orderSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    enum: {
+      values: ["pending", "confirmed", "shipped", "delivered"],
+      message: "{VALUE} is not a valid status"
+    },
+    default: "pending"
+  }
+});</pre>
+  <p>The <code>{VALUE}</code> placeholder is automatically replaced with the actual invalid value submitted, producing a clear, specific error message.</p>
+  <p class="page-footer">Section Nine — Custom Error Messages</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Ten</p>
+    <h1 class="topic-title">Indexes in Mongoose</h1>
+  </div>
+  <pre>userSchema.index({ email: 1 }, { unique: true });
+productSchema.index({ category: 1, price: -1 });</pre>
+  <p>These map directly to the same index concepts covered earlier at the MongoDB shell level — Mongoose simply lets you declare them alongside the schema definition itself, keeping index intent version-controlled with your model code.</p>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Mongoose builds indexes automatically when the app starts (in development), which can be slow on large collections — in production, create indexes explicitly via migration scripts or the shell instead of relying on auto-indexing.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Ten — Indexes in Mongoose</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eleven</p>
+    <h1 class="topic-title">Summary — What to Use When</h1>
+  </div>
+  <table>
+    <thead><tr><th>Concept</th><th>Use It When...</th></tr></thead>
+    <tbody>
+      <tr><td>Instance Methods</td><td>You need an operation tied to a specific document (e.g., <code>comparePassword</code>)</td></tr>
+      <tr><td>Static Methods</td><td>You need a custom query that repeats often (e.g., <code>findActiveUsers</code>)</td></tr>
+      <tr><td>Virtuals</td><td>You need a computed field that shouldn't be stored (e.g., <code>fullName</code>, <code>priceAfterDiscount</code>)</td></tr>
+      <tr><td>pre("save")</td><td>Modifying data before it's saved (hashing, formatting)</td></tr>
+      <tr><td>pre("find")</td><td>Automatic filtering (e.g., soft delete)</td></tr>
+      <tr><td>post("save")</td><td>Something after saving (logging, notifications)</td></tr>
+      <tr><td>Populate</td><td>Query volume is small and manageable</td></tr>
+      <tr><td>Aggregation + $lookup</td><td>Performance and large data volume matter more than code simplicity</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Eleven — Summary</p>
+</section>
+</div>
+
+
+<div class="a4-page">
+  <div class="cover" style="min-height: 100mm;">
+    <p class="kicker">Module 5</p>
+    <h1 class="module-title" style="border: none; padding-bottom: 0;">MONGODB TRANSACTIONS</h1>
+  </div>
+</div>
+
+<div class="a4-page">
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>MongoDB Transactions</h1>
+  <h2>Multi-Document ACID Guarantees — Concepts, Mechanics &amp; Real-World Usage</h2>
+  <p class="meta">Technical Reference · MongoDB / Mongoose</p>
+</div>
+</div>
+
+<div class="a4-page">
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Why Transactions Are Needed</li>
+    <li>How Transactions Solve the Problem (ACID Guarantee)</li>
+    <li>The Core Steps of Any Transaction</li>
+    <li>Requirements to Run Transactions</li>
+    <li>Write Conflicts &amp; Retry Logic</li>
+    <li>Read Concern &amp; Write Concern Inside Transactions</li>
+    <li>When to Use Transactions (and When Not To)</li>
+    <li>Real-World Example — Cash Order Checkout</li>
+    <li>The Performance Cost of Transactions</li>
+  </ol>
+</div>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Why Transactions Are Needed</h1>
+  </div>
+  <p>In NoSQL, a single document is inherently <strong>atomic</strong> — updating one document is guaranteed to happen entirely or not at all. The problem appears when an operation needs to update <strong>more than one document across more than one collection</strong> at the same time.</p>
+
+  <h3 class="sub">The Classic Problem Example</h3>
+  <p>Consider a "purchase a product" operation:</p>
+  <ol class="plain">
+    <li>Decrease stock quantity in <code>products</code></li>
+    <li>Create a new order in <code>orders</code></li>
+    <li>Deduct funds from the user's balance in <code>users</code></li>
+  </ol>
+
+  <pre>// ❌ Without a transaction — a real risk
+await Product.updateOne({ _id: productId }, { $inc: { stock: -1 } });
+// The server crashes right here!
+await Order.create({ userId, productId, status: "confirmed" });
+await User.updateOne({ _id: userId }, { $inc: { balance: -price } });</pre>
+
+  <p>If the server crashes right after the first step, the result is: <strong>stock was decremented, but no order was ever created, and no money was deducted</strong> — a product vanished for no reason, and the customer never paid. This is exactly what transactions prevent.</p>
+  <p class="page-footer">Section One — Why Transactions Are Needed</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">How Transactions Solve the Problem (ACID Guarantee)</h1>
+  </div>
+  <p>A transaction guarantees that all these operations execute as <strong>a single unit (all or nothing)</strong>:</p>
+  <ul>
+    <li>If everything succeeds → <code>commit</code> (all changes are persisted together)</li>
+    <li>If anything fails at any step → <code>abort</code> (everything is rolled back, including steps that had already succeeded)</li>
+  </ul>
+
+  <pre>const session = await mongoose.startSession();
+session.startTransaction();
+
+try {
+  await Product.updateOne(
+    { _id: productId },
+    { $inc: { stock: -1 } },
+    { session }
+  );
+
+  await Order.create(
+    [{ userId, productId, status: "confirmed" }],
+    { session }
+  );
+
+  await User.updateOne(
+    { _id: userId },
+    { $inc: { balance: -price } },
+    { session }
+  );
+
+  await session.commitTransaction();
+  console.log("Transaction succeeded");
+} catch (error) {
+  await session.abortTransaction();
+  console.log("Transaction failed, everything rolled back:", error);
+} finally {
+  session.endSession();
+}</pre>
+
+  <div class="note"><strong>Important:</strong> every operation must pass the same <code>session</code> as an option, or it won't be treated as part of the same transaction.</div>
+  <p class="page-footer">Section Two — How Transactions Solve the Problem</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">The Core Steps of Any Transaction</h1>
+  </div>
+  <table>
+    <thead><tr><th>Step</th><th>Command</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><code>startSession()</code></td><td>Begins a new session tied to the transaction</td></tr>
+      <tr><td>2</td><td><code>startTransaction()</code></td><td>Actually starts the transaction</td></tr>
+      <tr><td>3</td><td>Run operations passing <code>{ session }</code></td><td>Each operation is recorded as part of the transaction, not applied to real data immediately</td></tr>
+      <tr><td>4</td><td><code>commitTransaction()</code></td><td>Persists all changes at once</td></tr>
+      <tr><td>5</td><td><code>abortTransaction()</code> (on error)</td><td>Rolls back everything</td></tr>
+      <tr><td>6</td><td><code>endSession()</code></td><td>Closes the session and frees resources</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — The Core Steps of Any Transaction</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Requirements to Run Transactions</h1>
+  </div>
+  <div class="warning-box"><strong>Critical:</strong> transactions are <strong>not available in every MongoDB setup</strong>.</div>
+  <ul>
+    <li>MongoDB must be running as a <strong>Replica Set</strong> (even a single-node replica set for local development) or a <strong>Sharded Cluster</strong>.</li>
+    <li><strong>Not available on a standalone MongoDB instance</strong> (a plain server with no replica set).</li>
+    <li>Supported from <strong>MongoDB 4.0</strong> onward for replica sets, and from <strong>4.2</strong> onward for sharded clusters.</li>
+  </ul>
+  <pre>// For local development, run a single-node replica set:
+mongod --replSet rs0
+// then initiate it:
+rs.initiate()</pre>
+  <p>Attempting to use a transaction on a standalone instance results in a clear error stating the feature isn't supported.</p>
+  <p class="page-footer">Section Four — Requirements to Run Transactions</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Write Conflicts &amp; Retry Logic</h1>
+  </div>
+  <p>If another transaction tries to modify the same document at the same time, MongoDB throws a <strong>Write Conflict Error</strong>. This is part of the <strong>Isolation</strong> guarantee in ACID.</p>
+  <pre>try {
+  // the operation
+} catch (error) {
+  if (error.errorLabels && error.errorLabels.includes("TransientTransactionError")) {
+    // safe to retry — this error is temporary
+  }
+  await session.abortTransaction();
+}</pre>
+  <div class="tip-box">
+    <span class="tip-label">Best Practice</span>
+    <ul>
+      <li>Your code should be prepared to <strong>retry</strong> when a <code>TransientTransactionError</code> occurs, since it indicates a temporary conflict between transactions, not an actual logic error.</li>
+      <li>MongoDB drivers provide helper wrappers (e.g., <code>withTransaction()</code> in the native driver) that automatically handle retry logic for transient errors — worth using instead of hand-rolling retry loops.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Five — Write Conflicts &amp; Retry Logic</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">Read Concern &amp; Write Concern Inside Transactions</h1>
+  </div>
+  <p>You can control the accuracy-vs-speed trade-off explicitly:</p>
+  <pre>session.startTransaction({
+  readConcern: { level: "snapshot" },     // read a fixed snapshot of data as of transaction start
+  writeConcern: { w: "majority" }         // writes must be acknowledged by a majority of nodes before success
+});</pre>
+  <p><code>readConcern: "snapshot"</code> matters a lot because it guarantees you're reading the <strong>same version of the data</strong> throughout the transaction's lifetime, even if someone else modifies the data at the same moment.</p>
+  <p class="page-footer">Section Six — Read Concern &amp; Write Concern</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">When to Use Transactions (and When Not To)</h1>
+  </div>
+  <h3 class="sub">Use Them When:</h3>
+  <ul>
+    <li>An operation touches <strong>more than one collection</strong> and all parts must succeed or fail together (like the purchase example above).</li>
+    <li>Financial operations (transferring balance, deducting/adding credit).</li>
+    <li>Operations with a serious <strong>race condition</strong> risk (e.g., booking the last available ticket or the last item in stock).</li>
+  </ul>
+
+  <h3 class="sub">Avoid Them When:</h3>
+  <ul>
+    <li>The operation touches <strong>a single document only</strong> — MongoDB documents are already atomic, so an extra transaction adds nothing.</li>
+    <li>You have very high throughput (many operations per second) — transactions add noticeable performance overhead.</li>
+    <li>The problem can be solved with a better schema design instead (e.g., embedding) rather than needing coordination across separate collections in the first place.</li>
+  </ul>
+  <p class="page-footer">Section Seven — When to Use Transactions</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">Real-World Example — Cash Order Checkout</h1>
+  </div>
+  <p>In an e-commerce API, the <strong>Cash Order</strong> scenario is one of the best real-world fits for a transaction.</p>
+  <pre>const createCashOrder = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const cart = await Cart.findById(req.params.cartId).session(session);
+
+    const order = await Order.create(
+      [{
+        user: req.user._id,
+        cartItems: cart.cartItems,
+        totalOrderPrice: cart.totalPriceAfterDiscount || cart.totalPrice,
+        paymentMethodType: "cash"
+      }],
+      { session }
+    );
+
+    const bulkOptions = cart.cartItems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product, quantity: { $gte: item.quantity } },
+        update: { $inc: { quantity: -item.quantity, sold: +item.quantity } }
+      }
+    }));
+
+    const bulkResult = await Product.bulkWrite(bulkOptions, { session });
+
+    // If any product didn't have enough stock, bulkWrite won't update it at all
+    if (bulkResult.modifiedCount !== cart.cartItems.length) {
+      throw new Error("Insufficient stock for one or more products");
+    }
+
+    await Cart.findByIdAndDelete(req.params.cartId).session(session);
+
+    await session.commitTransaction();
+    res.status(201).json({ status: "success", data: order });
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(400).json({ status: "fail", message: error.message });
+  } finally {
+    session.endSession();
+  }
+};</pre>
+  <div class="scenario"><strong>Why this matters here specifically:</strong> if any error occurs after the order was already created (e.g., a stock update failure), without a transaction the customer could end up with a confirmed order while the product was never actually deducted from stock — a genuine data inconsistency.</div>
+  <p class="page-footer">Section Eight — Real-World Example</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">The Performance Cost of Transactions</h1>
+  </div>
+  <p>Transactions aren't "free" — they take longer than regular operations and hold resources on the server until they're closed (commit/abort). Using them for every simple operation without real need will negatively affect overall system performance.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Golden Rule</span>
+    <ul>
+      <li>Only use a transaction when you genuinely need an "all or nothing" guarantee across more than one document/collection — not as a default solution for every update.</li>
+      <li>Keep transactions short-lived: avoid slow operations (like external API calls or heavy computation) inside a transaction block, since long-running transactions hold locks longer and increase the chance of write conflicts with other operations.</li>
+      <li>For single-document updates, rely on MongoDB's built-in document-level atomicity — no transaction wrapper needed.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Nine — The Performance Cost of Transactions</p>
+</section>
+</div>
+
+
+<div class="a4-page">
+  <div class="cover" style="min-height: 100mm;">
+    <p class="kicker">Module 6</p>
+    <h1 class="module-title" style="border: none; padding-bottom: 0;">MONGODB AGGREGATION USERS EXAMPLE</h1>
+  </div>
+</div>
+
+<div class="a4-page">
+<div class="cover">
+  <p class="kicker">Applied Example</p>
+  <h1>MongoDB Aggregation Pipeline</h1>
+  <h2>Real-World "Users" Collection — Training &amp; Hiring Platform Scenario</h2>
+  <p class="meta">Technical Reference · Applied Aggregation &amp; Indexing</p>
+</div>
+</div>
+
+<div class="a4-page">
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>The Scenario &amp; Seed Data</li>
+    <li>$match — Filter Active Trainees by Track</li>
+    <li>$group — Employment Rate per Track</li>
+    <li>$sort + $limit — Top Performing Trainees</li>
+    <li>$project — Hiring-Ready Report</li>
+    <li>$addFields — Months Since Joining</li>
+    <li>$count — Dropped-Out Trainees</li>
+    <li>$unwind — Most Common Skills</li>
+    <li>$lookup — Matching Job Openings</li>
+    <li>$facet — Full Dashboard in One Query</li>
+    <li>$bucket — Progress Level Groups</li>
+    <li>$merge — Monthly Snapshot Reports</li>
+    <li>Indexes on the Users Collection</li>
+  </ol>
+</div>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">The Scenario &amp; Seed Data</h1>
+  </div>
+  <p>Imagine building a <strong>tech training &amp; hiring platform</strong> (similar to the DEY HireReady Initiative). The <code>users</code> collection holds trainees, mentors, and admins.</p>
+  <pre>db.users.insertMany([
+  {
+    _id: 1, name: "Ahmed Sayed", email: "ahmed@gmail.com", age: 24,
+    city: "Cairo", track: "MERN Stack", role: "trainee", isActive: true,
+    joinDate: new Date("2025-01-15"), completedCourses: 8, monthlyIncome: 0,
+    skills: ["React", "Node.js", "MongoDB"], appliedJobsCount: 15
+  },
+  {
+    _id: 2, name: "Mona Khalil", email: "mona@gmail.com", age: 27,
+    city: "Alexandria", track: ".NET", role: "trainee", isActive: true,
+    joinDate: new Date("2025-02-01"), completedCourses: 12, monthlyIncome: 8000,
+    skills: ["C#", "ASP.NET Core", "SQL Server"], appliedJobsCount: 20
+  },
+  {
+    _id: 3, name: "Youssef Adel", email: "youssef@gmail.com", age: 23,
+    city: "Cairo", track: "MERN Stack", role: "trainee", isActive: false,
+    joinDate: new Date("2024-11-10"), completedCourses: 3, monthlyIncome: 0,
+    skills: ["JavaScript"], appliedJobsCount: 2
+  },
+  {
+    _id: 4, name: "Salma Reda", email: "salma@gmail.com", age: 30,
+    city: "Menoufia", track: "Instructor", role: "mentor", isActive: true,
+    joinDate: new Date("2023-06-01"), completedCourses: 0, monthlyIncome: 15000,
+    skills: ["Teaching", "MERN Stack", "Mentorship"], appliedJobsCount: 0
+  },
+  {
+    _id: 5, name: "Karim Fathy", email: "karim@gmail.com", age: 25,
+    city: "Menoufia", track: "MERN Stack", role: "trainee", isActive: true,
+    joinDate: new Date("2025-03-20"), completedCourses: 10, monthlyIncome: 6500,
+    skills: ["React", "Express", "MongoDB", "Redis"], appliedJobsCount: 25
+  },
+  {
+    _id: 6, name: "Nourhan Adly", email: "nourhan@gmail.com", age: 22,
+    city: "Alexandria", track: ".NET", role: "trainee", isActive: true,
+    joinDate: new Date("2025-01-05"), completedCourses: 9, monthlyIncome: 0,
+    skills: ["C#", "Entity Framework"], appliedJobsCount: 18
+  },
+  {
+    _id: 7, name: "Hossam Admin", email: "hossam@platform.com", age: 33,
+    city: "Cairo", track: null, role: "admin", isActive: true,
+    joinDate: new Date("2022-01-01"), completedCourses: 0, monthlyIncome: 20000,
+    skills: ["Management"], appliedJobsCount: 0
+  }
+])</pre>
+  <p>Three types of users exist: <code>trainee</code>, <code>mentor</code>, and <code>admin</code>. Each has a <code>track</code>, a <code>monthlyIncome</code> (once employed), and an <code>appliedJobsCount</code>.</p>
+  <p class="page-footer">Section One — The Scenario &amp; Seed Data</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">$match — Filter Active Trainees by Track</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee", track: "MERN Stack", isActive: true } }
+])</pre>
+  <p><strong>Result:</strong> Ahmed Sayed and Karim Fathy (Youssef is excluded since <code>isActive: false</code>).</p>
+  <div class="scenario"><strong>Real question answered:</strong> "I need the list of active trainees in a specific track so I can send them a new job opportunity."</div>
+  <p class="page-footer">Section Two — $match</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">$group — Employment Rate per Track</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $group: {
+      _id: "$track",
+      totalTrainees: { $sum: 1 },
+      employed: { $sum: { $cond: [{ $gt: ["$monthlyIncome", 0] }, 1, 0] } },
+      avgAppliedJobs: { $avg: "$appliedJobsCount" }
+  }}
+])</pre>
+  <p><strong>Result:</strong></p>
+  <pre>{ "_id": "MERN Stack", "totalTrainees": 3, "employed": 1, "avgAppliedJobs": 14 }
+{ "_id": ".NET",       "totalTrainees": 2, "employed": 1, "avgAppliedJobs": 19 }</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "Which track leads to more employed graduates — MERN or .NET?" — a question management would genuinely ask.</div>
+  <p class="page-footer">Section Three — $group</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">$sort + $limit — Top Performing Trainees</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $sort: { completedCourses: -1 } },
+  { $limit: 3 }
+])</pre>
+  <p><strong>Result:</strong> Mona (12) → Karim (10) → Nourhan (9)</p>
+  <div class="scenario"><strong>Real question answered:</strong> "Who are the top 3 trainees I can recommend to a partner company that's hiring?"</div>
+  <p class="page-footer">Section Four — $sort + $limit</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">$project — Hiring-Ready Report</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee", isActive: true } },
+  { $project: {
+      _id: 0,
+      name: 1,
+      track: 1,
+      skills: 1,
+      readyForHire: { $gte: ["$completedCourses", 8] }
+  }}
+])</pre>
+  <p><strong>Result:</strong> A trimmed report — no email or salary (sensitive data) — with a new computed field indicating whether the trainee is "ready for hire."</p>
+  <p class="page-footer">Section Five — $project</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">$addFields — Months Since Joining</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $addFields: {
+      monthsSinceJoining: {
+        $dateDiff: { startDate: "$joinDate", endDate: new Date(), unit: "month" }
+      }
+  }}
+])</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "How many months has this trainee been enrolled without finding a job yet? — a strong indicator they need closer follow-up."</div>
+  <p class="page-footer">Section Six — $addFields</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">$count — Dropped-Out Trainees</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee", isActive: false } },
+  { $count: "droppedOutTrainees" }
+])</pre>
+  <p><strong>Result:</strong> <code>{ "droppedOutTrainees": 1 }</code> (Youssef only).</p>
+  <p class="page-footer">Section Seven — $count</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">$unwind — Most Common Skills</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $unwind: "$skills" },
+  { $group: { _id: "$skills", count: { $sum: 1 } } },
+  { $sort: { count: -1 } }
+])</pre>
+  <p><strong>Result:</strong></p>
+  <pre>{ "_id": "MongoDB", "count": 2 }
+{ "_id": "React",   "count": 2 }
+{ "_id": "C#",      "count": 2 }
+...</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "Which skill is most common among trainees, so I know what supplementary course to build?"</div>
+  <p class="page-footer">Section Eight — $unwind</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">$lookup — Matching Job Openings</h1>
+  </div>
+  <pre>db.jobs.insertMany([
+  { _id: 101, title: "Junior MERN Developer", requiredTrack: "MERN Stack", city: "Cairo" },
+  { _id: 102, title: "Junior .NET Developer", requiredTrack: ".NET", city: "Alexandria" }
+])
+
+db.users.aggregate([
+  { $match: { role: "trainee", isActive: true } },
+  { $lookup: {
+      from: "jobs",
+      localField: "track",
+      foreignField: "requiredTrack",
+      as: "matchingJobs"
+  }}
+])</pre>
+  <p><strong>Result:</strong> Each trainee now carries a <code>matchingJobs</code> array with openings that match their track — effectively a real "Recommended Jobs" feature.</p>
+  <p class="page-footer">Section Nine — $lookup</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Ten</p>
+    <h1 class="topic-title">$facet — Full Dashboard in One Query</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $facet: {
+      "usersByRole": [
+        { $group: { _id: "$role", count: { $sum: 1 } } }
+      ],
+      "employmentStats": [
+        { $match: { role: "trainee" } },
+        { $group: {
+            _id: null,
+            employed: { $sum: { $cond: [{ $gt: ["$monthlyIncome", 0] }, 1, 0] } },
+            unemployed: { $sum: { $cond: [{ $eq: ["$monthlyIncome", 0] }, 1, 0] } }
+        }}
+      ],
+      "topCity": [
+        { $group: { _id: "$city", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 1 }
+      ]
+  }}
+])</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "I need one dashboard showing: user distribution by role, employment rate, and the city with the most trainees" — all in a single query instead of three.</div>
+  <p class="page-footer">Section Ten — $facet</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eleven</p>
+    <h1 class="topic-title">$bucket — Progress Level Groups</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $bucket: {
+      groupBy: "$completedCourses",
+      boundaries: [0, 5, 10, 15],
+      default: "Advanced",
+      output: { count: { $sum: 1 }, names: { $push: "$name" } }
+  }}
+])</pre>
+  <p><strong>Result:</strong></p>
+  <pre>{ "_id": 0,  "count": 1, "names": ["Youssef Adel"] }               // Beginner (0-4 courses)
+{ "_id": 5,  "count": 3, "names": ["Ahmed", "Nourhan", "Karim"] }  // Intermediate (5-9)
+{ "_id": 10, "count": 1, "names": ["Mona Khalil"] }                // Advanced (10-14)</pre>
+  <p class="page-footer">Section Eleven — $bucket</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Twelve</p>
+    <h1 class="topic-title">$merge — Monthly Snapshot Reports</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $group: {
+      _id: "$track",
+      totalActive: { $sum: { $cond: ["$isActive", 1, 0] } },
+      employmentRate: { $avg: { $cond: [{ $gt: ["$monthlyIncome", 0] }, 1, 0] } }
+  }},
+  { $merge: { into: "monthlyReports", whenMatched: "replace" } }
+])</pre>
+  <div class="scenario"><strong>Real scenario:</strong> run this pipeline every month to persist a snapshot into a <code>monthlyReports</code> collection, tracking how the employment rate evolves over time.</div>
+  <p class="page-footer">Section Twelve — $merge</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Thirteen</p>
+    <h1 class="topic-title">Indexes on the Users Collection</h1>
+  </div>
+
+  <h3 class="sub">Unique Index — Prevent Duplicate Registration</h3>
+  <pre>db.users.createIndex({ email: 1 }, { unique: true })</pre>
+  <div class="scenario">If someone tries registering with an email already on the platform, the database itself rejects the operation.</div>
+
+  <h3 class="sub">Compound Index — The Most Common Admin Filter</h3>
+  <pre>db.users.createIndex({ role: 1, track: 1, isActive: 1 })</pre>
+  <div class="scenario">The most frequent query in the admin dashboard is "get all active trainees in a given track." This index makes it instant even with thousands of users.</div>
+  <pre>// Query that benefits from this index
+db.users.find({ role: "trainee", track: "MERN Stack", isActive: true })</pre>
+
+  <h3 class="sub">Sparse Index — Since Admins &amp; Mentors Have No Track</h3>
+  <pre>db.users.createIndex({ track: 1 }, { sparse: true })</pre>
+  <div class="scenario">Hossam Admin has <code>track: null</code>. A sparse index skips users without a track instead of indexing them all under a repeated null value.</div>
+
+  <h3 class="sub">Partial Index — Only on Inactive Trainees</h3>
+  <pre>db.users.createIndex(
+  { joinDate: 1 },
+  { partialFilterExpression: { isActive: false } }
+)</pre>
+  <div class="scenario">A recurring "trainees who went inactive" report filtered by join date only needs an index covering inactive users — saving significant space versus indexing all 10,000+ users.</div>
+
+  <h3 class="sub">Verifying Index Effectiveness</h3>
+  <pre>db.users.find({ role: "trainee", track: "MERN Stack", isActive: true }).explain("executionStats")</pre>
+  <p>If the result shows <code>"stage": "IXSCAN"</code>, the compound index is being used. If it shows <code>"stage": "COLLSCAN"</code>, it means a full collection scan happened instead.</p>
+  <p class="page-footer">Section Thirteen — Indexes on the Users Collection</p>
+</section>
+</div>
+
+
+<div class="a4-page">
+  <div class="cover" style="min-height: 100mm;">
+    <p class="kicker">Module 7</p>
+    <h1 class="module-title" style="border: none; padding-bottom: 0;">MONGODB REFERENCE EN</h1>
+  </div>
+</div>
+
+<div class="a4-page">
+<div class="cover">
+  <p class="kicker">Technical Reference Manual</p>
+  <h1>MongoDB Shell Command Reference</h1>
+  <h2>Complete Function List — Inputs and Return Values</h2>
+  <p class="meta">Technical Reference · MongoDB / mongosh</p>
+</div>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section One</p>
+    <h1 class="cat-title">Database-Level Commands</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">show dbs</td><td class="func-input">None</td><td class="func-return">List of all databases with each one's size</td></tr>
+      <tr><td class="func-name">use &lt;dbName&gt;</td><td class="func-input">Database name</td><td class="func-return">Switches the current database (text confirmation)</td></tr>
+      <tr><td class="func-name">db</td><td class="func-input">None</td><td class="func-return">Name of the current database</td></tr>
+      <tr><td class="func-name">show collections</td><td class="func-input">None</td><td class="func-return">List of all collections in the current database</td></tr>
+      <tr><td class="func-name">db.dropDatabase()</td><td class="func-input">None</td><td class="func-return">Object containing ok: 1 and dropped: dbName</td></tr>
+      <tr><td class="func-name">db.stats()</td><td class="func-input">scale (optional)</td><td class="func-return">Object with database statistics (size, collection count)</td></tr>
+      <tr><td class="func-name">db.createCollection()</td><td class="func-input">Collection name + options (optional)</td><td class="func-return">Confirmation that the collection was created</td></tr>
+      <tr><td class="func-name">db.getCollectionNames()</td><td class="func-input">None</td><td class="func-return">Array of all collection names</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section One — Database-Level Commands</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Two</p>
+    <h1 class="cat-title">Create / Insert</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">insertOne()</td><td class="func-input">A single object (document)</td><td class="func-return">Object containing acknowledged and insertedId</td></tr>
+      <tr><td class="func-name">insertMany()</td><td class="func-input">Array of objects</td><td class="func-return">Object containing acknowledged and insertedIds (array of IDs)</td></tr>
+      <tr><td class="func-name">insert() (Deprecated)</td><td class="func-input">Object or array</td><td class="func-return">Write result information (WriteResult)</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Two — Create / Insert</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Three</p>
+    <h1 class="cat-title">Read / Find</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">find()</td><td class="func-input">Filter object (optional) + projection object (optional)</td><td class="func-return">Cursor pointing to multiple documents</td></tr>
+      <tr><td class="func-name">findOne()</td><td class="func-input">Filter object (optional) + projection object (optional)</td><td class="func-return">A single document, or null</td></tr>
+      <tr><td class="func-name">countDocuments()</td><td class="func-input">Filter object (optional)</td><td class="func-return">Integer count of matching documents</td></tr>
+      <tr><td class="func-name">estimatedDocumentCount()</td><td class="func-input">None</td><td class="func-return">Fast approximate count of all documents</td></tr>
+      <tr><td class="func-name">distinct()</td><td class="func-input">Field name + filter (optional)</td><td class="func-return">Array of unique values for a given field</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — Read / Find</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Four</p>
+    <h1 class="cat-title">Update</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">updateOne()</td><td class="func-input">Filter object + update object (+ options)</td><td class="func-return">Object with matchedCount and modifiedCount</td></tr>
+      <tr><td class="func-name">updateMany()</td><td class="func-input">Filter object + update object (+ options)</td><td class="func-return">Object with matchedCount and modifiedCount</td></tr>
+      <tr><td class="func-name">replaceOne()</td><td class="func-input">Filter object + full replacement document</td><td class="func-return">Object with matchedCount and modifiedCount</td></tr>
+      <tr><td class="func-name">findOneAndUpdate()</td><td class="func-input">Filter + update + options</td><td class="func-return">The document (before or after update, per options) or null</td></tr>
+      <tr><td class="func-name">findOneAndReplace()</td><td class="func-input">Filter + replacement document + options</td><td class="func-return">The old/new document, or null</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Four — Update</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Five</p>
+    <h1 class="cat-title">Delete</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">deleteOne()</td><td class="func-input">Filter object</td><td class="func-return">Object with deletedCount (0 or 1)</td></tr>
+      <tr><td class="func-name">deleteMany()</td><td class="func-input">Filter object</td><td class="func-return">Object with deletedCount (integer)</td></tr>
+      <tr><td class="func-name">findOneAndDelete()</td><td class="func-input">Filter object (+ options)</td><td class="func-return">The deleted document, or null</td></tr>
+      <tr><td class="func-name">drop()</td><td class="func-input">None</td><td class="func-return">true on success, or an error if the collection does not exist</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Five — Delete</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Six</p>
+    <h1 class="cat-title">Cursor Modifiers</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">sort()</td><td class="func-input">Object specifying field and direction (1 or -1)</td><td class="func-return">Cursor modified with the sort order</td></tr>
+      <tr><td class="func-name">limit()</td><td class="func-input">Integer</td><td class="func-return">Cursor limited to a set number of results</td></tr>
+      <tr><td class="func-name">skip()</td><td class="func-input">Integer</td><td class="func-return">Cursor after skipping a given number of results</td></tr>
+      <tr><td class="func-name">toArray()</td><td class="func-input">None</td><td class="func-return">Array containing all documents</td></tr>
+      <tr><td class="func-name">forEach()</td><td class="func-input">Callback function</td><td class="func-return">None — executes the function on each document</td></tr>
+      <tr><td class="func-name">count() (Deprecated)</td><td class="func-input">None</td><td class="func-return">Count of documents in the cursor</td></tr>
+      <tr><td class="func-name">hasNext()</td><td class="func-input">None</td><td class="func-return">true/false — whether a next document exists</td></tr>
+      <tr><td class="func-name">next()</td><td class="func-input">None</td><td class="func-return">The next document in the cursor</td></tr>
+      <tr><td class="func-name">pretty()</td><td class="func-input">None</td><td class="func-return">Same cursor with clearer formatting for display</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Six — Cursor Modifiers</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Seven</p>
+    <h1 class="cat-title">Aggregation</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">aggregate()</td><td class="func-input">Array of pipeline stages</td><td class="func-return">Cursor with the pipeline result</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Seven — Aggregation</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Eight</p>
+    <h1 class="cat-title">Indexes</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">createIndex()</td><td class="func-input">Object specifying field and type (+ options)</td><td class="func-return">Name of the created index</td></tr>
+      <tr><td class="func-name">createIndexes()</td><td class="func-input">Array of index objects</td><td class="func-return">Array of index names</td></tr>
+      <tr><td class="func-name">getIndexes()</td><td class="func-input">None</td><td class="func-return">Array of all indexes on the collection</td></tr>
+      <tr><td class="func-name">dropIndex()</td><td class="func-input">Index name or field object</td><td class="func-return">Confirmation of deletion</td></tr>
+      <tr><td class="func-name">dropIndexes()</td><td class="func-input">None</td><td class="func-return">Confirmation that all indexes except _id were dropped</td></tr>
+      <tr><td class="func-name">reIndex()</td><td class="func-input">None</td><td class="func-return">Rebuilds all indexes</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Eight — Indexes</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Nine</p>
+    <h1 class="cat-title">Collection Info &amp; Stats</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">stats()</td><td class="func-input">Options (optional)</td><td class="func-return">Object with collection statistics (size, document count)</td></tr>
+      <tr><td class="func-name">totalSize()</td><td class="func-input">None</td><td class="func-return">Total size in bytes</td></tr>
+      <tr><td class="func-name">dataSize()</td><td class="func-input">None</td><td class="func-return">Data-only size in bytes</td></tr>
+      <tr><td class="func-name">validate()</td><td class="func-input">Options (optional)</td><td class="func-return">Report on the structural integrity of the collection</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Nine — Collection Info &amp; Stats</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Ten</p>
+    <h1 class="cat-title">Bulk Operations</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">bulkWrite()</td><td class="func-input">Array of operations (insert/update/delete)</td><td class="func-return">Object summarizing all operations (insertedCount, modifiedCount, etc.)</td></tr>
+      <tr><td class="func-name">initializeUnorderedBulkOp()</td><td class="func-input">None</td><td class="func-return">Bulk operation object (executed with no specific order)</td></tr>
+      <tr><td class="func-name">initializeOrderedBulkOp()</td><td class="func-input">None</td><td class="func-return">Bulk operation object (executed in order)</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Ten — Bulk Operations</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Eleven</p>
+    <h1 class="cat-title">Transactions</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">db.getMongo().startSession()</td><td class="func-input">None</td><td class="func-return">Session object</td></tr>
+      <tr><td class="func-name">session.startTransaction()</td><td class="func-input">Options (optional)</td><td class="func-return">Starts the transaction</td></tr>
+      <tr><td class="func-name">session.commitTransaction()</td><td class="func-input">None</td><td class="func-return">Confirms and persists all transaction operations</td></tr>
+      <tr><td class="func-name">session.abortTransaction()</td><td class="func-input">None</td><td class="func-return">Cancels all transaction operations</td></tr>
+      <tr><td class="func-name">session.endSession()</td><td class="func-input">None</td><td class="func-return">Ends the session</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Eleven — Transactions</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Twelve</p>
+    <h1 class="cat-title">User &amp; Role Management</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">db.createUser()</td><td class="func-input">Object with user, pwd, roles</td><td class="func-return">Confirmation that the user was created</td></tr>
+      <tr><td class="func-name">db.dropUser()</td><td class="func-input">Username</td><td class="func-return">Confirmation of deletion</td></tr>
+      <tr><td class="func-name">show users</td><td class="func-input">None</td><td class="func-return">List of all users on the database</td></tr>
+      <tr><td class="func-name">db.grantRolesToUser()</td><td class="func-input">Username + array of roles</td><td class="func-return">Confirmation that privileges were granted</td></tr>
+      <tr><td class="func-name">db.revokeRolesFromUser()</td><td class="func-input">Username + array of roles</td><td class="func-return">Confirmation that privileges were revoked</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Twelve — User &amp; Role Management</p>
+</section>
+</div>
+
+<div class="a4-page">
+<section class="category">
+  <div class="cat-header">
+    <p class="cat-number">Section Thirteen</p>
+    <h1 class="cat-title">Watch / Change Streams</h1>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Function</th><th>Input</th><th>Return Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="func-name">watch()</td><td class="func-input">Pipeline (optional) + options</td><td class="func-return">Change stream cursor that monitors changes live</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Thirteen — Watch / Change Streams</p>
+</section>
+</div>
+
+
+</body>
+</html>

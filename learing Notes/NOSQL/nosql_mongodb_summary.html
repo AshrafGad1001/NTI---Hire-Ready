@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>NoSQL & MongoDB — Complete Study Summary</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 28pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc {
+    padding: 60px 55px;
+  }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li {
+    margin-bottom: 8px;
+  }
+
+  section.topic {
+    padding: 60px 55px 40px 55px;
+  }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+
+  ul, ol.plain {
+    margin: 8px 0;
+    padding-left: 22px;
+  }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td {
+    border-bottom: 1.5px solid #000;
+  }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 14px;
+    color: #333;
+  }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Study Summary</p>
+  <h1>NoSQL &amp; MongoDB</h1>
+  <h2>Complete Conversation Recap — Concepts, Commands &amp; Practical Examples</h2>
+  <p class="meta">Technical Reference · Compiled from Study Session</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>SQL vs. NoSQL</li>
+    <li>ACID vs. BASE</li>
+    <li>The CAP Theorem</li>
+    <li>NoSQL Database Types</li>
+    <li>BSON (Binary JSON)</li>
+    <li>Embedding vs. Referencing</li>
+    <li>Mongo Shell — Basic Commands</li>
+    <li>Query Operators</li>
+    <li>The Aggregation Pipeline</li>
+    <li>Sort, Skip &amp; Limit</li>
+    <li>find() vs. findOne()</li>
+    <li>Projection</li>
+    <li>Index Properties</li>
+    <li>Indexing — Pros &amp; Cons</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic One</p>
+    <h1 class="topic-title">SQL vs. NoSQL</h1>
+  </div>
+
+  <h3 class="sub">SQL (Relational Databases)</h3>
+  <p>Examples: SQL Server, MySQL, PostgreSQL.</p>
+  <ul>
+    <li><strong>Structured</strong> — data lives in tables with a fixed, predefined schema (columns and types).</li>
+    <li><strong>Relations</strong> — tables are linked via Foreign Keys.</li>
+    <li><strong>ACID compliant</strong> — very high accuracy in transactions (critical for banking, e-commerce transactions).</li>
+    <li><strong>Vertical Scaling</strong> — scale by upgrading a single server (RAM/CPU).</li>
+    <li>A unified query language (SQL) across implementations.</li>
+  </ul>
+
+  <h3 class="sub">NoSQL (Non-Relational Databases)</h3>
+  <p>Example: MongoDB.</p>
+  <ul>
+    <li><strong>Unstructured / Flexible Schema</strong> — each document in a collection can have a different shape.</li>
+    <li><strong>No fixed relations</strong> — instead of JOINs, data uses Embedding or Referencing.</li>
+    <li><strong>BASE model</strong> instead of ACID: Basically Available, Soft state, Eventually consistent — faster, less strict on immediate consistency.</li>
+    <li><strong>Horizontal Scaling</strong> — add more servers (Sharding), easier to scale with massive data volumes.</li>
+    <li>Multiple types exist: Document (MongoDB), Key-Value (Redis), Column-family (Cassandra), Graph (Neo4j).</li>
+  </ul>
+
+  <h3 class="sub">When to Use Which</h3>
+  <table>
+    <thead><tr><th>Scenario</th><th>Better Fit</th></tr></thead>
+    <tbody>
+      <tr><td>Complex, stable relationships (financial transactions)</td><td>SQL</td></tr>
+      <tr><td>Frequently changing data shape, fast development needs</td><td>NoSQL</td></tr>
+      <tr><td>Massive scale (millions of users)</td><td>Usually NoSQL</td></tr>
+      <tr><td>Complex reports requiring many joins</td><td>SQL</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Topic One — SQL vs. NoSQL</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Two</p>
+    <h1 class="topic-title">ACID vs. BASE</h1>
+  </div>
+
+  <h3 class="sub">ACID (SQL Model)</h3>
+  <p>Philosophy: accuracy and consistency come first, even at the cost of speed.</p>
+  <table>
+    <thead><tr><th>Letter</th><th>Meaning</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Atomicity</td><td>All-or-nothing</td><td>A transaction either completes fully or is fully rolled back — no partial state.</td></tr>
+      <tr><td>Consistency</td><td>Valid state transitions</td><td>Data moves from one valid state to another; no rule/constraint violations.</td></tr>
+      <tr><td>Isolation</td><td>Concurrent safety</td><td>Concurrent transactions behave as though each runs alone, with no interference.</td></tr>
+      <tr><td>Durability</td><td>Permanence</td><td>Once committed, data is guaranteed to persist even after a crash.</td></tr>
+    </tbody>
+  </table>
+  <p><em>Example:</em> transferring money between two bank accounts — ACID is mandatory, since a partial transfer (money leaving one account but never arriving at the other) is unacceptable.</p>
+
+  <h3 class="sub">BASE (NoSQL Model)</h3>
+  <p>Philosophy: prioritize availability and speed, accepting that data may take a moment to fully synchronize.</p>
+  <table>
+    <thead><tr><th>Letter</th><th>Meaning</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Basically Available</td><td>Always responds</td><td>The system responds to every request, even if part of it is degraded.</td></tr>
+      <tr><td>Soft state</td><td>Not fixed</td><td>Data state can change over time even without new input, due to replica synchronization.</td></tr>
+      <tr><td>Eventually consistent</td><td>Converges over time</td><td>Replicas aren't instantly identical, but will converge within a short time.</td></tr>
+    </tbody>
+  </table>
+  <p><em>Example:</em> a Like count on a social media post — a brief delay in updating the number across viewers is harmless. Speed matters more than instant accuracy.</p>
+
+  <h3 class="sub">MongoDB in Practice</h3>
+  <p>MongoDB supports multi-document transactions since version 4.0, giving a choice: use ACID transactions when accuracy is essential, or rely on eventual consistency when speed matters more.</p>
+  <pre>const session = await mongoose.startSession();
+session.startTransaction();
+try {
+  await Order.create([orderData], { session });
+  await Product.updateMany(..., { session });
+  await session.commitTransaction();
+} catch (err) {
+  await session.abortTransaction();
+}</pre>
+  <p class="page-footer">Topic Two — ACID vs. BASE</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Three</p>
+    <h1 class="topic-title">The CAP Theorem</h1>
+  </div>
+  <p>In any distributed database, a system cannot simultaneously guarantee all three of the following once a network issue occurs — it can guarantee at most two.</p>
+
+  <h3 class="sub">The Three Properties</h3>
+  <ul>
+    <li><strong>Consistency (C)</strong> — every node returns the exact same data at the same moment.</li>
+    <li><strong>Availability (A)</strong> — every request receives a response (success or failure), even if it isn't the newest data.</li>
+    <li><strong>Partition Tolerance (P)</strong> — the system keeps functioning even if nodes lose the ability to communicate with each other.</li>
+  </ul>
+
+  <h3 class="sub">Why Not All Three?</h3>
+  <p>Network partitions are inevitable in distributed systems. So the real trade-off during a partition is between Consistency and Availability — Partition Tolerance isn't optional, since network failures will happen regardless.</p>
+  <ul>
+    <li><strong>Choosing Consistency</strong> — some nodes must stop responding (reject requests) until data is synchronized, to avoid returning incorrect data.</li>
+    <li><strong>Choosing Availability</strong> — requests are served from every node, but data may briefly differ between nodes (not fully consistent).</li>
+  </ul>
+
+  <h3 class="sub">Real-World Examples</h3>
+  <table>
+    <thead><tr><th>System</th><th>Choice</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>MongoDB (default)</td><td>CP</td><td>Prefers to pause writes on the primary rather than risk inconsistency across replicas.</td></tr>
+      <tr><td>Cassandra</td><td>AP</td><td>Prefers to always respond, even with slightly stale data, then reconciles eventually.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Read/Write Concerns in MongoDB</h3>
+  <pre>// Write Concern - confirms the write reached a certain number of nodes
+db.orders.insertOne(order, { writeConcern: { w: "majority" } })
+
+// Read Concern - ensures reads come from a synchronized copy
+db.orders.find().readConcern("majority")</pre>
+  <p>Using <code>w: "majority"</code> sacrifices a bit of speed to guarantee higher consistency — CAP trade-offs are configuration decisions you make directly in your project.</p>
+  <p class="page-footer">Topic Three — The CAP Theorem</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Four</p>
+    <h1 class="topic-title">NoSQL Database Types</h1>
+  </div>
+
+  <h3 class="sub">1. Key-Value Store</h3>
+  <p>The simplest type — every entry is a unique key mapped to a value (string, number, JSON, binary). Like a distributed HashMap/Dictionary.</p>
+  <p><em>Examples:</em> Redis, Riak. <em>Use cases:</em> caching, session storage, real-time leaderboards, temporary shopping carts.</p>
+
+  <h3 class="sub">2. Wide Column Store</h3>
+  <p>Similar to tables, but each row can have different columns from the next. Data is stored column-by-column rather than row-by-row, making it very fast for reading specific columns across millions of rows.</p>
+  <p><em>Examples:</em> Apache HBase, Cassandra. <em>Use cases:</em> Big Data analytics, time-series data (IoT sensors, logs), systems requiring massive high-speed writes.</p>
+
+  <h3 class="sub">3. Document Store</h3>
+  <p>Data is stored as documents (typically JSON/BSON), each with a flexible structure.</p>
+  <p><em>Examples:</em> MongoDB, CouchDB. <em>Use cases:</em> general web/mobile applications, variable-shaped content (CMS, catalogs) — the most common NoSQL type in MERN-stack projects.</p>
+
+  <h3 class="sub">4. Graph Store</h3>
+  <p>Data is represented as Nodes (entities) and Edges (relationships), designed specifically to query complex relationships quickly — something SQL and MongoDB struggle with.</p>
+  <p><em>Examples:</em> Neo4j, InfiniteGraph. <em>Use cases:</em> social networks (friend recommendations), recommendation engines, fraud detection, knowledge graphs.</p>
+
+  <h3 class="sub">Quick Comparison</h3>
+  <table>
+    <thead><tr><th>Type</th><th>Strongest At</th><th>Weakest At</th></tr></thead>
+    <tbody>
+      <tr><td>Key-Value</td><td>Lookup by key</td><td>Complex queries</td></tr>
+      <tr><td>Wide Column</td><td>Reading/writing single columns at massive scale</td><td>Complex relationships</td></tr>
+      <tr><td>Document</td><td>Flexibility + medium-complexity queries</td><td>Many joins between collections</td></tr>
+      <tr><td>Graph</td><td>Relationships and traversal</td><td>Simple flat data at huge scale</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Topic Four — NoSQL Database Types</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Five</p>
+    <h1 class="topic-title">BSON (Binary JSON)</h1>
+  </div>
+  <p>BSON stands for Binary JSON — the format MongoDB actually uses to store documents on disk, not plain JSON.</p>
+
+  <h3 class="sub">Why Not Plain JSON?</h3>
+  <table>
+    <thead><tr><th>Problem with JSON</th><th>BSON's Solution</th></tr></thead>
+    <tbody>
+      <tr><td>No precise data types (every number is just "number")</td><td>Specific types: Int32, Int64, Double, Decimal128</td></tr>
+      <tr><td>No dedicated date type</td><td>Native Date type stored directly as binary</td></tr>
+      <tr><td>No binary data type (images, files)</td><td>Native Binary Data type</td></tr>
+      <tr><td>Slow parsing (must be read as text first)</td><td>Faster traversal — field lengths are known upfront without reading the entire string</td></tr>
+      <tr><td>No ObjectId type</td><td>ObjectId is a native BSON type (used for MongoDB's <code>_id</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Important Note</h3>
+  <p>The JSON you see in a response (Postman, frontend, etc.) is a textual representation automatically converted from BSON. BSON itself is stored as binary inside MongoDB's <code>.wt</code> files (WiredTiger storage engine).</p>
+
+  <h3 class="sub">The 16MB Document Limit</h3>
+  <p>This is a direct consequence of BSON's design: it uses an Int32 to store document size, capping the maximum possible size at 16MB. This is why arrays that can grow unbounded (e.g., a huge number of comments) should use Referencing instead of Embedding.</p>
+  <p class="page-footer">Topic Five — BSON (Binary JSON)</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Six</p>
+    <h1 class="topic-title">Embedding vs. Referencing</h1>
+  </div>
+  <p>The most important design decision in MongoDB schema design.</p>
+
+  <h3 class="sub">Embedding</h3>
+  <p>Nesting related data directly inside the parent document.</p>
+  <pre>{
+  name: "Ashraf",
+  addresses: [
+    { city: "Shebin El-Kom", street: "..." }
+  ]
+}</pre>
+  <p>Use it when the relationship is "one-to-few" and the data is almost always read together.</p>
+
+  <h3 class="sub">Referencing</h3>
+  <p>Similar to a Foreign Key — storing a reference (ID) to another document instead of embedding it.</p>
+  <pre>{
+  name: "Ashraf",
+  projectId: ObjectId("...")
+}</pre>
+  <p>Use it when the relationship is "one-to-many" at scale, or the data changes frequently, or it's shared across multiple parents.</p>
+
+  <div class="note">Golden Rule: if an array can grow without bound (e.g., comments on a viral post), never embed it — MongoDB documents are capped at 16MB.</div>
+  <p class="page-footer">Topic Six — Embedding vs. Referencing</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Seven</p>
+    <h1 class="topic-title">Mongo Shell — Basic Commands</h1>
+  </div>
+
+  <h3 class="sub">Connecting &amp; Navigation</h3>
+  <pre>mongosh
+mongosh "mongodb://localhost:27017/mydb"
+mongosh "mongodb+srv://cluster.mongodb.net/mydb" -u user -p</pre>
+  <pre>show dbs
+use myDatabase
+db
+show collections</pre>
+
+  <h3 class="sub">Insert</h3>
+  <pre>db.projects.insertOne({ title: "GoRent" })
+db.projects.insertMany([{ title: "GoRent" }, { title: "Portfolio" }])</pre>
+
+  <h3 class="sub">Find</h3>
+  <pre>db.projects.find()
+db.projects.findOne({ title: "GoRent" })
+db.projects.find({ createdAt: { $gt: new Date("2025-01-01") } })
+db.projects.find({}, { title: 1, techStack: 1, _id: 0 })</pre>
+
+  <h3 class="sub">Update</h3>
+  <pre>db.projects.updateOne({ title: "GoRent" }, { $set: { status: "completed" } })
+db.products.updateOne({ _id: id }, { $inc: { stock: -1 } })
+db.projects.updateOne({ _id: id }, { $push: { challenges: "New challenge" } })</pre>
+
+  <h3 class="sub">Delete</h3>
+  <pre>db.projects.deleteOne({ title: "GoRent" })
+db.projects.deleteMany({ status: "archived" })
+db.projects.drop()</pre>
+
+  <h3 class="sub">Indexes</h3>
+  <pre>db.projects.createIndex({ title: 1 })
+db.projects.getIndexes()
+db.projects.dropIndex("title_1")</pre>
+
+  <h3 class="sub">User Management</h3>
+  <pre>use admin
+db.createUser({
+  user: "ashraf",
+  pwd: "securePassword",
+  roles: [{ role: "readWrite", db: "myapp" }]
+})</pre>
+  <p class="page-footer">Topic Seven — Mongo Shell Basic Commands</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Eight</p>
+    <h1 class="topic-title">Query Operators</h1>
+  </div>
+
+  <h3 class="sub">Comparison Operators</h3>
+  <pre>db.products.find({ price: { $gt: 200 } })
+db.products.find({ price: { $gte: 200 } })
+db.products.find({ price: { $lt: 500 } })
+db.products.find({ price: { $lte: 500 } })
+db.products.find({ price: { $ne: 100 } })
+db.products.find({ category: { $in: ["Electronics", "Books"] } })
+db.products.find({ category: { $nin: ["Electronics", "Books"] } })</pre>
+
+  <h3 class="sub">Logical Operators</h3>
+  <pre>// $and — all conditions must be true
+db.posts.find({ $and: [{ likes: { $gt: 200 } }, { likes: { $lt: 500 } }] })
+
+// Simpler equivalent when on the same field
+db.posts.find({ likes: { $gt: 200, $lt: 500 } })
+
+// $or — at least one condition true
+db.posts.find({ $or: [{ likes: { $gt: 500 } }, { category: "Trending" }] })
+
+// $nor — neither condition true
+db.posts.find({ $nor: [{ likes: { $gt: 500 } }, { category: "Trending" }] })</pre>
+
+  <h3 class="sub">Element Operators</h3>
+  <pre>db.products.find({ discount: { $exists: true } })
+db.products.find({ price: { $type: "double" } })</pre>
+
+  <h3 class="sub">Array Operators</h3>
+  <pre>db.projects.find({ techStack: { $all: ["Next.js", "TypeScript"] } })
+db.projects.find({ techStack: { $size: 3 } })
+db.orders.find({ items: { $elemMatch: { productId: id, quantity: { $gte: 2 } } } })</pre>
+
+  <h3 class="sub">Evaluation Operators</h3>
+  <pre>db.products.find({ title: { $regex: "^Laptop", $options: "i" } })
+db.products.find({ $expr: { $gt: ["$price", "$discountPrice"] } })
+db.products.find({ price: { $mod: [5, 0] } })</pre>
+  <p class="page-footer">Topic Eight — Query Operators</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Nine</p>
+    <h1 class="topic-title">The Aggregation Pipeline</h1>
+  </div>
+
+  <h3 class="sub">Core Stages</h3>
+  <pre>// $match — filtering, like WHERE
+{ $match: { status: "completed", totalPrice: { $gte: 100 } } }
+
+// $group — grouping, like GROUP BY
+{ $group: {
+    _id: "$userId",
+    totalSpent: { $sum: "$totalPrice" },
+    orderCount: { $sum: 1 },
+    avgOrder: { $avg: "$totalPrice" }
+}}
+
+// $sort / $limit / $skip
+{ $sort: { price: -1 } }
+{ $skip: 10 }
+{ $limit: 5 }
+
+// $project — reshaping fields, like SELECT
+{ $project: { title: 1, price: 1, priceAfterTax: { $multiply: ["$price", 1.14] }, _id: 0 } }
+
+// $lookup — join across collections
+{ $lookup: { from: "products", localField: "productId", foreignField: "_id", as: "productDetails" } }
+
+// $unwind — flatten an array into separate documents
+{ $unwind: "$items" }
+
+// $addFields — add computed fields without removing existing ones
+{ $addFields: { finalPrice: { $subtract: ["$price", "$discount"] } } }
+
+// $count
+{ $count: "totalElectronics" }</pre>
+
+  <h3 class="sub">Advanced Stages</h3>
+  <pre>// $facet — run multiple sub-pipelines at once (useful for dashboards)
+{ $facet: {
+    priceStats: [{ $group: { _id: null, avgPrice: { $avg: "$price" } } }],
+    categoryCounts: [{ $group: { _id: "$category", count: { $sum: 1 } } }]
+}}
+
+// $bucket — group data into ranges
+{ $bucket: { groupBy: "$price", boundaries: [0, 100, 500, 1000], default: "Other" } }
+
+// $replaceRoot — reshape the root document
+{ $replaceRoot: { newRoot: "$items" } }
+
+// $out / $merge — write pipeline results to a collection
+{ $merge: { into: "userTotals", whenMatched: "merge" } }
+
+// $sample — random documents
+{ $sample: { size: 3 } }</pre>
+
+  <h3 class="sub">Common Group/Project Operators</h3>
+  <table>
+    <thead><tr><th>Operator</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>$sum</td><td>Sum values</td></tr>
+      <tr><td>$avg</td><td>Average</td></tr>
+      <tr><td>$max / $min</td><td>Highest / lowest value</td></tr>
+      <tr><td>$push</td><td>Collect values into an array</td></tr>
+      <tr><td>$addToSet</td><td>Like $push, but without duplicates</td></tr>
+      <tr><td>$first / $last</td><td>First / last document in the group</td></tr>
+      <tr><td>$cond</td><td>If/else expression</td></tr>
+      <tr><td>$ifNull</td><td>Default value if null</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Topic Nine — The Aggregation Pipeline</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Ten</p>
+    <h1 class="topic-title">Sort, Skip &amp; Limit</h1>
+  </div>
+
+  <h3 class="sub">sort()</h3>
+  <pre>db.products.find().sort({ price: 1 })   // ascending
+db.products.find().sort({ price: -1 })  // descending
+db.products.find().sort({ category: 1, price: -1 })  // multi-field</pre>
+
+  <h3 class="sub">limit() &amp; skip()</h3>
+  <pre>db.products.find().limit(5)
+db.products.find().skip(10)</pre>
+
+  <h3 class="sub">Pagination — All Three Together</h3>
+  <pre>const page = 2;
+const limitPerPage = 10;
+
+db.products.find()
+  .sort({ createdAt: -1 })
+  .skip((page - 1) * limitPerPage)
+  .limit(limitPerPage);</pre>
+  <div class="note">Order matters: always sort first, then skip, then limit — otherwise pagination results can be inconsistent across pages.</div>
+
+  <h3 class="sub">Mongoose Example</h3>
+  <pre>const products = await Product.find({ category: "Electronics" })
+  .sort({ ratingsAverage: -1 })
+  .skip((page - 1) * limit)
+  .limit(limit);</pre>
+  <p class="page-footer">Topic Ten — Sort, Skip &amp; Limit</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Eleven</p>
+    <h1 class="topic-title">find() vs. findOne()</h1>
+  </div>
+
+  <h3 class="sub">find()</h3>
+  <p>Returns a cursor pointing to every document matching the filter — could be zero, one, or millions of documents.</p>
+  <pre>db.products.find({ category: "Electronics" })</pre>
+  <ul>
+    <li>Returns an array-like cursor, not a plain array.</li>
+    <li>Supports chaining <code>.sort()</code>, <code>.limit()</code>, <code>.skip()</code>.</li>
+    <li>Returns an empty cursor (not null) if nothing matches.</li>
+  </ul>
+
+  <h3 class="sub">findOne()</h3>
+  <p>Returns only the first matching document, even if multiple documents match.</p>
+  <pre>db.products.findOne({ category: "Electronics" })</pre>
+  <ul>
+    <li>Returns a single object directly (not an array, not a cursor).</li>
+    <li>Returns <code>null</code> if no match is found.</li>
+  </ul>
+
+  <h3 class="sub">When to Use Which</h3>
+  <table>
+    <thead><tr><th>Scenario</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>Need a full list (e.g., all products in a category)</td><td>find()</td></tr>
+      <tr><td>Check if a document exists (e.g., email lookup at signup)</td><td>findOne()</td></tr>
+      <tr><td>Fetch a user by a unique field (_id, email)</td><td>findOne() / findById()</td></tr>
+      <tr><td>Pagination / paged listings</td><td>find()</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">Mongoose adds <code>findById()</code> as shorthand for <code>findOne({ _id: id })</code>.</div>
+  <p class="page-footer">Topic Eleven — find() vs. findOne()</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Twelve</p>
+    <h1 class="topic-title">Projection</h1>
+  </div>
+  <p>The second parameter of <code>find()</code>, used to control which fields are returned instead of the entire document.</p>
+  <pre>db.Posts.find(
+  { Sticker: { $nin: ["Happy Bear", "Angry Bear"] } },
+  { UID: 1, Comments: 1 }
+)</pre>
+
+  <h3 class="sub">Inclusion (value: 1)</h3>
+  <p>Specify only the fields you want; everything else is excluded automatically.</p>
+  <pre>db.Posts.find({}, { UID: 1, Comments: 1 })</pre>
+
+  <h3 class="sub">Exclusion (value: 0)</h3>
+  <p>Specify fields to exclude; everything else is returned.</p>
+  <pre>db.Posts.find({}, { Sticker: 0 })</pre>
+
+  <h3 class="sub">Excluding _id</h3>
+  <pre>db.Posts.find({}, { UID: 1, Comments: 1, _id: 0 })</pre>
+
+  <div class="note">Important rule: you cannot mix inclusion and exclusion in the same query, except for <code>_id</code>, which is always allowed as an exception.</div>
+
+  <h3 class="sub">Practical Example</h3>
+  <pre>db.products.find(
+  { category: "Electronics" },
+  { title: 1, price: 1, imageCover: 1, ratingsAverage: 1 }
+)</pre>
+  <p>Reduces the amount of data transferred over the network and speeds up response time, especially with large datasets.</p>
+  <p class="page-footer">Topic Twelve — Projection</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Thirteen</p>
+    <h1 class="topic-title">Index Properties</h1>
+  </div>
+
+  <h3 class="sub">1. Unique</h3>
+  <p>Prevents duplicate values in a field across all documents.</p>
+  <pre>db.users.createIndex({ email: 1 }, { unique: true })</pre>
+  <p><em>Use case:</em> email or username fields in an auth system, to prevent duplicate account registration.</p>
+
+  <h3 class="sub">2. Sparse</h3>
+  <p>The index ignores documents where the field is missing entirely, instead of indexing them as null.</p>
+  <pre>db.users.createIndex({ phoneNumber: 1 }, { sparse: true })</pre>
+  <p><em>Use case:</em> optional fields (e.g., not every user provides a phone number). Combining sparse with unique avoids conflicts that would otherwise occur when many documents share a null value.</p>
+
+  <h3 class="sub">3. Partial</h3>
+  <p>Similar to sparse but more precise — lets you define a custom filter expression, so the index only covers documents matching that condition.</p>
+  <pre>db.orders.createIndex(
+  { customerId: 1 },
+  { partialFilterExpression: { status: "completed" } }
+)</pre>
+  <p><em>Use case:</em> indexing only completed orders instead of all orders, reducing index size and speeding up frequently filtered queries.</p>
+
+  <h3 class="sub">4. Compound</h3>
+  <p>A single index built from more than one field.</p>
+  <pre>db.products.createIndex({ category: 1, price: -1 })</pre>
+  <p><em>Use case:</em> filtering products by category while sorting by price simultaneously — much faster than two separate indexes.</p>
+  <div class="note">The ESR Rule (Equality, Sort, Range) determines the best field order inside a compound index: equality fields first, then sort fields, then range fields.</div>
+  <p class="page-footer">Topic Thirteen — Index Properties</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Topic Fourteen</p>
+    <h1 class="topic-title">Indexing — Pros &amp; Cons</h1>
+  </div>
+
+  <h3 class="sub">Pros</h3>
+  <table>
+    <thead><tr><th>Benefit</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Read performance</td><td>Instead of a full collection scan, the index jumps directly to the right location.</td></tr>
+      <tr><td>Faster sorting</td><td>If an index exists on the sort field, MongoDB can use the index's existing order instead of sorting all data at query time.</td></tr>
+      <tr><td>Improved aggregation</td><td>Early $match/$sort stages benefit from indexes, reducing documents processed in later stages.</td></tr>
+      <tr><td>Enforcing data rules (unique)</td><td>A unique index prevents duplicate values (e.g., email) without extra application-level validation.</td></tr>
+      <tr><td>Reduced memory pressure</td><td>Index lookups load only a small portion of data into memory compared to scanning the full collection.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Cons</h3>
+  <table>
+    <thead><tr><th>Drawback</th><th>Explanation</th></tr></thead>
+    <tbody>
+      <tr><td>Slower writes</td><td>Every insert, update, or delete must update all related indexes — more indexes mean slower writes.</td></tr>
+      <tr><td>Extra storage usage</td><td>Each index takes up disk space separate from the actual data.</td></tr>
+      <tr><td>RAM consumption</td><td>MongoDB tries to keep active indexes in memory; if indexes exceed available RAM, disk I/O slows things down instead of helping.</td></tr>
+      <tr><td>Maintenance complexity</td><td>Requires ongoing monitoring to identify and remove unused indexes.</td></tr>
+      <tr><td>Hard limit on count</td><td>MongoDB allows a maximum of 64 indexes per collection.</td></tr>
+      <tr><td>Misuse can hurt performance</td><td>A poorly chosen index (rarely filtered field, wrong field order in a compound index) wastes space and resources with little benefit.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Golden Rule</h3>
+  <p><strong>Do index:</strong> fields frequently used in <code>find()</code>/<code>$match</code> conditions, <code>sort()</code>, and foreign-key-like references.</p>
+  <p><strong>Don't index:</strong> rarely filtered/sorted fields, or fields that change value extremely frequently (e.g., counters updated every second), since the write overhead outweighs the benefit.</p>
+
+  <h3 class="sub">Practical Example</h3>
+  <pre>db.products.createIndex({ category: 1, price: -1 })  // frequently filtered and sorted
+db.reviews.createIndex({ productId: 1 })              // foreign-key-like, used in $lookup</pre>
+  <p class="page-footer">Topic Fourteen — Indexing Pros &amp; Cons</p>
+</section>
+
+</body>
+</html>

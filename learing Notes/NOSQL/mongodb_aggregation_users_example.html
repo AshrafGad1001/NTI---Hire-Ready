@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>MongoDB Aggregation — Real-World Users Collection Example</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 26pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 18pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 12.5pt;
+    font-weight: 700;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 10.8pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.5pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .scenario {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 10px;
+    color: #222;
+  }
+  .scenario strong { font-weight: 700; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Applied Example</p>
+  <h1>MongoDB Aggregation Pipeline</h1>
+  <h2>Real-World "Users" Collection — Training &amp; Hiring Platform Scenario</h2>
+  <p class="meta">Technical Reference · Applied Aggregation &amp; Indexing</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>The Scenario &amp; Seed Data</li>
+    <li>$match — Filter Active Trainees by Track</li>
+    <li>$group — Employment Rate per Track</li>
+    <li>$sort + $limit — Top Performing Trainees</li>
+    <li>$project — Hiring-Ready Report</li>
+    <li>$addFields — Months Since Joining</li>
+    <li>$count — Dropped-Out Trainees</li>
+    <li>$unwind — Most Common Skills</li>
+    <li>$lookup — Matching Job Openings</li>
+    <li>$facet — Full Dashboard in One Query</li>
+    <li>$bucket — Progress Level Groups</li>
+    <li>$merge — Monthly Snapshot Reports</li>
+    <li>Indexes on the Users Collection</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">The Scenario &amp; Seed Data</h1>
+  </div>
+  <p>Imagine building a <strong>tech training &amp; hiring platform</strong> (similar to the DEY HireReady Initiative). The <code>users</code> collection holds trainees, mentors, and admins.</p>
+  <pre>db.users.insertMany([
+  {
+    _id: 1, name: "Ahmed Sayed", email: "ahmed@gmail.com", age: 24,
+    city: "Cairo", track: "MERN Stack", role: "trainee", isActive: true,
+    joinDate: new Date("2025-01-15"), completedCourses: 8, monthlyIncome: 0,
+    skills: ["React", "Node.js", "MongoDB"], appliedJobsCount: 15
+  },
+  {
+    _id: 2, name: "Mona Khalil", email: "mona@gmail.com", age: 27,
+    city: "Alexandria", track: ".NET", role: "trainee", isActive: true,
+    joinDate: new Date("2025-02-01"), completedCourses: 12, monthlyIncome: 8000,
+    skills: ["C#", "ASP.NET Core", "SQL Server"], appliedJobsCount: 20
+  },
+  {
+    _id: 3, name: "Youssef Adel", email: "youssef@gmail.com", age: 23,
+    city: "Cairo", track: "MERN Stack", role: "trainee", isActive: false,
+    joinDate: new Date("2024-11-10"), completedCourses: 3, monthlyIncome: 0,
+    skills: ["JavaScript"], appliedJobsCount: 2
+  },
+  {
+    _id: 4, name: "Salma Reda", email: "salma@gmail.com", age: 30,
+    city: "Menoufia", track: "Instructor", role: "mentor", isActive: true,
+    joinDate: new Date("2023-06-01"), completedCourses: 0, monthlyIncome: 15000,
+    skills: ["Teaching", "MERN Stack", "Mentorship"], appliedJobsCount: 0
+  },
+  {
+    _id: 5, name: "Karim Fathy", email: "karim@gmail.com", age: 25,
+    city: "Menoufia", track: "MERN Stack", role: "trainee", isActive: true,
+    joinDate: new Date("2025-03-20"), completedCourses: 10, monthlyIncome: 6500,
+    skills: ["React", "Express", "MongoDB", "Redis"], appliedJobsCount: 25
+  },
+  {
+    _id: 6, name: "Nourhan Adly", email: "nourhan@gmail.com", age: 22,
+    city: "Alexandria", track: ".NET", role: "trainee", isActive: true,
+    joinDate: new Date("2025-01-05"), completedCourses: 9, monthlyIncome: 0,
+    skills: ["C#", "Entity Framework"], appliedJobsCount: 18
+  },
+  {
+    _id: 7, name: "Hossam Admin", email: "hossam@platform.com", age: 33,
+    city: "Cairo", track: null, role: "admin", isActive: true,
+    joinDate: new Date("2022-01-01"), completedCourses: 0, monthlyIncome: 20000,
+    skills: ["Management"], appliedJobsCount: 0
+  }
+])</pre>
+  <p>Three types of users exist: <code>trainee</code>, <code>mentor</code>, and <code>admin</code>. Each has a <code>track</code>, a <code>monthlyIncome</code> (once employed), and an <code>appliedJobsCount</code>.</p>
+  <p class="page-footer">Section One — The Scenario &amp; Seed Data</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">$match — Filter Active Trainees by Track</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee", track: "MERN Stack", isActive: true } }
+])</pre>
+  <p><strong>Result:</strong> Ahmed Sayed and Karim Fathy (Youssef is excluded since <code>isActive: false</code>).</p>
+  <div class="scenario"><strong>Real question answered:</strong> "I need the list of active trainees in a specific track so I can send them a new job opportunity."</div>
+  <p class="page-footer">Section Two — $match</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">$group — Employment Rate per Track</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $group: {
+      _id: "$track",
+      totalTrainees: { $sum: 1 },
+      employed: { $sum: { $cond: [{ $gt: ["$monthlyIncome", 0] }, 1, 0] } },
+      avgAppliedJobs: { $avg: "$appliedJobsCount" }
+  }}
+])</pre>
+  <p><strong>Result:</strong></p>
+  <pre>{ "_id": "MERN Stack", "totalTrainees": 3, "employed": 1, "avgAppliedJobs": 14 }
+{ "_id": ".NET",       "totalTrainees": 2, "employed": 1, "avgAppliedJobs": 19 }</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "Which track leads to more employed graduates — MERN or .NET?" — a question management would genuinely ask.</div>
+  <p class="page-footer">Section Three — $group</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">$sort + $limit — Top Performing Trainees</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $sort: { completedCourses: -1 } },
+  { $limit: 3 }
+])</pre>
+  <p><strong>Result:</strong> Mona (12) → Karim (10) → Nourhan (9)</p>
+  <div class="scenario"><strong>Real question answered:</strong> "Who are the top 3 trainees I can recommend to a partner company that's hiring?"</div>
+  <p class="page-footer">Section Four — $sort + $limit</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">$project — Hiring-Ready Report</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee", isActive: true } },
+  { $project: {
+      _id: 0,
+      name: 1,
+      track: 1,
+      skills: 1,
+      readyForHire: { $gte: ["$completedCourses", 8] }
+  }}
+])</pre>
+  <p><strong>Result:</strong> A trimmed report — no email or salary (sensitive data) — with a new computed field indicating whether the trainee is "ready for hire."</p>
+  <p class="page-footer">Section Five — $project</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">$addFields — Months Since Joining</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $addFields: {
+      monthsSinceJoining: {
+        $dateDiff: { startDate: "$joinDate", endDate: new Date(), unit: "month" }
+      }
+  }}
+])</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "How many months has this trainee been enrolled without finding a job yet? — a strong indicator they need closer follow-up."</div>
+  <p class="page-footer">Section Six — $addFields</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">$count — Dropped-Out Trainees</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee", isActive: false } },
+  { $count: "droppedOutTrainees" }
+])</pre>
+  <p><strong>Result:</strong> <code>{ "droppedOutTrainees": 1 }</code> (Youssef only).</p>
+  <p class="page-footer">Section Seven — $count</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">$unwind — Most Common Skills</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $unwind: "$skills" },
+  { $group: { _id: "$skills", count: { $sum: 1 } } },
+  { $sort: { count: -1 } }
+])</pre>
+  <p><strong>Result:</strong></p>
+  <pre>{ "_id": "MongoDB", "count": 2 }
+{ "_id": "React",   "count": 2 }
+{ "_id": "C#",      "count": 2 }
+...</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "Which skill is most common among trainees, so I know what supplementary course to build?"</div>
+  <p class="page-footer">Section Eight — $unwind</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">$lookup — Matching Job Openings</h1>
+  </div>
+  <pre>db.jobs.insertMany([
+  { _id: 101, title: "Junior MERN Developer", requiredTrack: "MERN Stack", city: "Cairo" },
+  { _id: 102, title: "Junior .NET Developer", requiredTrack: ".NET", city: "Alexandria" }
+])
+
+db.users.aggregate([
+  { $match: { role: "trainee", isActive: true } },
+  { $lookup: {
+      from: "jobs",
+      localField: "track",
+      foreignField: "requiredTrack",
+      as: "matchingJobs"
+  }}
+])</pre>
+  <p><strong>Result:</strong> Each trainee now carries a <code>matchingJobs</code> array with openings that match their track — effectively a real "Recommended Jobs" feature.</p>
+  <p class="page-footer">Section Nine — $lookup</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Ten</p>
+    <h1 class="topic-title">$facet — Full Dashboard in One Query</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $facet: {
+      "usersByRole": [
+        { $group: { _id: "$role", count: { $sum: 1 } } }
+      ],
+      "employmentStats": [
+        { $match: { role: "trainee" } },
+        { $group: {
+            _id: null,
+            employed: { $sum: { $cond: [{ $gt: ["$monthlyIncome", 0] }, 1, 0] } },
+            unemployed: { $sum: { $cond: [{ $eq: ["$monthlyIncome", 0] }, 1, 0] } }
+        }}
+      ],
+      "topCity": [
+        { $group: { _id: "$city", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 1 }
+      ]
+  }}
+])</pre>
+  <div class="scenario"><strong>Real question answered:</strong> "I need one dashboard showing: user distribution by role, employment rate, and the city with the most trainees" — all in a single query instead of three.</div>
+  <p class="page-footer">Section Ten — $facet</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eleven</p>
+    <h1 class="topic-title">$bucket — Progress Level Groups</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $bucket: {
+      groupBy: "$completedCourses",
+      boundaries: [0, 5, 10, 15],
+      default: "Advanced",
+      output: { count: { $sum: 1 }, names: { $push: "$name" } }
+  }}
+])</pre>
+  <p><strong>Result:</strong></p>
+  <pre>{ "_id": 0,  "count": 1, "names": ["Youssef Adel"] }               // Beginner (0-4 courses)
+{ "_id": 5,  "count": 3, "names": ["Ahmed", "Nourhan", "Karim"] }  // Intermediate (5-9)
+{ "_id": 10, "count": 1, "names": ["Mona Khalil"] }                // Advanced (10-14)</pre>
+  <p class="page-footer">Section Eleven — $bucket</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Twelve</p>
+    <h1 class="topic-title">$merge — Monthly Snapshot Reports</h1>
+  </div>
+  <pre>db.users.aggregate([
+  { $match: { role: "trainee" } },
+  { $group: {
+      _id: "$track",
+      totalActive: { $sum: { $cond: ["$isActive", 1, 0] } },
+      employmentRate: { $avg: { $cond: [{ $gt: ["$monthlyIncome", 0] }, 1, 0] } }
+  }},
+  { $merge: { into: "monthlyReports", whenMatched: "replace" } }
+])</pre>
+  <div class="scenario"><strong>Real scenario:</strong> run this pipeline every month to persist a snapshot into a <code>monthlyReports</code> collection, tracking how the employment rate evolves over time.</div>
+  <p class="page-footer">Section Twelve — $merge</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Thirteen</p>
+    <h1 class="topic-title">Indexes on the Users Collection</h1>
+  </div>
+
+  <h3 class="sub">Unique Index — Prevent Duplicate Registration</h3>
+  <pre>db.users.createIndex({ email: 1 }, { unique: true })</pre>
+  <div class="scenario">If someone tries registering with an email already on the platform, the database itself rejects the operation.</div>
+
+  <h3 class="sub">Compound Index — The Most Common Admin Filter</h3>
+  <pre>db.users.createIndex({ role: 1, track: 1, isActive: 1 })</pre>
+  <div class="scenario">The most frequent query in the admin dashboard is "get all active trainees in a given track." This index makes it instant even with thousands of users.</div>
+  <pre>// Query that benefits from this index
+db.users.find({ role: "trainee", track: "MERN Stack", isActive: true })</pre>
+
+  <h3 class="sub">Sparse Index — Since Admins &amp; Mentors Have No Track</h3>
+  <pre>db.users.createIndex({ track: 1 }, { sparse: true })</pre>
+  <div class="scenario">Hossam Admin has <code>track: null</code>. A sparse index skips users without a track instead of indexing them all under a repeated null value.</div>
+
+  <h3 class="sub">Partial Index — Only on Inactive Trainees</h3>
+  <pre>db.users.createIndex(
+  { joinDate: 1 },
+  { partialFilterExpression: { isActive: false } }
+)</pre>
+  <div class="scenario">A recurring "trainees who went inactive" report filtered by join date only needs an index covering inactive users — saving significant space versus indexing all 10,000+ users.</div>
+
+  <h3 class="sub">Verifying Index Effectiveness</h3>
+  <pre>db.users.find({ role: "trainee", track: "MERN Stack", isActive: true }).explain("executionStats")</pre>
+  <p>If the result shows <code>"stage": "IXSCAN"</code>, the compound index is being used. If it shows <code>"stage": "COLLSCAN"</code>, it means a full collection scan happened instead.</p>
+  <p class="page-footer">Section Thirteen — Indexes on the Users Collection</p>
+</section>
+
+</body>
+</html>

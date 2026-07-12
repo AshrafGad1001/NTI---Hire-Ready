@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Mongoose In Depth — Schemas, Middleware &amp; Population</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 26pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 18.5pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.5pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>Mongoose In Depth</h1>
+  <h2>Schemas, Instance &amp; Static Methods, Virtuals, Middleware &amp; Population</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Schema — Beyond Just Defining Fields</li>
+    <li>Important Schema Options Often Overlooked</li>
+    <li>Instance Methods vs. Static Methods vs. Virtuals</li>
+    <li>Middleware (Hooks) — Pre and Post</li>
+    <li>The "this" Context Trap in Middleware</li>
+    <li>Population — Replacing Manual Joins</li>
+    <li>The N+1 Query Problem &amp; When to Avoid Populate</li>
+    <li>Mongoose Validation vs. MongoDB Schema Validation</li>
+    <li>Custom Error Messages with Enum</li>
+    <li>Indexes in Mongoose</li>
+    <li>Summary — What to Use When</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Schema — Beyond Just Defining Fields</h1>
+  </div>
+  <h3 class="sub">Basic Definition</h3>
+  <pre>const mongoose = require("mongoose");
+
+const productSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: [true, "Product title is required"],
+    trim: true,
+    minlength: 3,
+    maxlength: 100
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true
+  }
+}, {
+  timestamps: true   // automatically adds createdAt and updatedAt
+});</pre>
+  <p class="page-footer">Section One — Schema Basics</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">Important Schema Options Often Overlooked</h1>
+  </div>
+  <pre>const productSchema = new mongoose.Schema({
+  // ... fields
+}, {
+  timestamps: true,
+
+  toJSON: { virtuals: true },     // makes virtuals appear when converted to JSON
+  toObject: { virtuals: true },
+
+  strict: true,      // (default: true) — any field not defined in the schema is ignored automatically
+
+  versionKey: false, // removes the __v field Mongoose adds automatically for version tracking
+
+  collection: "products"  // manually set the collection name (if different from default)
+});</pre>
+
+  <div class="warning-box"><strong>Important note on "strict":</strong> setting it to <code>false</code> means any field on the document not defined in the schema gets saved anyway — this defeats one of the schema's most valuable protections (guarding against unexpected data). Keep it <code>true</code> unless you have a strong reason not to.</div>
+  <p class="page-footer">Section Two — Schema Options</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Instance Methods vs. Static Methods vs. Virtuals</h1>
+  </div>
+
+  <h3 class="sub">Instance Methods — Operate on a Single Document</h3>
+  <pre>productSchema.methods.isInStock = function() {
+  return this.quantity > 0;
+};
+
+// Usage:
+const product = await Product.findById(id);
+if (product.isInStock()) { ... }</pre>
+
+  <h3 class="sub">Static Methods — Operate on the Model Itself</h3>
+  <pre>productSchema.statics.findByCategory = function(categoryId) {
+  return this.find({ category: categoryId });
+};
+
+// Usage:
+const products = await Product.findByCategory(categoryId);</pre>
+
+  <h3 class="sub">Virtuals — Computed Fields, Not Actually Stored</h3>
+  <pre>productSchema.virtual("priceAfterDiscount").get(function() {
+  return this.price - (this.price * this.discount / 100);
+});
+
+// Or a virtual that pulls data from another collection (reverse population)
+productSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id"
+});</pre>
+
+  <div class="warning-box"><strong>Important:</strong> a virtual is never stored in the database — it's calculated only when accessed. You must enable <code>toJSON: { virtuals: true }</code> for it to show up in responses.</div>
+
+  <table>
+    <thead><tr><th>Concept</th><th>Use It When...</th></tr></thead>
+    <tbody>
+      <tr><td>Instance Methods</td><td>You need an operation tied to a specific document (e.g., <code>comparePassword</code>)</td></tr>
+      <tr><td>Static Methods</td><td>You need a custom query that repeats often (e.g., <code>findActiveUsers</code>)</td></tr>
+      <tr><td>Virtuals</td><td>You need a computed field that shouldn't be stored (e.g., <code>fullName</code>, <code>priceAfterDiscount</code>)</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — Methods &amp; Virtuals</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Middleware (Hooks) — Pre and Post</h1>
+  </div>
+  <p>Middleware functions run <strong>automatically before or after</strong> a given operation (save, find, remove, etc.).</p>
+
+  <table>
+    <thead><tr><th>Type</th><th>When It Runs</th></tr></thead>
+    <tbody>
+      <tr><td><code>pre</code></td><td>Before the operation</td></tr>
+      <tr><td><code>post</code></td><td>After the operation</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Example 1 — pre("save"): Hashing the Password Before Saving</h3>
+  <pre>const bcrypt = require("bcryptjs");
+
+userSchema.pre("save", async function(next) {
+  if (!this.isModified("password")) return next();  // skip re-hashing if password wasn't changed
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});</pre>
+  <div class="note"><strong>A common beginner question:</strong> why <code>this.isModified("password")</code>? Because if you call <code>save()</code> to update a different field (like the name), this check prevents the password from being re-hashed every single time you save, even though it's already hashed from before.</div>
+
+  <h3 class="sub">Example 2 — pre("find"): Hiding Soft-Deleted Products</h3>
+  <pre>productSchema.pre(/^find/, function(next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});</pre>
+  <p><code>/^find/</code> is a regex that covers every operation starting with "find" (<code>find</code>, <code>findOne</code>, <code>findById</code>, etc.) at once.</p>
+
+  <h3 class="sub">Example 3 — post("save"): Logging or Sending an Email</h3>
+  <pre>orderSchema.post("save", function(doc) {
+  console.log(`Order ${doc._id} was created`);
+  // could send a confirmation email here, for example
+});</pre>
+
+  <h3 class="sub">Example 4 — pre("findOneAndDelete"): Cascade Delete</h3>
+  <pre>// If a Category is deleted, delete all products linked to it
+categorySchema.pre("findOneAndDelete", async function(next) {
+  const categoryId = this.getQuery()._id;
+  await Product.deleteMany({ category: categoryId });
+  next();
+});</pre>
+  <p class="page-footer">Section Four — Middleware</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">The "this" Context Trap in Middleware</h1>
+  </div>
+  <p>A point that confuses many beginners: what <code>this</code> refers to changes depending on the middleware type.</p>
+  <pre>// In document middleware (save, validate) — "this" refers to the Document
+userSchema.pre("save", function(next) {
+  console.log(this.name);  // ✅ works
+  next();
+});
+
+// In query middleware (find, findOne, updateOne) — "this" refers to the Query itself, not a Document
+productSchema.pre("find", function(next) {
+  console.log(this.getQuery());  // ✅ works — returns the search condition
+  console.log(this.name);        // ❌ undefined — there's no document yet
+  next();
+});</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Never use arrow functions for middleware callbacks — arrow functions don't bind their own <code>this</code>, so it will point to the surrounding scope instead of the document/query.</li>
+      <li>When debugging middleware behavior, log <code>this.constructor.modelName</code> to confirm which model context you're actually inside.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Five — The "this" Context Trap</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">Population — Replacing Manual Joins</h1>
+  </div>
+  <h3 class="sub">The Core Idea</h3>
+  <p>Once you define a <code>ref</code> in the schema, you can replace an ObjectId with the full referenced document at query time.</p>
+  <pre>const orderSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
+});</pre>
+  <pre>// Without populate
+const order = await Order.findById(id);
+console.log(order.user);  // just the ObjectId
+
+// With populate
+const order = await Order.findById(id).populate("user");
+console.log(order.user);  // the full User document</pre>
+
+  <h3 class="sub">Populate with Field Selection (Like Projection)</h3>
+  <pre>const order = await Order.findById(id).populate("user", "name email");
+// only fetches name and email from User, not everything</pre>
+
+  <h3 class="sub">Multiple Populates Together</h3>
+  <pre>const order = await Order.findById(id)
+  .populate("user", "name email")
+  .populate("products", "title price");</pre>
+
+  <h3 class="sub">Nested Population — When a Reference Itself Has Another Reference</h3>
+  <pre>const review = await Review.findById(id).populate({
+  path: "product",
+  populate: {
+    path: "category",
+    select: "name"
+  }
+});</pre>
+
+  <h3 class="sub">Populate with Filter and Sort</h3>
+  <pre>const category = await Category.findById(id).populate({
+  path: "products",
+  match: { price: { $gte: 100 } },
+  select: "title price",
+  options: { sort: { price: -1 }, limit: 5 }
+});</pre>
+  <p class="page-footer">Section Six — Population</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">The N+1 Query Problem &amp; When to Avoid Populate</h1>
+  </div>
+  <p>Populate performs a <strong>separate additional query</strong> for each reference — it's not a true JOIN like in SQL. If you have an array of 100 orders and each one is populated, this can result in hundreds of queries.</p>
+
+  <div class="warning-box"><strong>The N+1 problem:</strong> one query to get the list, then N additional queries (one per referenced document) to populate each one — performance degrades quickly as the list grows.</div>
+
+  <h3 class="sub">The Better Alternative for High Performance</h3>
+  <p>Use the Aggregation Pipeline with <code>$lookup</code> instead of Populate, especially with large datasets or a high query volume.</p>
+  <pre>// Instead of Populate, you can use:
+Order.aggregate([
+  { $match: { _id: orderId } },
+  { $lookup: { from: "users", localField: "user", foreignField: "_id", as: "user" } }
+])</pre>
+
+  <div class="tip-box">
+    <span class="tip-label">Tips &amp; Tricks</span>
+    <ul>
+      <li>Populate is fine for typical CRUD endpoints with reasonable list sizes and pagination — don't over-optimize prematurely.</li>
+      <li>Reach for <code>$lookup</code>-based aggregation when a single request would otherwise trigger dozens or hundreds of populate queries, or when you need to combine population with grouping/filtering logic in the same query.</li>
+      <li>Always paginate lists that use populate — an unbounded list with nested populate is a common source of slow endpoints in production.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Seven — N+1 Query Problem</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eight</p>
+    <h1 class="topic-title">Mongoose Validation vs. MongoDB Schema Validation</h1>
+  </div>
+  <pre>const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    unique: true,
+    lowercase: true,
+    validate: {
+      validator: function(value) {
+        return /^\S+@\S+\.\S+$/.test(value);
+      },
+      message: "Invalid email format"
+    }
+  },
+  age: {
+    type: Number,
+    min: [18, "Must be at least 18 years old"],
+    max: [100, "Age cannot exceed 100"]
+  }
+});</pre>
+
+  <div class="note"><strong>The difference from MongoDB's own $jsonSchema validation:</strong> Mongoose validation runs at the application layer (Node.js), before the data even reaches the database. It responds to the user faster, but doesn't protect you if someone accesses the database directly, bypassing your application entirely.</div>
+  <p class="page-footer">Section Eight — Mongoose Validation vs. DB-Level Validation</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Nine</p>
+    <h1 class="topic-title">Custom Error Messages with Enum</h1>
+  </div>
+  <pre>const orderSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    enum: {
+      values: ["pending", "confirmed", "shipped", "delivered"],
+      message: "{VALUE} is not a valid status"
+    },
+    default: "pending"
+  }
+});</pre>
+  <p>The <code>{VALUE}</code> placeholder is automatically replaced with the actual invalid value submitted, producing a clear, specific error message.</p>
+  <p class="page-footer">Section Nine — Custom Error Messages</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Ten</p>
+    <h1 class="topic-title">Indexes in Mongoose</h1>
+  </div>
+  <pre>userSchema.index({ email: 1 }, { unique: true });
+productSchema.index({ category: 1, price: -1 });</pre>
+  <p>These map directly to the same index concepts covered earlier at the MongoDB shell level — Mongoose simply lets you declare them alongside the schema definition itself, keeping index intent version-controlled with your model code.</p>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Mongoose builds indexes automatically when the app starts (in development), which can be slow on large collections — in production, create indexes explicitly via migration scripts or the shell instead of relying on auto-indexing.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Ten — Indexes in Mongoose</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Eleven</p>
+    <h1 class="topic-title">Summary — What to Use When</h1>
+  </div>
+  <table>
+    <thead><tr><th>Concept</th><th>Use It When...</th></tr></thead>
+    <tbody>
+      <tr><td>Instance Methods</td><td>You need an operation tied to a specific document (e.g., <code>comparePassword</code>)</td></tr>
+      <tr><td>Static Methods</td><td>You need a custom query that repeats often (e.g., <code>findActiveUsers</code>)</td></tr>
+      <tr><td>Virtuals</td><td>You need a computed field that shouldn't be stored (e.g., <code>fullName</code>, <code>priceAfterDiscount</code>)</td></tr>
+      <tr><td>pre("save")</td><td>Modifying data before it's saved (hashing, formatting)</td></tr>
+      <tr><td>pre("find")</td><td>Automatic filtering (e.g., soft delete)</td></tr>
+      <tr><td>post("save")</td><td>Something after saving (logging, notifications)</td></tr>
+      <tr><td>Populate</td><td>Query volume is small and manageable</td></tr>
+      <tr><td>Aggregation + $lookup</td><td>Performance and large data volume matter more than code simplicity</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Eleven — Summary</p>
+</section>
+
+</body>
+</html>
