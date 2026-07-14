@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>HTTP Requests &amp; Responses — Complete Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.62;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 40px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 55px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
+  .toc h3 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 16px 0 6px 0;
+    color: #333;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.8pt;
+    padding-left: 20px;
+    margin: 0;
+  }
+  .toc li { margin-bottom: 5px; }
+
+  section.topic { padding: 55px 55px 35px 55px; }
+  .topic-header {
+    margin-bottom: 22px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 18.5pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 12.8pt;
+    font-weight: 700;
+    margin-top: 18px;
+    margin-bottom: 7px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  h4.item {
+    font-size: 12.2pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+
+  p { margin: 7px 0; }
+  ul, ol.plain { margin: 7px 0; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.2pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 6px 8px;
+  }
+  tbody td {
+    padding: 6px 8px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 10.5pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 8px 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.3pt;
+    overflow-x: auto;
+    margin: 8px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.3pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9.8pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 7px 0;
+    margin-top: 10px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.2pt;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
+  }
+  .tip-box ul { margin: 5px 0 0 0; padding-left: 16px; }
+  .tip-box li { margin-bottom: 4px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.2pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 8.5pt;
+    color: #666;
+    text-align: center;
+    margin-top: 24px;
+    border-top: 0.5px solid #999;
+    padding-top: 7px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>HTTP Requests &amp; Responses</h1>
+  <h2>Complete Guide — From Fundamentals to Advanced API Concepts</h2>
+  <p class="meta">Technical Reference · Web Communication Fundamentals</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+
+  <h3>Level 1 — Absolute Fundamentals</h3>
+  <ol>
+    <li>What Is HTTP?</li>
+    <li>Client vs. Server</li>
+    <li>What Is a Request?</li>
+    <li>What Is a Response?</li>
+    <li>HTTP Methods (GET, POST, PUT, PATCH, DELETE)</li>
+    <li>The Request–Response Lifecycle</li>
+  </ol>
+
+  <h3>Level 2 — URL Details</h3>
+  <ol start="7">
+    <li>URL Structure Recap</li>
+    <li>Path Parameters vs. Query Parameters</li>
+  </ol>
+
+  <h3>Level 3 — Request &amp; Response Details</h3>
+  <ol start="9">
+    <li>Request Headers</li>
+    <li>Request Body</li>
+    <li>Response Headers</li>
+    <li>Response Body</li>
+    <li>Content Types (MIME Types)</li>
+    <li>HTTP Status Codes (2xx, 3xx, 4xx, 5xx)</li>
+  </ol>
+
+  <h3>Level 4 — Security &amp; Identity</h3>
+  <ol start="15">
+    <li>HTTP vs. HTTPS</li>
+    <li>Cookies</li>
+    <li>Sessions</li>
+    <li>Authentication &amp; Authorization</li>
+    <li>JWT (JSON Web Token)</li>
+    <li>Bearer Token</li>
+  </ol>
+
+  <h3>Level 5 — API Concepts</h3>
+  <ol start="21">
+    <li>REST API Basics</li>
+    <li>CRUD Operations</li>
+    <li>Idempotency</li>
+    <li>Error Handling</li>
+    <li>API Versioning</li>
+  </ol>
+
+  <h3>Level 6 — Performance &amp; Advanced Protection</h3>
+  <ol start="26">
+    <li>CORS (Cross-Origin Resource Sharing)</li>
+    <li>Caching</li>
+    <li>Rate Limiting</li>
+    <li>Compression (Gzip/Brotli)</li>
+    <li>Keep-Alive &amp; Persistent Connections</li>
+  </ol>
+
+  <h3>Level 7 — Practical Tools</h3>
+  <ol start="31">
+    <li>File Uploads (multipart/form-data)</li>
+    <li>Fetch API / Axios (Client-Side Requests)</li>
+    <li>API Testing (Postman / Thunder Client)</li>
+    <li>Browser Developer Tools (Network Tab)</li>
+  </ol>
+
+  <h3>Level 8 — Comparison</h3>
+  <ol start="35">
+    <li>WebSockets vs. HTTP</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level One</p>
+    <h1 class="topic-title">Absolute Fundamentals</h1>
+  </div>
+
+  <h4 class="item">1. What Is HTTP?</h4>
+  <p><strong>HTTP (HyperText Transfer Protocol)</strong> is the protocol that defines how a client (like a browser or a mobile app) and a server exchange data over the web. It's a set of agreed-upon rules: how a request should be formatted, how a response should look, and what happens in between.</p>
+  <p>HTTP is <strong>stateless</strong> — each request is handled independently, with no memory of previous requests by default. That's exactly why concepts like Cookies, Sessions, and Tokens exist later on — to simulate "memory" across otherwise disconnected requests.</p>
+  <div class="note"><strong>.NET parallel:</strong> think of HTTP as the equivalent of the wire protocol underneath ASP.NET's request pipeline — the actual "language" that Kestrel and the browser speak to each other, regardless of what framework sits on top.</div>
+
+  <h4 class="item">2. Client vs. Server</h4>
+  <table>
+    <thead><tr><th></th><th>Client</th><th>Server</th></tr></thead>
+    <tbody>
+      <tr><td>Role</td><td>Initiates requests (browser, mobile app, Postman, another server)</td><td>Listens for requests and sends back responses</td></tr>
+      <tr><td>Examples</td><td>React app, mobile app, curl command</td><td>Node.js/Express app, ASP.NET Core app</td></tr>
+      <tr><td>Direction</td><td>"I want something"</td><td>"Here's what you asked for" (or an error)</td></tr>
+    </tbody>
+  </table>
+  <div class="note">A single machine can be both — for example, one API server acting as a client when it calls another external API (a payment gateway, for instance).</div>
+
+  <h4 class="item">3. What Is a Request?</h4>
+  <p>A request is what the client sends to the server, asking it to do something — fetch data, create a record, update something, or delete it. Every request has a method, a URL, headers, and (optionally) a body.</p>
+  <pre>GET /products/42 HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJhbGciOi...</pre>
+
+  <h4 class="item">4. What Is a Response?</h4>
+  <p>A response is what the server sends back after processing the request — a status code, headers, and (usually) a body containing the requested data or an error message.</p>
+  <pre>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{ "id": 42, "title": "Laptop HP", "price": 15000 }</pre>
+
+  <h4 class="item">5. HTTP Methods</h4>
+  <table>
+    <thead><tr><th>Method</th><th>Purpose</th><th>Typical Use</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>Retrieve data</td><td>Fetch a product, list users</td></tr>
+      <tr><td>POST</td><td>Create new data</td><td>Create an order, register a user</td></tr>
+      <tr><td>PUT</td><td>Replace an entire resource</td><td>Overwrite a user's full profile</td></tr>
+      <tr><td>PATCH</td><td>Partially update a resource</td><td>Update just the user's email</td></tr>
+      <tr><td>DELETE</td><td>Remove a resource</td><td>Delete a product</td></tr>
+    </tbody>
+  </table>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>PUT vs. PATCH is a common interview trap: PUT conceptually replaces the whole resource (missing fields could be wiped/reset), while PATCH only touches the fields you send. In practice, many APIs use PUT loosely as "update," so always check the documentation of the API you're consuming.</li>
+    </ul>
+  </div>
+
+  <h4 class="item">6. The Request–Response Lifecycle</h4>
+  <p>The full journey of a single HTTP call, end to end:</p>
+  <ol class="plain">
+    <li>The client builds a request (method, URL, headers, body).</li>
+    <li>DNS resolves the domain to an IP address.</li>
+    <li>A TCP connection is established (and a TLS handshake, if HTTPS).</li>
+    <li>The request travels to the server.</li>
+    <li>The server's routing layer matches the URL/method to a handler.</li>
+    <li>The handler processes the request (queries a database, runs business logic).</li>
+    <li>The server builds and sends back a response.</li>
+    <li>The client receives the response and acts on it (renders UI, throws an error, etc.).</li>
+  </ol>
+  <p class="page-footer">Level One — Absolute Fundamentals</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Two</p>
+    <h1 class="topic-title">URL Details</h1>
+  </div>
+
+  <h4 class="item">7. URL Structure Recap</h4>
+  <p>A full URL breaks down into: <code>scheme://host:port/path?query#fragment</code>. In the context of an HTTP request specifically, the "Request URL" is everything the client sends the server to identify exactly which resource is being requested — typically the path plus the query string (the host is used earlier, to establish the connection itself; the fragment never leaves the browser).</p>
+  <pre>https://api.example.com:443/products/42?fields=title,price#top</pre>
+  <table>
+    <thead><tr><th>Part</th><th>Value</th><th>Sent to Server?</th></tr></thead>
+    <tbody>
+      <tr><td>Scheme + Host + Port</td><td>https://api.example.com:443</td><td>Used to establish the connection</td></tr>
+      <tr><td>Path</td><td>/products/42</td><td>Yes — part of the request line</td></tr>
+      <tr><td>Query</td><td>?fields=title,price</td><td>Yes — part of the request line</td></tr>
+      <tr><td>Fragment</td><td>#top</td><td>No — browser-only</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">8. Path Parameters vs. Query Parameters</h4>
+  <pre>/users/123            ← Path Parameter
+/users?role=admin      ← Query Parameter</pre>
+  <p><strong>Rule of thumb:</strong> if the value is a core, essential part of identifying the resource (like a specific user's ID), it's a path parameter. If it's optional, used for filtering/sorting/pagination, it's a query parameter.</p>
+  <pre>// Express.js
+app.get("/users/:id", (req, res) => {
+  console.log(req.params.id);   // path parameter
+});
+
+app.get("/users", (req, res) => {
+  console.log(req.query.role);  // query parameter
+});</pre>
+  <p class="page-footer">Level Two — URL Details</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Three</p>
+    <h1 class="topic-title">Request &amp; Response Details</h1>
+  </div>
+
+  <h4 class="item">9. Request Headers</h4>
+  <p>Headers are metadata sent alongside the request — information about the request itself, not the actual data being requested.</p>
+  <table>
+    <thead><tr><th>Header</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Authorization</td><td>Carries credentials (e.g., a Bearer token)</td></tr>
+      <tr><td>Content-Type</td><td>Tells the server the format of the request body (e.g., application/json)</td></tr>
+      <tr><td>Accept</td><td>Tells the server what response format the client can handle</td></tr>
+      <tr><td>User-Agent</td><td>Identifies the client software (browser, app version)</td></tr>
+      <tr><td>Cookie</td><td>Sends stored cookies back to the server</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">10. Request Body</h4>
+  <p>The actual data payload sent with the request — used with POST, PUT, and PATCH, but not typically with GET or DELETE.</p>
+  <pre>POST /users HTTP/1.1
+Content-Type: application/json
+
+{ "name": "Ashraf", "email": "ashraf@example.com" }</pre>
+  <div class="warning-box"><strong>Note:</strong> GET requests technically can have a body per the HTTP spec, but it's widely unsupported/ignored by servers and proxies in practice — never rely on a GET body; use query parameters instead.</div>
+
+  <h4 class="item">11. Response Headers</h4>
+  <p>Metadata about the response itself.</p>
+  <table>
+    <thead><tr><th>Header</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Content-Type</td><td>Format of the response body (e.g., application/json, text/html)</td></tr>
+      <tr><td>Content-Length</td><td>Size of the response body in bytes</td></tr>
+      <tr><td>Set-Cookie</td><td>Instructs the client to store a cookie</td></tr>
+      <tr><td>Cache-Control</td><td>How long/whether the response can be cached</td></tr>
+      <tr><td>Access-Control-Allow-Origin</td><td>Which origins are allowed to read this response (CORS)</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">12. Response Body</h4>
+  <p>The actual data returned — commonly JSON for APIs, HTML for web pages, or binary data for files/images.</p>
+  <pre>{
+  "status": "success",
+  "data": { "id": 42, "title": "Laptop HP" }
+}</pre>
+
+  <h4 class="item">13. Content Types (MIME Types)</h4>
+  <p>The <code>Content-Type</code> header tells the receiving side exactly how to interpret the raw bytes of the body.</p>
+  <table>
+    <thead><tr><th>MIME Type</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>application/json</td><td>JSON data</td></tr>
+      <tr><td>application/x-www-form-urlencoded</td><td>Standard HTML form data, URL-encoded</td></tr>
+      <tr><td>multipart/form-data</td><td>Form data including file uploads</td></tr>
+      <tr><td>text/html</td><td>HTML content</td></tr>
+      <tr><td>image/png, image/jpeg</td><td>Binary image data</td></tr>
+      <tr><td>application/pdf</td><td>PDF binary content</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">14. HTTP Status Codes</h4>
+  <table>
+    <thead><tr><th>Range</th><th>Category</th><th>Common Examples</th></tr></thead>
+    <tbody>
+      <tr><td>2xx</td><td>Success</td><td>200 OK, 201 Created, 204 No Content</td></tr>
+      <tr><td>3xx</td><td>Redirection</td><td>301 Moved Permanently, 302 Found, 304 Not Modified</td></tr>
+      <tr><td>4xx</td><td>Client Error</td><td>400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict, 429 Too Many Requests</td></tr>
+      <tr><td>5xx</td><td>Server Error</td><td>500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable</td></tr>
+    </tbody>
+  </table>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>401 vs. 403 is a classic interview question: 401 (Unauthorized) means "I don't know who you are" (missing/invalid credentials); 403 (Forbidden) means "I know who you are, but you're not allowed to do this."</li>
+      <li>Return the most specific status code available — resist the urge to always return 200 with an error message buried in the body.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Level Three — Request &amp; Response Details</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Four</p>
+    <h1 class="topic-title">Security &amp; Identity</h1>
+  </div>
+
+  <h4 class="item">15. HTTP vs. HTTPS</h4>
+  <p>HTTPS is HTTP layered on top of TLS/SSL encryption. The data exchanged is encrypted in transit, preventing eavesdropping (man-in-the-middle attacks) and verifying the server's identity via a certificate. Functionally, the request/response structure is identical — HTTPS just wraps it in an encrypted tunnel.</p>
+
+  <h4 class="item">16. Cookies</h4>
+  <p>A small piece of data the server asks the browser to store (via the <code>Set-Cookie</code> header), which the browser then automatically sends back on every subsequent request to that domain. Commonly used to maintain login state, track sessions, or store preferences.</p>
+  <pre>Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict</pre>
+  <table>
+    <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>HttpOnly</td><td>JavaScript cannot read the cookie (protects against XSS stealing it)</td></tr>
+      <tr><td>Secure</td><td>Only sent over HTTPS</td></tr>
+      <tr><td>SameSite</td><td>Controls whether the cookie is sent on cross-site requests (protects against CSRF)</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">17. Sessions</h4>
+  <p>Since HTTP is stateless, a "session" is a server-side mechanism to remember a user across multiple requests. Typically, the server stores session data (in memory, Redis, or a database) keyed by a session ID, and gives that ID to the client as a cookie. Each subsequent request includes the cookie, letting the server look up the associated session data.</p>
+
+  <h4 class="item">18. Authentication &amp; Authorization</h4>
+  <table>
+    <thead><tr><th></th><th>Authentication</th><th>Authorization</th></tr></thead>
+    <tbody>
+      <tr><td>Question answered</td><td>"Who are you?"</td><td>"What are you allowed to do?"</td></tr>
+      <tr><td>Example</td><td>Logging in with email/password</td><td>Checking if this user's role permits deleting a product</td></tr>
+      <tr><td>Failure status</td><td>401 Unauthorized</td><td>403 Forbidden</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">19. JWT (JSON Web Token)</h4>
+  <p>A compact, self-contained token format used to represent claims (like user ID, role, expiration) that can be verified without a database lookup, since it's cryptographically signed. A JWT has three parts separated by dots: <code>header.payload.signature</code>.</p>
+  <pre>eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxMjMifQ.4f8s9d...</pre>
+  <div class="note"><strong>Key idea:</strong> the payload is only base64-encoded, not encrypted — anyone can decode and read it. Never store sensitive secrets in a JWT payload; the signature only guarantees the token wasn't tampered with, not that its contents are hidden.</div>
+
+  <h4 class="item">20. Bearer Token</h4>
+  <p>A convention for sending a token (often a JWT) in the Authorization header, telling the server "whoever holds this token is authorized."</p>
+  <pre>Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>JWTs are commonly stateless (no server-side session lookup needed) — a big architectural difference from traditional session-cookie authentication, which requires the server to store session state somewhere.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Level Four — Security &amp; Identity</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Five</p>
+    <h1 class="topic-title">API Concepts</h1>
+  </div>
+
+  <h4 class="item">21. REST API Basics</h4>
+  <p>REST (Representational State Transfer) is an architectural style for designing APIs around <strong>resources</strong> (nouns, like <code>/products</code>, <code>/users</code>), manipulated using standard HTTP methods. A RESTful API should be stateless (no server-side session per request) and use predictable, resource-oriented URLs.</p>
+  <pre>GET    /products        → list products
+GET    /products/42      → get one product
+POST   /products         → create a product
+PUT    /products/42      → replace a product
+PATCH  /products/42      → partially update a product
+DELETE /products/42      → delete a product</pre>
+
+  <h4 class="item">22. CRUD Operations</h4>
+  <table>
+    <thead><tr><th>CRUD</th><th>HTTP Method</th></tr></thead>
+    <tbody>
+      <tr><td>Create</td><td>POST</td></tr>
+      <tr><td>Read</td><td>GET</td></tr>
+      <tr><td>Update</td><td>PUT / PATCH</td></tr>
+      <tr><td>Delete</td><td>DELETE</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">23. Idempotency</h4>
+  <p>An operation is <strong>idempotent</strong> if performing it multiple times produces the same result as performing it once. GET, PUT, and DELETE are expected to be idempotent; POST generally is not (calling it twice typically creates two records).</p>
+  <table>
+    <thead><tr><th>Method</th><th>Idempotent?</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>Yes</td></tr>
+      <tr><td>PUT</td><td>Yes</td></tr>
+      <tr><td>DELETE</td><td>Yes</td></tr>
+      <tr><td>PATCH</td><td>Ideally, but depends on implementation</td></tr>
+      <tr><td>POST</td><td>No</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><strong>Practical relevance:</strong> idempotency matters a lot for retry logic — it's safe to automatically retry a failed GET or DELETE request, but retrying a failed POST (e.g., "create order") without idempotency protection could create duplicate orders.</div>
+
+  <h4 class="item">24. Error Handling</h4>
+  <p>A well-designed API returns errors with a correct status code and a consistent, informative body — not just a generic 500 for everything.</p>
+  <pre>{
+  "status": "fail",
+  "message": "Product with id 42 not found"
+}</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Distinguish operational errors (expected, like "not found" or "validation failed" — return 4xx) from programming errors (bugs — return 500 and log them for investigation, without leaking internal details to the client).</li>
+    </ul>
+  </div>
+
+  <h4 class="item">25. API Versioning</h4>
+  <p>As an API evolves, versioning prevents breaking existing clients when introducing changes.</p>
+  <pre>/api/v1/products
+/api/v2/products</pre>
+  <p>Common strategies: URL path versioning (as above), header-based versioning (<code>Accept: application/vnd.myapp.v2+json</code>), or query parameter versioning (<code>?version=2</code>) — URL path versioning is the most common in practice due to its simplicity and visibility.</p>
+  <p class="page-footer">Level Five — API Concepts</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Six</p>
+    <h1 class="topic-title">Performance &amp; Advanced Protection</h1>
+  </div>
+
+  <h4 class="item">26. CORS (Cross-Origin Resource Sharing)</h4>
+  <p>A browser security mechanism that blocks a web page from making requests to a different origin (domain/port/protocol) than the one it was served from, unless that other server explicitly allows it via response headers.</p>
+  <pre>Access-Control-Allow-Origin: https://myapp.com
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, Authorization</pre>
+  <div class="warning-box"><strong>Important:</strong> CORS is enforced by the browser, not the server — it doesn't protect the server from non-browser clients (like Postman or curl), which ignore CORS entirely. It exists purely to protect users' browsers from malicious cross-site scripts.</div>
+
+  <h4 class="item">27. Caching</h4>
+  <p>Storing a response so subsequent identical requests can be served faster, without hitting the server (or the origin server) again.</p>
+  <table>
+    <thead><tr><th>Header</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Cache-Control: max-age=3600</td><td>Cache this response for 3600 seconds</td></tr>
+      <tr><td>ETag</td><td>A fingerprint of the resource; used to check if it changed</td></tr>
+      <tr><td>304 Not Modified</td><td>Server tells the client its cached copy is still valid</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">28. Rate Limiting</h4>
+  <p>Restricting how many requests a client can make in a given time window, to protect the server from abuse or overload.</p>
+  <pre>HTTP/1.1 429 Too Many Requests
+Retry-After: 60</pre>
+  <p>Commonly implemented with middleware (e.g., <code>express-rate-limit</code> in Node.js) tracking request counts per IP or per API key.</p>
+
+  <h4 class="item">29. Compression (Gzip/Brotli)</h4>
+  <p>The server compresses the response body before sending it, and the client decompresses it — reducing the amount of data transferred over the network.</p>
+  <pre>Request:  Accept-Encoding: gzip, br
+Response: Content-Encoding: gzip</pre>
+
+  <h4 class="item">30. Keep-Alive &amp; Persistent Connections</h4>
+  <p>By default in HTTP/1.1, a single TCP connection stays open across multiple requests/responses instead of opening a brand-new connection for every single request — avoiding the overhead of repeated TCP handshakes.</p>
+  <pre>Connection: keep-alive</pre>
+  <p class="page-footer">Level Six — Performance &amp; Advanced Protection</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Seven</p>
+    <h1 class="topic-title">Practical Tools</h1>
+  </div>
+
+  <h4 class="item">31. File Uploads (multipart/form-data)</h4>
+  <p>Uploading files (images, documents) requires a special content type that can carry both regular fields and binary file data in a single request body, each part separated by a boundary marker.</p>
+  <pre>Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="title"
+
+Laptop HP
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="laptop.png"
+Content-Type: image/png
+
+[binary data]
+------WebKitFormBoundary--</pre>
+  <p>In Express.js, this is typically handled with a middleware like <code>multer</code>.</p>
+
+  <h4 class="item">32. Fetch API / Axios (Client-Side Requests)</h4>
+  <pre>// Fetch API (built into browsers)
+const res = await fetch("https://api.example.com/products/42");
+const data = await res.json();
+
+// Axios (popular third-party library)
+const { data } = await axios.get("https://api.example.com/products/42");</pre>
+  <div class="note">Axios automatically parses JSON and throws on non-2xx status codes by default; Fetch does neither — a 404 response from <code>fetch()</code> doesn't throw an error unless you check <code>res.ok</code> manually.</div>
+
+  <h4 class="item">33. API Testing (Postman / Thunder Client)</h4>
+  <p>Tools that let you manually construct and send HTTP requests (setting method, headers, body) without writing client code — essential for testing an API independently of the frontend that will eventually consume it.</p>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Use Postman/Thunder Client collections to save common requests (with environment variables for base URLs and tokens), making it easy to re-test endpoints as the API evolves.</li>
+    </ul>
+  </div>
+
+  <h4 class="item">34. Browser Developer Tools (Network Tab)</h4>
+  <p>The Network tab in browser DevTools shows every request the page makes — method, status code, headers, request/response bodies, and timing — invaluable for debugging why a frontend isn't getting the data it expects.</p>
+  <p class="page-footer">Level Seven — Practical Tools</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Eight</p>
+    <h1 class="topic-title">Comparison</h1>
+  </div>
+
+  <h4 class="item">35. WebSockets vs. HTTP</h4>
+  <table>
+    <thead><tr><th></th><th>HTTP</th><th>WebSockets</th></tr></thead>
+    <tbody>
+      <tr><td>Connection model</td><td>Request-response, typically short-lived per exchange</td><td>A single persistent, full-duplex connection</td></tr>
+      <tr><td>Who can initiate</td><td>Only the client</td><td>Either side can send messages at any time</td></tr>
+      <tr><td>Typical use</td><td>Standard API calls, page loads</td><td>Real-time features — chat apps, live notifications, live dashboards</td></tr>
+      <tr><td>Overhead per message</td><td>Higher (new headers each time, unless Keep-Alive is used)</td><td>Lower — no repeated handshake once connected</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><strong>How it starts:</strong> a WebSocket connection begins as a normal HTTP request that includes an <code>Upgrade: websocket</code> header; if the server agrees, the connection "upgrades" from HTTP to the WebSocket protocol and stays open for ongoing bidirectional communication.</div>
+  <p class="page-footer">Level Eight — Comparison</p>
+</section>
+
+</body>
+</html>

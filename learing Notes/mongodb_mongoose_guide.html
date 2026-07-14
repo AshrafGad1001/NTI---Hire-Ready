@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>MongoDB &amp; Mongoose — Complete Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.62;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 40px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 55px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
+  .toc h3 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 16px 0 6px 0;
+    color: #333;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.8pt;
+    padding-left: 20px;
+    margin: 0;
+  }
+  .toc li { margin-bottom: 5px; }
+
+  section.topic { padding: 55px 55px 35px 55px; }
+  .topic-header {
+    margin-bottom: 22px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 18.5pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 12.8pt;
+    font-weight: 700;
+    margin-top: 18px;
+    margin-bottom: 7px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  h4.item {
+    font-size: 12.2pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+
+  p { margin: 7px 0; }
+  ul, ol.plain { margin: 7px 0; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.2pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 6px 8px;
+  }
+  tbody td {
+    padding: 6px 8px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 10.5pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 8px 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.3pt;
+    overflow-x: auto;
+    margin: 8px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.3pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9.8pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 7px 0;
+    margin-top: 10px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.2pt;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
+  }
+  .tip-box ul { margin: 5px 0 0 0; padding-left: 16px; }
+  .tip-box li { margin-bottom: 4px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.2pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 8.5pt;
+    color: #666;
+    text-align: center;
+    margin-top: 24px;
+    border-top: 0.5px solid #999;
+    padding-top: 7px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>MongoDB &amp; Mongoose</h1>
+  <h2>Complete Guide — From Fundamentals to Advanced Queries</h2>
+  <p class="meta">Technical Reference · NoSQL &amp; ODM Fundamentals</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+
+  <h3>Level 1 — Absolute Fundamentals</h3>
+  <ol>
+    <li>What Is MongoDB?</li>
+    <li>SQL vs. NoSQL</li>
+    <li>Core Terminology</li>
+    <li>What Is Mongoose?</li>
+    <li>Connecting to MongoDB</li>
+  </ol>
+
+  <h3>Level 2 — Schema &amp; Models</h3>
+  <ol start="6">
+    <li>Schema</li>
+    <li>Data Types</li>
+    <li>Schema Options &amp; Validators</li>
+    <li>Model</li>
+  </ol>
+
+  <h3>Level 3 — CRUD Operations</h3>
+  <ol start="10">
+    <li>Create — insert &amp; insertMany</li>
+    <li>Read — find, findOne, findById</li>
+    <li>Update — findByIdAndUpdate &amp; Operators</li>
+    <li>Delete — findByIdAndDelete</li>
+  </ol>
+
+  <h3>Level 4 — Query Details</h3>
+  <ol start="14">
+    <li>Query Filters</li>
+    <li>Projection</li>
+    <li>Sort, Limit &amp; Skip</li>
+    <li>Query Operators</li>
+  </ol>
+
+  <h3>Level 5 — Advanced Concepts</h3>
+  <ol start="18">
+    <li>ObjectId &amp; _id</li>
+    <li>Relationships (populate)</li>
+    <li>Timestamps</li>
+    <li>create() vs. save()</li>
+    <li>Middleware (Hooks)</li>
+  </ol>
+</div>
+
+<!-- ======================== LEVEL 1 ======================== -->
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level One</p>
+    <h1 class="topic-title">Absolute Fundamentals</h1>
+  </div>
+
+  <h4 class="item">1. What Is MongoDB?</h4>
+  <p>MongoDB is a <strong>NoSQL document database</strong> — instead of storing data in tables and rows like SQL, it stores data as <strong>JSON-like documents</strong> (called BSON internally) inside collections. Each document can have its own structure, with no rigid schema enforced at the database level.</p>
+  <p>MongoDB is designed for flexibility and scalability — you can store a user with 2 fields next to a user with 10 fields in the same collection, with no migration required.</p>
+  <pre>// A document in MongoDB
+{
+  "_id": "6a26898e51652b3ff6ba0fdb",
+  "name": "ashraf gad",
+  "email": "ashraf@gmail.com",
+  "gender": "male",
+  "createdAt": "2026-06-08T09:21:18.506Z"
+}</pre>
+
+  <h4 class="item">2. SQL vs. NoSQL</h4>
+  <table>
+    <thead><tr><th></th><th>SQL (e.g. SQL Server, MySQL)</th><th>NoSQL (MongoDB)</th></tr></thead>
+    <tbody>
+      <tr><td>Structure</td><td>Tables, Rows, Columns</td><td>Collections, Documents, Fields</td></tr>
+      <tr><td>Schema</td><td>Fixed — must define columns upfront</td><td>Flexible — each document can differ</td></tr>
+      <tr><td>Relations</td><td>Foreign keys &amp; JOINs</td><td>Embedded documents or references</td></tr>
+      <tr><td>Query language</td><td>SQL</td><td>MongoDB Query Language (MQL)</td></tr>
+      <tr><td>Scaling</td><td>Vertical (bigger server)</td><td>Horizontal (more servers)</td></tr>
+      <tr><td>Best for</td><td>Structured relational data</td><td>Flexible, fast-evolving data</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">3. Core Terminology</h4>
+  <table>
+    <thead><tr><th>SQL Term</th><th>MongoDB Equivalent</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>Database</td><td>Database</td><td>Container for collections</td></tr>
+      <tr><td>Table</td><td>Collection</td><td>Group of documents</td></tr>
+      <tr><td>Row</td><td>Document</td><td>A single record (JSON object)</td></tr>
+      <tr><td>Column</td><td>Field</td><td>A key inside a document</td></tr>
+      <tr><td>Primary Key</td><td>_id</td><td>Auto-generated unique identifier</td></tr>
+      <tr><td>JOIN</td><td>$lookup / populate</td><td>Combining data from two collections</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">4. What Is Mongoose?</h4>
+  <p>Mongoose is an <strong>ODM (Object Data Modeling)</strong> library for MongoDB in Node.js. It provides a layer on top of the raw MongoDB driver, adding structure through Schemas, validation, middleware, and helper methods — so you work with JavaScript objects instead of raw MongoDB queries.</p>
+  <div class="note"><strong>Analogy:</strong> if MongoDB is the database, Mongoose is like Sequelize or Entity Framework — it maps your JavaScript objects to database documents and handles the communication in between.</div>
+
+  <h4 class="item">5. Connecting to MongoDB</h4>
+  <pre>import mongoose from 'mongoose';
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/myDB');
+    console.log('Database Connected Successfully ✅');
+  } catch (error) {
+    console.error('Database Connection Failed ❌', error);
+  }
+};
+
+export default connectDB;</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>The database name (<code>myDB</code>) at the end of the connection string is created automatically by MongoDB the first time you insert data — no need to create it manually.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Level One — Absolute Fundamentals</p>
+</section>
+
+<!-- ======================== LEVEL 2 ======================== -->
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Two</p>
+    <h1 class="topic-title">Schema &amp; Models</h1>
+  </div>
+
+  <h4 class="item">6. Schema</h4>
+  <p>A Schema defines the <strong>structure</strong> of a document — what fields exist, their types, and any validation rules. It's your blueprint for every document in a collection.</p>
+  <pre>import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+  name:     { type: String,  required: true },
+  email:    { type: String,  required: true, unique: true },
+  password: { type: String,  required: true },
+  age:      { type: Number },
+  gender:   { type: String,  enum: ['male', 'female', 'not specified'], default: 'not specified' }
+}, { timestamps: true });</pre>
+
+  <h4 class="item">7. Data Types</h4>
+  <table>
+    <thead><tr><th>Type</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td>String</td><td>Text values — names, emails, addresses</td></tr>
+      <tr><td>Number</td><td>Integers and floats — age, price, quantity</td></tr>
+      <tr><td>Boolean</td><td>true / false — isActive, isVerified</td></tr>
+      <tr><td>Date</td><td>Date and time values</td></tr>
+      <tr><td>Array</td><td>List of values — [String], [Number]</td></tr>
+      <tr><td>ObjectId</td><td>Reference to another document's _id</td></tr>
+      <tr><td>Mixed</td><td>Any type — flexible, untyped field</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">8. Schema Options &amp; Validators</h4>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>required</td><td>Boolean</td><td>Field must be present</td></tr>
+      <tr><td>unique</td><td>Boolean</td><td>No duplicate values in the collection</td></tr>
+      <tr><td>default</td><td>Any</td><td>Value used when field is not provided</td></tr>
+      <tr><td>enum</td><td>Array</td><td>Value must be one of the listed options</td></tr>
+      <tr><td>lowercase</td><td>Boolean</td><td>Converts string to lowercase before saving</td></tr>
+      <tr><td>trim</td><td>Boolean</td><td>Removes leading/trailing whitespace</td></tr>
+      <tr><td>min / max</td><td>Number</td><td>Minimum and maximum value for numbers</td></tr>
+      <tr><td>minlength / maxlength</td><td>Number</td><td>Minimum and maximum length for strings</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="item">9. Model</h4>
+  <p>A Model is a <strong>class compiled from a Schema</strong> — it's the actual interface you use to interact with a collection. Every CRUD operation goes through the model.</p>
+  <pre>const User = mongoose.model('User', userSchema);
+// Creates (or uses) a collection named 'users' (Mongoose auto-pluralises)
+
+export default User;</pre>
+  <div class="note"><strong>Naming convention:</strong> the model name is singular and PascalCase (<code>'User'</code>); Mongoose automatically maps it to a lowercase plural collection (<code>users</code>).</div>
+  <p class="page-footer">Level Two — Schema &amp; Models</p>
+</section>
+
+<!-- ======================== LEVEL 3 ======================== -->
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Three</p>
+    <h1 class="topic-title">CRUD Operations</h1>
+  </div>
+
+  <h4 class="item">10. Create</h4>
+  <p><strong>Insert one document:</strong></p>
+  <pre>const user = await User.create({ name: 'Ashraf', email: 'a@gmail.com', password: '1234' });</pre>
+  <p><strong>Insert multiple documents (Array):</strong></p>
+  <pre>const users = await User.create([
+  { name: 'Ahmed', email: 'ahmed@gmail.com', password: '1234', gender: 'male' },
+  { name: 'Sara',  email: 'sara@gmail.com',  password: '1234', gender: 'female' }
+]);</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li><code>User.create()</code> accepts both a single object and an array — no need to switch between <code>create()</code> and <code>insertMany()</code>. Both run Schema validation before saving.</li>
+    </ul>
+  </div>
+
+  <h4 class="item">11. Read</h4>
+  <table>
+    <thead><tr><th>Method</th><th>Returns</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td>User.find()</td><td>Array (empty [] if none)</td><td>Get all documents, or filter by condition</td></tr>
+      <tr><td>User.findOne(filter)</td><td>Object or null</td><td>Get first matching document</td></tr>
+      <tr><td>User.findById(id)</td><td>Object or null</td><td>Get document by its _id</td></tr>
+    </tbody>
+  </table>
+  <pre>// All users
+await User.find();
+
+// Filter: male users only
+await User.find({ gender: 'male' });
+
+// Find by email
+await User.findOne({ email: 'ashraf@gmail.com' });
+
+// Find by _id
+await User.findById('6a26898e51652b3ff6ba0fdb');</pre>
+
+  <h4 class="item">12. Update</h4>
+  <pre>// Update by ID — returns the updated document (new: true)
+await User.findByIdAndUpdate(
+  '6a26898e51652b3ff6ba0fdb',
+  { $set: { name: 'Ashraf Alaa' } },
+  { new: true }
+);
+
+// Update by any field
+await User.findOneAndUpdate(
+  { email: 'ashraf@gmail.com' },
+  { $set: { gender: 'male' } },
+  { new: true }
+);</pre>
+  <div class="warning-box"><strong>Important:</strong> always use <code>$set</code> when updating — without it, MongoDB replaces the entire document with only the fields you sent, silently wiping any fields you didn't include.</div>
+
+  <h4 class="item">13. Delete</h4>
+  <pre>// Delete by ID — returns the deleted document
+await User.findByIdAndDelete('6a26898e51652b3ff6ba0fdb');
+
+// Delete by any field
+await User.findOneAndDelete({ email: 'ashraf@gmail.com' });</pre>
+  <p class="page-footer">Level Three — CRUD Operations</p>
+</section>
+
+<!-- ======================== LEVEL 4 ======================== -->
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Four</p>
+    <h1 class="topic-title">Query Details</h1>
+  </div>
+
+  <h4 class="item">14. Query Filters</h4>
+  <p>Filters are plain JavaScript objects passed to <code>find()</code> or <code>findOne()</code> to narrow down results.</p>
+  <pre>// Exact match
+await User.find({ gender: 'male' });
+
+// Multiple conditions (AND)
+await User.find({ gender: 'male', age: 22 });
+
+// Using operators
+await User.find({ age: { $gte: 20, $lte: 30 } });  // age between 20 and 30</pre>
+
+  <h4 class="item">15. Projection</h4>
+  <p>Projection controls which fields are returned — useful for hiding sensitive data like passwords or reducing response size.</p>
+  <pre>// Show only name and email (1 = include)
+await User.find({}, { name: 1, email: 1 });
+
+// Hide password (0 = exclude)
+await User.find({}, { password: 0 });
+
+// Hide _id as well
+await User.find({}, { name: 1, email: 1, _id: 0 });</pre>
+
+  <h4 class="item">16. Sort, Limit &amp; Skip</h4>
+  <pre>// Sort by name A→Z (1 = asc, -1 = desc)
+await User.find().sort({ name: 1 });
+
+// Get only 10 results
+await User.find().limit(10);
+
+// Skip first 10 (useful for pagination)
+await User.find().skip(10).limit(10);
+
+// Combine all (page 2, sorted by createdAt newest first)
+await User.find().sort({ createdAt: -1 }).skip(10).limit(10);</pre>
+
+  <h4 class="item">17. Query Operators</h4>
+  <table>
+    <thead><tr><th>Operator</th><th>Meaning</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>$eq</td><td>Equal</td><td>{ age: { $eq: 22 } }</td></tr>
+      <tr><td>$ne</td><td>Not equal</td><td>{ gender: { $ne: 'male' } }</td></tr>
+      <tr><td>$gt / $gte</td><td>Greater than / or equal</td><td>{ age: { $gte: 18 } }</td></tr>
+      <tr><td>$lt / $lte</td><td>Less than / or equal</td><td>{ age: { $lte: 30 } }</td></tr>
+      <tr><td>$in</td><td>Value in array</td><td>{ gender: { $in: ['male', 'female'] } }</td></tr>
+      <tr><td>$nin</td><td>Value not in array</td><td>{ status: { $nin: ['inactive'] } }</td></tr>
+      <tr><td>$or</td><td>At least one condition true</td><td>{ $or: [{ age: 20 }, { age: 22 }] }</td></tr>
+      <tr><td>$and</td><td>All conditions true</td><td>{ $and: [{ age: 22 }, { gender: 'male' }] }</td></tr>
+      <tr><td>$exists</td><td>Field exists</td><td>{ phone: { $exists: true } }</td></tr>
+      <tr><td>$regex</td><td>Pattern match</td><td>{ name: { $regex: /ashraf/i } }</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Level Four — Query Details</p>
+</section>
+
+<!-- ======================== LEVEL 5 ======================== -->
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Level Five</p>
+    <h1 class="topic-title">Advanced Concepts</h1>
+  </div>
+
+  <h4 class="item">18. ObjectId &amp; _id</h4>
+  <p>Every MongoDB document gets an <strong>_id</strong> field automatically — a unique 12-byte identifier called an <strong>ObjectId</strong>, represented as a 24-character hex string. It is MongoDB's equivalent of a Primary Key in SQL, but globally unique across all machines and time.</p>
+  <pre>6a26898e51652b3ff6ba0fdb
+└───────┘└──────────┘└──────┘
+  4 bytes   5 bytes   3 bytes
+ timestamp  random    counter</pre>
+  <table>
+    <thead><tr><th></th><th>SQL Primary Key</th><th>MongoDB ObjectId</th></tr></thead>
+    <tbody>
+      <tr><td>Format</td><td>Integer (1, 2, 3 …)</td><td>24-char hex string</td></tr>
+      <tr><td>Generated by</td><td>Database auto-increment</td><td>Client or server (before insert)</td></tr>
+      <tr><td>Contains timestamp</td><td>No</td><td>Yes — extractable via .getTimestamp()</td></tr>
+      <tr><td>Global uniqueness</td><td>Only within one table</td><td>Globally unique across all servers</td></tr>
+    </tbody>
+  </table>
+  <pre>// Validate an ID before querying
+import mongoose from 'mongoose';
+mongoose.Types.ObjectId.isValid('6a26898e51652b3ff6ba0fdb'); // true
+mongoose.Types.ObjectId.isValid('123');                       // false</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Always validate the ID format in your controller before hitting the database — passing an invalid ID format throws a CastError from Mongoose, which you'd otherwise have to handle in the catch block.</li>
+    </ul>
+  </div>
+
+  <h4 class="item">19. Relationships (populate)</h4>
+  <p>MongoDB doesn't have JOINs, but Mongoose's <code>populate()</code> simulates them by replacing an ObjectId reference field with the actual document from the referenced collection.</p>
+  <pre>// Post schema — references User
+const postSchema = new mongoose.Schema({
+  title:  String,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+});
+
+// Query with populate — replaces userId with the full User document
+const post = await Post.findById(id).populate('userId', 'name email');
+// Result: post.userId is now { name: 'Ashraf', email: 'a@gmail.com' }
+// instead of just the raw ObjectId string</pre>
+  <div class="note"><strong>Performance note:</strong> <code>populate()</code> runs a second database query under the hood. For high-volume data, consider embedding the needed fields directly in the document instead.</div>
+
+  <h4 class="item">20. Timestamps</h4>
+  <p>Passing <code>{ timestamps: true }</code> as a Schema option instructs Mongoose to automatically add and manage two fields on every document — <code>createdAt</code> and <code>updatedAt</code> — with no manual work required.</p>
+  <pre>const userSchema = new mongoose.Schema({ name: String }, { timestamps: true });
+
+// Every saved document automatically gets:
+// createdAt: 2026-06-08T09:21:18.506Z  ← set once on insert
+// updatedAt: 2026-06-08T10:00:00.000Z  ← updated on every save/update</pre>
+
+  <h4 class="item">21. create() vs. save()</h4>
+  <table>
+    <thead><tr><th></th><th>create()</th><th>new Model() + save()</th></tr></thead>
+    <tbody>
+      <tr><td>Steps</td><td>One step</td><td>Two steps</td></tr>
+      <tr><td>Modify before saving</td><td>Not directly</td><td>Yes — manipulate the instance first</td></tr>
+      <tr><td>Validation</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Best for</td><td>Straightforward inserts</td><td>When you need to transform data before saving</td></tr>
+    </tbody>
+  </table>
+  <pre>// create() — one step
+const user = await User.create({ name: 'Ashraf', email: 'a@gmail.com', password: '1234' });
+
+// save() — two steps, allows modification in between
+const user = new User({ name: 'Ashraf', email: 'a@gmail.com', password: '1234' });
+user.name = user.name.toUpperCase();  // modify before saving
+await user.save();</pre>
+
+  <h4 class="item">22. Middleware (Hooks)</h4>
+  <p>Mongoose middleware (also called hooks) are functions that run automatically <strong>before or after</strong> a specific operation — such as hashing a password before saving, or cleaning up related documents after deletion.</p>
+  <pre>// pre-save hook — runs before every .save() or .create()
+userSchema.pre('save', async function (next) {
+  // 'this' refers to the document being saved
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+});
+
+// post-save hook — runs after the document is saved
+userSchema.post('save', function (doc) {
+  console.log('User saved:', doc.email);
+});</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Pre-hooks receive a <code>next</code> callback — always call it at the end, or the operation will hang indefinitely.</li>
+      <li>Common use cases: password hashing (pre-save), sending a welcome email (post-save), cascading deletes (pre-deleteOne).</li>
+    </ul>
+  </div>
+  <p class="page-footer">Level Five — Advanced Concepts</p>
+</section>
+
+</body>
+</html>

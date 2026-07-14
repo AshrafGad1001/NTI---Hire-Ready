@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>NoSQL &amp; MongoDB — 50 Review Questions with Detailed Answers</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 9px 13px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.3pt;
+    overflow-x: auto;
+    margin: 8px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.3pt;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 7px 8px;
+  }
+  tbody td {
+    padding: 7px 8px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 10.5pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  .qa-block {
+    margin-top: 20px;
+    padding-bottom: 16px;
+    border-bottom: 0.75px solid #999;
+  }
+  .qa-block:last-child { border-bottom: none; }
+  .q-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    text-transform: uppercase;
+  }
+  .q-text {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 12pt;
+    margin: 4px 0 8px 0;
+  }
+  .a-text { margin: 0; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    .qa-block { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Review &amp; Practice</p>
+  <h1>NoSQL &amp; MongoDB</h1>
+  <h2>50 Review Questions with Detailed Answers</h2>
+  <p class="meta">Comprehensive Study Recap · Compiled from Full Study Session</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>SQL vs. NoSQL, ACID vs. BASE, CAP Theorem (Q1–Q8)</li>
+    <li>NoSQL Types &amp; BSON (Q9–Q14)</li>
+    <li>Embedding, Referencing &amp; Design Patterns (Q15–Q22)</li>
+    <li>Mongo Shell, Query Operators &amp; Projection (Q23–Q31)</li>
+    <li>Aggregation Pipeline (Q32–Q38)</li>
+    <li>Indexing (Q39–Q43)</li>
+    <li>Schema Design Process &amp; Relationship Types (Q44–Q46)</li>
+    <li>Schema Validation &amp; Transactions (Q47–Q50)</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part One</p>
+    <h1 class="topic-title">SQL vs. NoSQL, ACID vs. BASE, CAP Theorem</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 1</p>
+    <p class="q-text">What is the core difference between SQL and NoSQL databases?</p>
+    <p class="a-text">SQL databases are relational, structured, use fixed schemas with tables and Foreign Keys, are ACID-compliant, and scale vertically. NoSQL databases are non-relational, use flexible schemas (documents, key-value pairs, wide columns, or graphs), follow the BASE model instead of strict ACID, and scale horizontally through sharding. SQL suits complex, stable relationships and financial-grade accuracy; NoSQL suits variable-shaped data, rapid development, and massive scale.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 2</p>
+    <p class="q-text">When would you choose SQL over NoSQL, and vice versa?</p>
+    <p class="a-text">Choose SQL when data has complex, stable relationships requiring strong consistency (e.g., banking transactions) or when reports need many joins. Choose NoSQL when the data shape varies frequently, development speed matters, or the system must scale to millions of users with flexible, evolving schemas.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 3</p>
+    <p class="q-text">Explain what each letter in ACID stands for.</p>
+    <p class="a-text"><strong>Atomicity:</strong> a transaction completes fully or not at all. <strong>Consistency:</strong> data moves from one valid state to another without violating rules. <strong>Isolation:</strong> concurrent transactions don't interfere with each other. <strong>Durability:</strong> once committed, data survives even a crash.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 4</p>
+    <p class="q-text">Explain what each letter in BASE stands for.</p>
+    <p class="a-text"><strong>Basically Available:</strong> the system always responds, even if degraded. <strong>Soft state:</strong> data can change over time even without new input, due to replication catching up. <strong>Eventually consistent:</strong> replicas aren't instantly identical but converge over a short time.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 5</p>
+    <p class="q-text">Give a real-world example of when ACID matters and when BASE is acceptable.</p>
+    <p class="a-text">ACID matters for a bank transfer — a partial transfer where money leaves one account but never reaches another is unacceptable. BASE is acceptable for something like a "Like" counter on a social media post, where a short delay before all viewers see the updated count causes no real harm.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 6</p>
+    <p class="q-text">Does MongoDB support ACID transactions? Explain.</p>
+    <p class="a-text">Yes — since MongoDB 4.0, multi-document ACID transactions are supported on replica sets (and from 4.2 on sharded clusters). This means MongoDB isn't purely BASE; it lets developers choose ACID guarantees when accuracy across multiple documents/collections is essential, while relying on document-level atomicity and eventual consistency elsewhere for speed.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 7</p>
+    <p class="q-text">What is the CAP Theorem, and why can't a distributed system guarantee all three properties at once?</p>
+    <p class="a-text">CAP states that a distributed database can guarantee at most two of: Consistency (every node returns the same data), Availability (every request gets a response), and Partition Tolerance (the system keeps working despite network failures). Since network partitions are inevitable in distributed systems, Partition Tolerance isn't really optional — so the real trade-off during a partition is between Consistency and Availability.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 8</p>
+    <p class="q-text">Is MongoDB CP or AP by default? How can this be tuned?</p>
+    <p class="a-text">MongoDB defaults to CP — it prefers to pause writes on the primary rather than risk returning inconsistent data across replicas. This can be tuned via Read Concern (e.g., <code>readConcern: "majority"</code>) and Write Concern (e.g., <code>writeConcern: { w: "majority" }</code>), trading some speed for stronger consistency guarantees, or vice versa.</p>
+  </div>
+  <p class="page-footer">Part One — SQL vs. NoSQL, ACID vs. BASE, CAP Theorem</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part Two</p>
+    <h1 class="topic-title">NoSQL Types &amp; BSON</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 9</p>
+    <p class="q-text">What are the four main types of NoSQL databases? Give an example of each.</p>
+    <p class="a-text">Key-Value Store (Redis, Riak) — simplest form, ideal for caching and sessions. Wide Column Store (Cassandra, HBase) — column-oriented, ideal for time-series and massive write volume. Document Store (MongoDB, CouchDB) — flexible JSON/BSON documents, the most common type in MERN apps. Graph Store (Neo4j, InfiniteGraph) — nodes and edges, ideal for relationship-heavy data like social networks or fraud detection.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 10</p>
+    <p class="q-text">Why is Redis often used alongside MongoDB in the same application?</p>
+    <p class="a-text">Redis is a key-value store optimized for extremely fast lookups, making it ideal for caching frequently accessed data, storing sessions, or rate-limiting — tasks MongoDB can technically do but not as fast for simple key-based access patterns. They complement each other: MongoDB handles rich, structured application data, while Redis handles ephemeral, high-speed lookups.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 11</p>
+    <p class="q-text">What is BSON, and why does MongoDB use it instead of plain JSON?</p>
+    <p class="a-text">BSON (Binary JSON) is the binary format MongoDB actually stores documents in. It's used instead of plain JSON because it supports precise data types (Int32, Int64, Double, Decimal128), a native Date type, native Binary Data, faster traversal (field lengths are known upfront), and a native ObjectId type — none of which plain JSON provides on its own.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 12</p>
+    <p class="q-text">What is the maximum size of a single MongoDB document, and why does that limit exist?</p>
+    <p class="a-text">16MB. This limit exists because BSON uses an Int32 to store document size, capping the maximum representable size at 16MB. This is a key reason unbounded arrays (like a huge, ever-growing list of comments) should use referencing instead of embedding.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 13</p>
+    <p class="q-text">If the JSON you see in a Postman response isn't how MongoDB stores the data, what's actually happening?</p>
+    <p class="a-text">MongoDB stores data as BSON on disk (inside WiredTiger storage engine files). The JSON shown in a client response is a textual representation automatically converted from the underlying BSON — it's a display/transport format, not the storage format.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 14</p>
+    <p class="q-text">Name two data types BSON supports that plain JSON does not.</p>
+    <p class="a-text">Any two of: a native Date type, a native ObjectId type, precise numeric types (Int32, Int64, Decimal128), and native Binary Data for storing raw binary content directly.</p>
+  </div>
+  <p class="page-footer">Part Two — NoSQL Types &amp; BSON</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part Three</p>
+    <h1 class="topic-title">Embedding, Referencing &amp; Design Patterns</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 15</p>
+    <p class="q-text">What is the "Embedding" pattern, and when should you use it?</p>
+    <p class="a-text">Embedding stores related data directly inside the parent document. Use it when the relationship is one-to-few, the related data is almost always read together with the parent, and it doesn't change frequently or independently. It gives fast single-query reads and atomic updates, but risks document bloat and duplication if misused.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 16</p>
+    <p class="q-text">What is the "Referencing" pattern, and when should you use it?</p>
+    <p class="a-text">Referencing stores just an ID pointing to another document, similar to a Foreign Key. Use it for large one-to-many or many-to-many relationships, data that changes frequently and independently, data shared across multiple parents, or arrays that could grow unbounded. It keeps documents small but requires a $lookup at read time.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 17</p>
+    <p class="q-text">Describe the Subset Pattern and give a practical use case.</p>
+    <p class="a-text">The Subset Pattern stores only a small, relevant portion of related data (e.g., the latest 5 reviews) directly on the parent document, while the full dataset lives in a separate collection. A practical use case: showing the "latest 3 reviews" on a product page instantly, without running an aggregation query on every page load.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 18</p>
+    <p class="q-text">Describe the Bucket Pattern and give a practical use case.</p>
+    <p class="a-text">The Bucket Pattern groups a batch of readings/events from the same time window into a single document, instead of creating one document per individual event. It's commonly used for time-series data, such as grouping a sensor's per-minute temperature readings into one document per hour, drastically reducing the total document count and index size.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 19</p>
+    <p class="q-text">Describe the Computed Pattern and give a practical use case.</p>
+    <p class="a-text">The Computed Pattern pre-calculates a value that's read frequently but changes rarely, storing it as a ready field instead of recalculating it on every read. A practical use case: storing <code>averageRating</code> directly on a Product document, updated only when a review is added or removed, instead of running an aggregation across all reviews every time the product page loads.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 20</p>
+    <p class="q-text">What's the most dangerous common mistake beginners make with the Embedding pattern?</p>
+    <p class="a-text">Over-embedding data that is mutable and shared across many documents — for example, embedding a full copy of product details (name, price, stock) inside every order. If the product's price changes later, every past order containing that product would need updating, which is a disaster. The fix is to embed a point-in-time snapshot (e.g., the price at the moment of purchase) rather than a live copy expected to stay in sync.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 21</p>
+    <p class="q-text">What are unbounded arrays, and why are they a common schema design mistake?</p>
+    <p class="a-text">An unbounded array is one that can grow without any practical limit — for example, embedding every review directly inside a product document. This risks hitting the 16MB document size limit and causes performance to degrade well before that, since the document becomes slower to read and write as it grows. The fix is to use referencing or the Subset Pattern instead.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 22</p>
+    <p class="q-text">What is the "golden rule" that should guide every embed-vs-reference decision?</p>
+    <p class="a-text">"Data that is accessed together should be stored together." The decision should be driven by actual access patterns (the queries your application really runs), not by an abstract sense of relational correctness borrowed from SQL thinking.</p>
+  </div>
+  <p class="page-footer">Part Three — Embedding, Referencing &amp; Design Patterns</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part Four</p>
+    <h1 class="topic-title">Mongo Shell, Query Operators &amp; Projection</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 23</p>
+    <p class="q-text">What's the difference between <code>find()</code> and <code>findOne()</code>?</p>
+    <p class="a-text"><code>find()</code> returns a cursor pointing to every matching document (could be zero, one, or millions), while <code>findOne()</code> returns only the first matching document directly as an object, or <code>null</code> if nothing matches. Use <code>find()</code> for lists/pagination and <code>findOne()</code> to check existence or fetch by a unique field.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 24</p>
+    <p class="q-text">What does Projection do, and what's the rule about mixing inclusion and exclusion?</p>
+    <p class="a-text">Projection (the second parameter of <code>find()</code>) controls which fields are returned. Setting a field to <code>1</code> includes it (all unlisted fields are excluded); setting it to <code>0</code> excludes it (all others are returned). You cannot mix inclusion and exclusion in the same projection, except for <code>_id</code>, which can always be explicitly excluded even inside an inclusion projection.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 25</p>
+    <p class="q-text">Write a query using $and and explain when you'd need it explicitly versus writing conditions directly on one field.</p>
+    <pre>db.posts.find({ $and: [{ likes: { $gt: 200 } }, { likes: { $lt: 500 } }] })
+// Equivalent when both conditions are on the same field:
+db.posts.find({ likes: { $gt: 200, $lt: 500 } })</pre>
+    <p class="a-text">Explicit <code>$and</code> is required when combining conditions across different fields, or when the same field needs multiple separate operator objects that can't be merged into one. On a single field with compatible operators, the shorthand form is preferred for readability.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 26</p>
+    <p class="q-text">What's the difference between $in and $all when querying an array field?</p>
+    <p class="a-text"><code>$in</code> matches documents where the field's value matches <em>any one</em> of the given values (or, for an array field, if the array contains at least one of them). <code>$all</code> requires the array to contain <em>every</em> value listed, not just one.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 27</p>
+    <p class="q-text">Write a query using $elemMatch and explain why it's needed instead of simple dot notation.</p>
+    <pre>db.orders.find({ items: { $elemMatch: { productId: id, quantity: { $gte: 2 } } } })</pre>
+    <p class="a-text">$elemMatch ensures that multiple conditions are satisfied by the <em>same</em> array element. Without it, MongoDB could match a document where one array element satisfies the first condition and a different element satisfies the second — $elemMatch guarantees both conditions apply to one single element.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 28</p>
+    <p class="q-text">Explain the correct order for chaining sort(), skip(), and limit() in pagination, and why order matters.</p>
+    <pre>db.products.find()
+  .sort({ createdAt: -1 })
+  .skip((page - 1) * limitPerPage)
+  .limit(limitPerPage);</pre>
+    <p class="a-text">Sort should come first to establish a consistent order, then skip, then limit. If the data isn't sorted deterministically before paginating, results across pages can duplicate or skip items inconsistently, since the underlying document order isn't guaranteed otherwise.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 29</p>
+    <p class="q-text">What does the Mongoose "strict" schema option do, and why should it usually stay true?</p>
+    <p class="a-text">When <code>strict: true</code> (the default), any field on an incoming document that isn't defined in the schema is silently ignored and not saved. Setting it to <code>false</code> allows arbitrary undeclared fields to be saved, which removes one of the schema's most valuable protections — guarding against unexpected or malformed data.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 30</p>
+    <p class="q-text">What is the difference between a Mongoose Virtual and a regular schema field?</p>
+    <p class="a-text">A regular field is stored in the database. A virtual is a computed property that exists only in the application layer and is never persisted — it's calculated on demand (e.g., <code>priceAfterDiscount</code>). To have virtuals appear in JSON responses, you must enable <code>toJSON: { virtuals: true }</code> in the schema options.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 31</p>
+    <p class="q-text">What's the difference between Mongoose Instance Methods and Static Methods?</p>
+    <p class="a-text">Instance methods (<code>schema.methods.x</code>) operate on a single document and are called on a fetched document instance (e.g., <code>product.isInStock()</code>). Static methods (<code>schema.statics.x</code>) operate on the Model itself and are called directly on the model (e.g., <code>Product.findByCategory(id)</code>), typically used for reusable custom queries.</p>
+  </div>
+  <p class="page-footer">Part Four — Mongo Shell, Query Operators &amp; Projection</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part Five</p>
+    <h1 class="topic-title">Aggregation Pipeline</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 32</p>
+    <p class="q-text">How does the Aggregation Pipeline fundamentally differ from a single SQL query in terms of execution order?</p>
+    <p class="a-text">In SQL, the written syntax follows a fixed logical clause order, and the query optimizer may reorder internal execution for performance without changing the meaning. In an Aggregation Pipeline, stages execute in exactly the order they're written — reordering stages changes the actual result, not just performance.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 33</p>
+    <p class="q-text">Match each aggregation stage to its closest SQL equivalent: $match, $group, $sort, $project, $lookup.</p>
+    <table>
+      <thead><tr><th>Stage</th><th>SQL Equivalent</th></tr></thead>
+      <tbody>
+        <tr><td>$match</td><td>WHERE</td></tr>
+        <tr><td>$group</td><td>GROUP BY</td></tr>
+        <tr><td>$sort</td><td>ORDER BY</td></tr>
+        <tr><td>$project</td><td>SELECT</td></tr>
+        <tr><td>$lookup</td><td>JOIN</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 34</p>
+    <p class="q-text">Why should $match generally be placed as early as possible in a pipeline?</p>
+    <p class="a-text">Placing $match early filters out irrelevant documents before they reach later, heavier stages — reducing the volume of data each subsequent stage must process, and allowing MongoDB to use available indexes on the filtered field for faster execution.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 35</p>
+    <p class="q-text">What does $unwind do, and why is it necessary before grouping on array elements?</p>
+    <pre>db.users.aggregate([
+  { $unwind: "$skills" },
+  { $group: { _id: "$skills", count: { $sum: 1 } } }
+])</pre>
+    <p class="a-text">$unwind flattens an array field into separate documents, one per array element, duplicating the rest of the parent document's fields for each. It's necessary before grouping by individual array values, because $group operates on document-level fields, not on elements nested inside an array.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 36</p>
+    <p class="q-text">What does $facet allow you to do that a single $group stage cannot?</p>
+    <p class="a-text">$facet runs multiple independent sub-pipelines against the same input set in a single aggregation call, returning all their results together as separate named fields. This is useful for building a dashboard with several unrelated statistics (e.g., counts by role, employment stats, and top city) in one query instead of three separate ones.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 37</p>
+    <p class="q-text">What's the difference between $out and $merge?</p>
+    <p class="a-text">$out completely replaces the target collection with the pipeline's output. $merge is more flexible — it can merge results into an existing collection (updating matching documents, inserting new ones, or various other merge strategies) rather than wiping it out entirely.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 38</p>
+    <p class="q-text">In a $group stage computing an average, what's the difference between using $avg directly versus using the Computed Pattern discussed earlier?</p>
+    <p class="a-text">Using $avg in an aggregation recalculates the average from scratch every time the query runs, which can be expensive on large datasets and frequent reads. The Computed Pattern instead pre-calculates and stores that average as a static field on the parent document, updating it only when the underlying data changes — trading a bit of write complexity for much faster reads.</p>
+  </div>
+  <p class="page-footer">Part Five — Aggregation Pipeline</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part Six</p>
+    <h1 class="topic-title">Indexing</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 39</p>
+    <p class="q-text">What is a Compound Index, and when is it preferable over two separate single-field indexes?</p>
+    <pre>db.products.createIndex({ category: 1, price: -1 })</pre>
+    <p class="a-text">A compound index is built from more than one field together. It's preferable when queries commonly filter and sort using multiple fields at once (e.g., filter by category, sort by price) — a single compound index serves that query far more efficiently than two separate indexes would.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 40</p>
+    <p class="q-text">What's the difference between a Sparse Index and a Partial Index?</p>
+    <p class="a-text">A sparse index simply skips documents where the indexed field doesn't exist at all. A partial index is more flexible — it lets you define an arbitrary filter expression, so the index only covers documents matching that specific condition (e.g., only "completed" orders), regardless of whether the indexed field itself is present or absent.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 41</p>
+    <p class="q-text">List three benefits and three drawbacks of adding indexes to a collection.</p>
+    <p class="a-text"><strong>Benefits:</strong> faster reads (avoids full collection scans), faster sorting when an index matches the sort field, and the ability to enforce uniqueness. <strong>Drawbacks:</strong> slower writes (every index must be updated on insert/update/delete), extra disk and RAM usage, and a hard cap of 64 indexes per collection.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 42</p>
+    <p class="q-text">How do you check whether a query is actually using an index, and what output indicates it isn't?</p>
+    <pre>db.users.find({ role: "trainee" }).explain("executionStats")</pre>
+    <p class="a-text">Run <code>.explain("executionStats")</code> on the query. If the result shows <code>"stage": "IXSCAN"</code>, an index was used. If it shows <code>"stage": "COLLSCAN"</code>, MongoDB performed a full collection scan instead, meaning no suitable index was used.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 43</p>
+    <p class="q-text">Why shouldn't you index a field like "viewsCount" that updates on almost every read of a document?</p>
+    <p class="a-text">Every write must update every index on the affected fields. A field that changes extremely frequently would force constant index maintenance on every update, adding significant write overhead for little to no read-performance benefit, since that field is rarely used as a filter or sort criterion in the first place.</p>
+  </div>
+  <p class="page-footer">Part Six — Indexing</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part Seven</p>
+    <h1 class="topic-title">Schema Design Process &amp; Relationship Types</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 44</p>
+    <p class="q-text">List the six steps of the NoSQL Schema Design Process in order.</p>
+    <p class="a-text">1) Identify the entities. 2) Identify the most common queries (access patterns) — the most important step. 3) Identify the relationships between entities. 4) Apply the right pattern (embed/reference/subset/bucket/computed) to each relationship. 5) Review the design against common mistakes (unbounded arrays, deep nesting, over-embedding mutable shared data). 6) Audit a real project's existing schemas against actual access patterns.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 45</p>
+    <p class="q-text">For each relationship type — One-to-Few, One-to-Many, One-to-Squillions, Many-to-Many — state the typical design decision.</p>
+    <table>
+      <thead><tr><th>Relationship Type</th><th>Typical Decision</th></tr></thead>
+      <tbody>
+        <tr><td>One-to-Few</td><td>Embed</td></tr>
+        <tr><td>One-to-Many</td><td>Reference (usually)</td></tr>
+        <tr><td>One-to-Squillions</td><td>Reference, often combined with the Bucket Pattern</td></tr>
+        <tr><td>Many-to-Many</td><td>Two-way referencing, or one-directional referencing based on the dominant query direction</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 46</p>
+    <p class="q-text">What three questions should you ask for every relationship before choosing embed vs. reference?</p>
+    <p class="a-text">1) Growth rate — is the count small and stable, or large and increasing? 2) Update frequency — does the data change often or rarely? 3) Read-together frequency — is the child data needed every time the parent is fetched?</p>
+  </div>
+  <p class="page-footer">Part Seven — Schema Design Process &amp; Relationship Types</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Part Eight</p>
+    <h1 class="topic-title">Schema Validation &amp; Transactions</h1>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 47</p>
+    <p class="q-text">What is the purpose of $jsonSchema validation in MongoDB, and does it replace application-level validation (e.g., Mongoose)?</p>
+    <p class="a-text">$jsonSchema enforces structural rules (required fields, types, ranges, enums) at the database engine level, rejecting non-compliant writes regardless of which client or script performs them. It does not replace application-level validation — the two work together: Mongoose gives fast, user-friendly feedback in the app; database-level validation is the last line of defense protecting data integrity even if the application is bypassed.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 48</p>
+    <p class="q-text">What's the difference between validationLevel: "strict" vs. "moderate", and when would you use "moderate"?</p>
+    <p class="a-text">"strict" (the default) applies the validation rule to all inserts and updates, even on pre-existing documents that don't already comply. "moderate" applies the rule to new inserts but allows updates to non-compliant legacy documents as long as the update doesn't make them worse. Use "moderate" when retrofitting validation onto a collection that already contains data not yet conforming to the new rule, to avoid breaking existing writes.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 49</p>
+    <p class="q-text">Why are multi-document transactions needed in MongoDB even though a single document write is already atomic?</p>
+    <p class="a-text">A single document's write is guaranteed atomic on its own, but many real operations (e.g., a purchase) need to update multiple documents across multiple collections together — decrementing stock, creating an order, and deducting a user's balance. Without a transaction, a crash partway through could leave the system in an inconsistent state (e.g., stock decremented but no order created). A transaction guarantees all these operations succeed together or are all rolled back.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q-number">Question 50</p>
+    <p class="q-text">What are the infrastructure requirements for running transactions in MongoDB, and what happens on a TransientTransactionError?</p>
+    <p class="a-text">Transactions require MongoDB to run as a Replica Set (even a single-node one for local development) or a Sharded Cluster — they are not supported on a standalone instance. Supported since MongoDB 4.0 for replica sets and 4.2 for sharded clusters. A <code>TransientTransactionError</code> indicates a temporary conflict (e.g., another transaction modifying the same document), and the recommended practice is to retry the transaction rather than treat it as a permanent failure.</p>
+  </div>
+  <p class="page-footer">Part Eight — Schema Validation &amp; Transactions</p>
+</section>
+
+</body>
+</html>

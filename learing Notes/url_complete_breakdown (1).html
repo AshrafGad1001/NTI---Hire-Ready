@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>URL — Complete Breakdown, URL vs URI &amp; Interview Prep</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 30pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .qa-block {
+    margin-top: 14px;
+    padding-bottom: 10px;
+    border-bottom: 0.5px solid #ccc;
+  }
+  .qa-block .q {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 10.8pt;
+    margin-bottom: 4px;
+  }
+  .qa-block .a {
+    font-size: 11pt;
+    margin: 0;
+  }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box, .qa-block { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference</p>
+  <h1>URL — Complete Breakdown</h1>
+  <h2>Structure, Components, URL vs. URI, Tips &amp; Interview Questions</h2>
+  <p class="meta">Technical Reference · Web Fundamentals</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>What Is a URL?</li>
+    <li>The Parts of a URL — What Each One Means</li>
+    <li>Full Component Table</li>
+    <li>URL vs. URI — The Real Difference</li>
+    <li>Tips &amp; Tricks</li>
+    <li>Common Interview Questions</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">What Is a URL?</h1>
+  </div>
+  <p><strong>URL = Uniform Resource Locator</strong> — the address used to identify the <strong>location</strong> of a specific resource on the internet and how to reach it.</p>
+  <p>The key word here is <strong>Locator</strong> — it tells you <em>where</em> the resource is and <em>how</em> to reach it, not just its name.</p>
+  <p class="page-footer">Section One — What Is a URL?</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">The Parts of a URL — What Each One Means</h1>
+  </div>
+  <p>Take this full example and break it down piece by piece:</p>
+  <pre>https://www.example.com:8080/products/laptop?category=electronics&amp;sort=price#reviews</pre>
+
+  <h3 class="sub">1. Scheme (Protocol)</h3>
+  <pre>https://</pre>
+  <p>Defines the <strong>protocol</strong> used to communicate with the server — essentially "how" you'll connect.</p>
+  <ul>
+    <li><code>http</code> — unencrypted</li>
+    <li><code>https</code> — encrypted (secure), via SSL/TLS</li>
+    <li><code>ftp</code> — file transfer</li>
+    <li><code>mailto</code> — opens an email client</li>
+    <li><code>ws</code> / <code>wss</code> — WebSocket</li>
+  </ul>
+
+  <h3 class="sub">2. Authority (Made Up of Several Sub-Parts)</h3>
+
+  <p><strong>a) Userinfo (optional, rarely used today)</strong></p>
+  <pre>username:password@</pre>
+  <p>Historically used to embed login credentials directly in the URL (e.g., FTP). Largely abandoned today for security reasons — the credentials appear in plain sight.</p>
+
+  <p><strong>b) Host (Domain)</strong></p>
+  <pre>www.example.com</pre>
+  <p>The <strong>server name</strong> you're connecting to. Can be either a domain name (as above) or a raw IP address (e.g., <code>192.168.1.1</code>).</p>
+
+  <p><strong>c) Port</strong></p>
+  <pre>:8080</pre>
+  <p>The <strong>port number</strong> the server is listening on. Each protocol has a default:</p>
+  <ul>
+    <li><code>http</code> → default 80</li>
+    <li><code>https</code> → default 443</li>
+  </ul>
+  <div class="note"><strong>Note:</strong> if the port isn't specified, the browser automatically uses the protocol's default. This is why running a Node.js server on <code>localhost:3000</code> requires the port to be written explicitly — 3000 isn't one of the default ports.</div>
+
+  <h3 class="sub">3. Path</h3>
+  <pre>/products/laptop</pre>
+  <p>The <strong>path</strong> to the resource inside the server — similar to a file path on an operating system. It tells you exactly where the resource lives within the server.</p>
+
+  <h3 class="sub">4. Query String (Parameters)</h3>
+  <pre>?category=electronics&amp;sort=price</pre>
+  <p>Extra data sent to the server as key-value pairs.</p>
+  <ul>
+    <li>Starts with <code>?</code></li>
+    <li>Each parameter is separated by <code>&amp;</code></li>
+    <li>Each parameter has the shape <code>key=value</code></li>
+  </ul>
+  <p><strong>Common uses:</strong> filtering, search, sorting, pagination (e.g., <code>?page=2&amp;limit=10</code>).</p>
+
+  <h3 class="sub">5. Fragment (Hash / Anchor)</h3>
+  <pre>#reviews</pre>
+  <p>Points to a <strong>specific section within the same page</strong> — it is never sent to the server at all; it's handled entirely on the client side (in the browser).</p>
+  <p><strong>Practical example:</strong> clicking a "Table of Contents" link in an article that jumps to a specific section on the same page uses a fragment.</p>
+  <p class="page-footer">Section Two — The Parts of a URL</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Full Component Table</h1>
+  </div>
+  <table>
+    <thead><tr><th>Part</th><th>Example</th><th>What It Represents</th></tr></thead>
+    <tbody>
+      <tr><td>Scheme</td><td><code>https://</code></td><td>The protocol being used</td></tr>
+      <tr><td>Userinfo</td><td><code>user:pass@</code></td><td>Login credentials (rarely used today)</td></tr>
+      <tr><td>Host</td><td><code>www.example.com</code></td><td>The server's name/address</td></tr>
+      <tr><td>Port</td><td><code>:8080</code></td><td>The port number</td></tr>
+      <tr><td>Path</td><td><code>/products/laptop</code></td><td>The resource's path within the server</td></tr>
+      <tr><td>Query</td><td><code>?category=electronics</code></td><td>Extra data sent to the server</td></tr>
+      <tr><td>Fragment</td><td><code>#reviews</code></td><td>A specific spot within the same page (client-side only)</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — Full Component Table</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">URL vs. URI — The Real Difference</h1>
+  </div>
+  <p>One of the most commonly confused topics — here's the logical breakdown.</p>
+
+  <h3 class="sub">URI = Uniform Resource Identifier</h3>
+  <p><strong>"Identifier"</strong> means anything that establishes the identity of a resource, whether through its <strong>location</strong> or its <strong>name</strong> — without necessarily saying exactly where it is.</p>
+
+  <h3 class="sub">URI Splits Into Two Types</h3>
+
+  <p><strong>1. URL (Locator) — specifies "where" the resource is and how to reach it</strong></p>
+  <pre>https://example.com/image.png</pre>
+  <p>This is a URL <strong>and</strong> a URI at the same time, because it identifies the resource <strong>through its location</strong>.</p>
+
+  <p><strong>2. URN (Uniform Resource Name) — specifies the resource's "name" without saying where it is</strong></p>
+  <pre>urn:isbn:0451450523</pre>
+  <p>This is a URN — it tells you "this book's identifier/name is such-and-such" but <strong>doesn't tell you where to find it</strong>. Like a book's barcode number — it identifies which book it is, without pointing you to its location.</p>
+
+  <h3 class="sub">The Relationship Between Them</h3>
+  <pre>URI (the general identifier)
+ ├── URL (specifies location + how to access it)
+ └── URN (specifies name only)</pre>
+  <p><strong>Every URL is a URI, but not every URI is a URL.</strong></p>
+
+  <h3 class="sub">Why These Names Exist</h3>
+  <ul>
+    <li><strong>Identifier (URI):</strong> the broad umbrella term — "anything that establishes a resource's identity"</li>
+    <li><strong>Locator (URL):</strong> a subtype of URI focused on "location + access" (like a GPS location)</li>
+    <li><strong>Name (URN):</strong> a subtype of URI focused on a "permanent name/identity," regardless of location (like a national ID number)</li>
+  </ul>
+
+  <h3 class="sub">Practical, Real-World Usage</h3>
+  <p>In day-to-day MERN development, you'll use <strong>URL</strong> almost exclusively (API links, pages, images, etc.). <strong>URN</strong> is rare in ordinary applications — it shows up more in formal classification systems like ISBNs for books, or in some XML Namespace specifications.</p>
+
+  <div class="warning-box"><strong>Interview note:</strong> in everyday usage, people say "URL" and "URI" as if they're the same thing, and modern browsers and specifications (like the WHATWG URL Standard) largely treat them as near-synonyms in practice. But if asked in an interview for the precise technical distinction, the explanation above is the correct answer.</div>
+  <p class="page-footer">Section Four — URL vs. URI</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Tips &amp; Tricks</h1>
+  </div>
+
+  <h3 class="sub">1. URL Encoding (Very Important)</h3>
+  <p>Not every character is allowed as-is in a URL. A space, for example, gets converted to <code>%20</code> or <code>+</code>.</p>
+  <pre>"laptop bag" → laptop%20bag</pre>
+  <p>In Node.js/JavaScript:</p>
+  <pre>encodeURIComponent("laptop bag & more")
+// Result: "laptop%20bag%20%26%20more"</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Use <code>encodeURIComponent()</code> on any value you place in a query string that you're not certain is safe (e.g., user input), to avoid characters like <code>&amp;</code> or <code>#</code> breaking the URL's structure.</li>
+    </ul>
+  </div>
+
+  <h3 class="sub">2. Path Parameters vs. Query Parameters (Common Interview Question)</h3>
+  <pre>/users/123          ← Path Parameter (core part of the resource's identity)
+/users?id=123        ← Query Parameter (a filter/extra data)</pre>
+  <p><strong>Rule of thumb:</strong> if the data is a <strong>core, essential</strong> part of the resource's identity (like a user's ID), use a path parameter. If it's <strong>optional or used for filtering</strong>, use a query parameter.</p>
+
+  <h3 class="sub">3. The Trailing Slash Sometimes Matters</h3>
+  <pre>/products
+/products/</pre>
+  <p>On some servers (and certain Express.js configurations), these can be treated as two different routes. Stay consistent across your project.</p>
+
+  <h3 class="sub">4. URLs Have a Maximum Length</h3>
+  <p>Most browsers and servers enforce a maximum URL length (typically around 2000 characters). If you need to send a large amount of data, use a <strong>POST body</strong> instead of stuffing it into the query string.</p>
+
+  <h3 class="sub">5. Case Sensitivity</h3>
+  <ul>
+    <li>The <strong>Scheme</strong> and <strong>Host</strong> are not case-sensitive (<code>HTTP://EXAMPLE.COM</code> = <code>http://example.com</code>).</li>
+    <li>But the <strong>Path</strong> can be case-sensitive depending on server configuration (<code>/Products</code> may differ from <code>/products</code>).</li>
+  </ul>
+  <p class="page-footer">Section Five — Tips &amp; Tricks</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">Common Interview Questions</h1>
+  </div>
+
+  <h3 class="sub">Foundational Questions</h3>
+
+  <div class="qa-block">
+    <p class="q">Q1: What are the parts of a URL?</p>
+    <p class="a">Scheme, Host, Port, Path, Query, Fragment — as broken down in Section Two.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q">Q2: What's the difference between a URL and a URI?</p>
+    <p class="a">URI is the broad, umbrella term; URL is a subtype of it that specifically identifies location.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q">Q3: What's the difference between a Path Parameter and a Query Parameter, and when do you use each?</p>
+    <p class="a">See the rule of thumb in the Tips section — core identity data goes in the path, optional/filter data goes in the query string.</p>
+  </div>
+
+  <h3 class="sub">Deeper Questions</h3>
+
+  <div class="qa-block">
+    <p class="q">Q4: What happens when you type a URL into a browser and press Enter?</p>
+    <p class="a">A classic, comprehensive question. You're expected to walk through: (1) the browser parses the URL, (2) a DNS lookup resolves the domain to an IP address, (3) a TCP connection is established with the server, (4) if HTTPS, a TLS handshake occurs, (5) an HTTP request is sent, (6) an HTTP response is received, (7) the browser renders the HTML and begins fetching additional resources (CSS, JS, images).</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q">Q5: What is DNS and what role does it play in a URL?</p>
+    <p class="a">DNS translates a domain name (e.g., google.com) into an actual IP address, since servers communicate via IP addresses, not names.</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q">Q6: Why use HTTPS instead of HTTP?</p>
+    <p class="a">For encryption — data between the browser and server stays encrypted, so no one can eavesdrop on it in transit (protection against man-in-the-middle attacks).</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q">Q7: What is a Query String and how do you access it in Express.js/Node.js?</p>
+    <pre>app.get("/products", (req, res) => {
+  console.log(req.query);  // { category: 'electronics', sort: 'price' }
+});</pre>
+  </div>
+
+  <div class="qa-block">
+    <p class="q">Q8: What's the difference between an Absolute URL and a Relative URL?</p>
+    <pre>Absolute: https://example.com/products/laptop
+Relative: /products/laptop</pre>
+    <p class="a">A relative URL depends on the current base URL (i.e., whatever page you're currently on).</p>
+  </div>
+
+  <div class="qa-block">
+    <p class="q">Q9: What is URL Encoding and why do we need it?</p>
+    <p class="a">Because certain characters (space, <code>&amp;</code>, <code>#</code>, <code>?</code>) have special meaning within the URL's own structure — using them unencoded as a plain value would break the URL's structure or be misinterpreted.</p>
+  </div>
+
+  <h3 class="sub">A Possible Trick Question</h3>
+
+  <div class="qa-block">
+    <p class="q">Q10: Does the Fragment (#) get sent to the server?</p>
+    <p class="a"><strong>No, never.</strong> The fragment is read and handled entirely on the client side (in the browser) and never reaches the server. This is used by Single Page Applications (like React Router, historically) to change the "displayed view" without triggering a new request to the server.</p>
+  </div>
+  <p class="page-footer">Section Six — Common Interview Questions</p>
+</section>
+
+</body>
+</html>
