@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Mongoose Level Two — Models, Documents, CRUD &amp; Query Builders</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 25pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 18.5pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.5pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference · Level Two</p>
+  <h1>Mongoose — Models &amp; Core Operations</h1>
+  <h2>Creating Models, Document vs. Model, CRUD &amp; Query Builders</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Creating Models — mongoose.model() and Its Relationship to Collections</li>
+    <li>Document vs. Model — the Practical Difference</li>
+    <li>CRUD with Mongoose</li>
+    <li>Query Builders — Chaining</li>
+    <li>Best Practices &amp; Tips for This Level</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Creating Models — mongoose.model() and Its Relationship to Collections</h1>
+  </div>
+
+  <h3 class="sub">The Core Idea</h3>
+  <p>A <strong>Schema</strong> is the "blueprint" — it describes the shape of the data only, without doing anything real against the database.</p>
+  <p>A <strong>Model</strong> is the "tool" you actually use to interact with the collection — to Create, Read, Update, and Delete.</p>
+  <pre>const mongoose = require("mongoose");
+
+// 1. The Schema - just the blueprint
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  role: { type: String, enum: ["trainee", "mentor", "admin"] }
+});
+
+// 2. The Model - the tool you'll actually work with
+const User = mongoose.model("User", userSchema);
+
+// Now you can use User to interact with the collection
+const newUser = await User.create({ name: "Ashraf", email: "ashraf@test.com", role: "trainee" });</pre>
+
+  <h3 class="sub">The Point That Confuses Everyone — How Does Mongoose Name the Collection?</h3>
+  <pre>const User = mongoose.model("User", userSchema);</pre>
+  <p><strong>Mongoose takes the name "User", lowercases it, and automatically pluralizes it → <code>users</code></strong></p>
+  <table>
+    <thead><tr><th>Name You Pass to mongoose.model()</th><th>Actual MongoDB Collection Name</th></tr></thead>
+    <tbody>
+      <tr><td><code>"User"</code></td><td><code>users</code></td></tr>
+      <tr><td><code>"Category"</code></td><td><code>categories</code> (handles correct pluralization!)</td></tr>
+      <tr><td><code>"Product"</code></td><td><code>products</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Manually Specifying the Collection Name (Overriding Auto-Naming)</h3>
+  <pre>const userSchema = new mongoose.Schema({
+  name: String
+}, {
+  collection: "platform_users"   // overrides the automatic naming
+});
+
+const User = mongoose.model("User", userSchema);
+// The actual collection is now named "platform_users", not "users"</pre>
+
+  <div class="note"><strong>.NET parallel:</strong> this is similar to the difference between an <strong>Entity Class name</strong> and the actual <strong>Table name</strong> in EF Core — you can leave them matching, or specify a different name via the <code>[Table("TableName")]</code> attribute.</div>
+
+  <h3 class="sub">Best Practice — File Organization</h3>
+  <pre>models/
+  User.js
+  Product.js
+  Order.js</pre>
+  <p>Each model in its own file, always exporting the model itself:</p>
+  <pre>// models/User.js
+const mongoose = require("mongoose");
+
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String
+});
+
+module.exports = mongoose.model("User", userSchema);</pre>
+  <pre>// in any other file
+const User = require("./models/User");</pre>
+  <p class="page-footer">Section One — Creating Models</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">Document vs. Model — the Practical Difference</h1>
+  </div>
+  <p>This is one of the biggest sources of confusion for beginners — here's a concrete way to think about it.</p>
+
+  <h3 class="sub">Model = "The Factory" That Produces Documents</h3>
+  <pre>const User = mongoose.model("User", userSchema);
+// User here is the "factory" - it can create new documents, find, update, delete</pre>
+
+  <h3 class="sub">Document = "The Single Product" That Comes Out of the Factory</h3>
+  <pre>const user = new User({ name: "Ashraf", email: "ashraf@test.com" });
+// user here is a single document - a real object with actual values</pre>
+
+  <h3 class="sub">The Difference in Practice</h3>
+  <pre>// Model - used for general operations (searching, statistics)
+const allTrainees = await User.find({ role: "trainee" });
+const count = await User.countDocuments({ isActive: true });
+
+// Document - used for working with one specific record
+const user = await User.findById(someId);
+user.name = "Ashraf Gad";      // direct edit on the document
+await user.save();             // saving the change - this is a Document method, not a Model method
+
+user.isModified("name");        // another Document-only method (as seen in pre-save hooks)</pre>
+
+  <h3 class="sub">A Table to Cement the Distinction Permanently</h3>
+  <table>
+    <thead><tr><th></th><th>Model</th><th>Document</th></tr></thead>
+    <tbody>
+      <tr><td>What is it?</td><td>A class/constructor representing the entire collection</td><td>A single instance representing one record</td></tr>
+      <tr><td>Used for</td><td>General queries (find, create, aggregate...)</td><td>Editing/reading a specific record after fetching it</td></tr>
+      <tr><td>Example</td><td><code>User.find()</code>, <code>User.create()</code></td><td><code>user.save()</code>, <code>user.isModified()</code></td></tr>
+      <tr><td>.NET Parallel</td><td><code>DbSet&lt;User&gt;</code></td><td>A single <code>User</code> object after <code>.Find()</code></td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Two — Document vs. Model</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">CRUD with Mongoose</h1>
+  </div>
+
+  <h3 class="sub">Create</h3>
+  <pre>// Method 1 - create() directly (most commonly used)
+const newUser = await User.create({
+  name: "Karim Fathy",
+  email: "karim@test.com",
+  role: "trainee"
+});
+
+// Method 2 - new + save() (useful if you want to modify before saving)
+const user = new User({ name: "Karim Fathy", email: "karim@test.com" });
+user.role = "trainee";   // you can modify before saving
+await user.save();
+
+// Creating multiple documents at once
+const users = await User.insertMany([
+  { name: "Sara", email: "sara@test.com" },
+  { name: "Omar", email: "omar@test.com" }
+]);</pre>
+
+  <h3 class="sub">Read</h3>
+  <pre>// Get all documents
+const allUsers = await User.find();
+
+// Get with a condition
+const trainees = await User.find({ role: "trainee" });
+
+// Get just one
+const user = await User.findOne({ email: "karim@test.com" });
+
+// Get by ID (Mongoose shorthand for findOne({_id}))
+const user = await User.findById(someId);</pre>
+
+  <h3 class="sub">Update</h3>
+  <pre>// Updating a document and returning the OLD version (default behavior)
+const updated = await User.findByIdAndUpdate(userId, { isActive: false });
+console.log(updated.isActive);  // logs the OLD value (true) — this confuses beginners!
+
+// Updating and returning the NEW version after the change
+const updated = await User.findByIdAndUpdate(
+  userId,
+  { isActive: false },
+  { new: true, runValidators: true }   // both of these matter a lot
+);
+console.log(updated.isActive);  // logs the NEW value (false)
+
+// Updating multiple documents at once
+await User.updateMany(
+  { role: "trainee", completedCourses: { $gte: 10 } },
+  { $set: { isReadyForHire: true } }
+);</pre>
+
+  <div class="warning-box"><strong>Critical point — runValidators:</strong> by default, update operations do NOT run schema validation the way create operations do.</div>
+  <pre>// ❌ Without runValidators - the rule is completely ignored
+await User.findByIdAndUpdate(userId, { age: -5 });
+// this saves fine even though the schema has min: 0 on age!
+
+// ✅ With runValidators - the rule is enforced
+await User.findByIdAndUpdate(userId, { age: -5 }, { runValidators: true });
+// throws a validation error as expected</pre>
+  <p>This is the single most common bug beginners run into — forgetting <code>runValidators: true</code>, then discovering invalid data was saved to the database with no error ever raised.</p>
+
+  <h3 class="sub">Delete</h3>
+  <pre>// Delete one document by ID
+await User.findByIdAndDelete(userId);
+
+// Delete with a condition
+await User.findOneAndDelete({ email: "karim@test.com" });
+
+// Delete multiple documents
+await User.deleteMany({ isActive: false, role: "trainee" });</pre>
+  <p class="page-footer">Section Three — CRUD with Mongoose</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Query Builders — Chaining</h1>
+  </div>
+
+  <h3 class="sub">The Core Idea</h3>
+  <p>When you call <code>find()</code> without <code>await</code>, Mongoose returns a <strong>Query object</strong>, not the final result. This gives you the chance to add more conditions "on top of it" before it actually executes.</p>
+  <pre>// Without chaining
+const trainees = await User.find({ role: "trainee" });
+
+// With chaining - same result, written differently
+const trainees = await User
+  .find()
+  .where("role").equals("trainee");</pre>
+
+  <h3 class="sub">Practical Chaining Examples</h3>
+  <pre>// Combining multiple conditions
+const activeMernTrainees = await User
+  .find()
+  .where("role").equals("trainee")
+  .where("track").equals("MERN Stack")
+  .where("isActive").equals(true);
+
+// Combining sort, limit, and select together
+const topTrainees = await User
+  .find({ role: "trainee" })
+  .sort({ completedCourses: -1 })
+  .limit(5)
+  .select("name completedCourses");
+
+// Numeric conditions via chaining
+const experiencedTrainees = await User
+  .find()
+  .where("completedCourses").gte(10);</pre>
+
+  <h3 class="sub">Important — When Does the Query Actually Execute?</h3>
+  <pre>const query = User.find({ role: "trainee" });  // hasn't executed yet!
+console.log(query);  // this is a Query object, not a result
+
+const result = await query;  // NOW it actually executes
+// or
+const result = await query.exec();  // same thing, sometimes clearer</pre>
+  <p><strong>Practical benefit:</strong> you can build your query gradually based on dynamic conditions (e.g., filters coming from the frontend) before actually executing it.</p>
+
+  <h3 class="sub">Real-World Example — Building a Dynamic Query Based on User Filters</h3>
+  <pre>// In the hiring platform - an endpoint with optional filters
+app.get("/users", async (req, res) => {
+  let query = User.find();
+
+  if (req.query.role) {
+    query = query.where("role").equals(req.query.role);
+  }
+
+  if (req.query.track) {
+    query = query.where("track").equals(req.query.track);
+  }
+
+  if (req.query.minCourses) {
+    query = query.where("completedCourses").gte(Number(req.query.minCourses));
+  }
+
+  query = query.sort({ createdAt: -1 });
+
+  const users = await query;
+  res.json({ status: "success", data: users });
+});</pre>
+  <p>This is a very real-world pattern — in any API with optional filters (like <code>/users?role=trainee&amp;minCourses=5</code>), chaining lets you add conditions only when they're actually present in the request, without writing complex if/else logic for every possible combination.</p>
+  <p class="page-footer">Section Four — Query Builders</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Best Practices &amp; Tips for This Level</h1>
+  </div>
+
+  <h3 class="sub">1. Keep Each Model in Its Own File, and Export It Directly</h3>
+  <pre>// ✅ Correct
+module.exports = mongoose.model("User", userSchema);</pre>
+
+  <h3 class="sub">2. Always Use { new: true, runValidators: true } with Update</h3>
+  <pre>// Make this an automatic habit for any findByIdAndUpdate
+const updated = await Model.findByIdAndUpdate(id, data, {
+  new: true,
+  runValidators: true
+});</pre>
+
+  <h3 class="sub">3. Use .lean() When You Don't Need Document Methods (Covered in Detail Later)</h3>
+  <pre>// If you're just displaying data (not editing or calling .save())
+const users = await User.find().lean();  // faster performance</pre>
+
+  <h3 class="sub">4. Don't Use find() When You Mean findOne()</h3>
+  <pre>// ❌ If you only need one record
+const users = await User.find({ email });  // this returns an Array!
+const user = users[0];   // unnecessary and confusing
+
+// ✅ Correct
+const user = await User.findOne({ email });</pre>
+
+  <h3 class="sub">5. Keep Chains Readable — Don't Stack Too Many Conditions on One Line</h3>
+  <pre>// ✅ Clearer to read
+const result = await User
+  .find()
+  .where("role").equals("trainee")
+  .where("isActive").equals(true)
+  .sort({ createdAt: -1 })
+  .limit(10);</pre>
+
+  <h3 class="sub">6. When a Query Is Built Dynamically, Start with an Empty Query and Add Conditions Gradually</h3>
+  <p>Exactly like the example above — this is a very common pattern in any API with optional filters.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Extra Tips &amp; Tricks</span>
+    <ul>
+      <li>Remember that a Query object is thenable — you can <code>await</code> it directly without always calling <code>.exec()</code>, but <code>.exec()</code> can make intent clearer in complex chained code.</li>
+      <li><code>findByIdAndUpdate</code> and <code>findOneAndUpdate</code> bypass certain document middleware by default (like <code>pre("save")</code>) since they operate at the query level, not the document level — if you rely on save-hooks for logic like password hashing, make sure you're using <code>save()</code> instead, or add equivalent query middleware.</li>
+      <li><code>insertMany()</code> is much faster than looping and calling <code>create()</code> repeatedly for bulk inserts, but by default it doesn't trigger document middleware either — check your Mongoose version's documentation if hooks are required during bulk inserts.</li>
+      <li>Use <code>.select()</code> together with <code>.lean()</code> when building list endpoints — combining both cuts down both database transfer size and JS object overhead.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Five — Best Practices &amp; Tips</p>
+</section>
+
+</body>
+</html>

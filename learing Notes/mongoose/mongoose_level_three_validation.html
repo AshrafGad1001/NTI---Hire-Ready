@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Mongoose Level Three — Validation in Detail</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 26pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.4pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference · Level Three</p>
+  <h1>Mongoose Validation In Detail</h1>
+  <h2>Built-In Validators, Custom Validators, Async Validators &amp; Error Handling</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Built-In Validators</li>
+    <li>Custom Validators</li>
+    <li>Async Validators</li>
+    <li>Validation Errors — Handling &amp; Translating to the Frontend</li>
+    <li>Best Practices &amp; Tips for This Level</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Built-In Validators</h1>
+  </div>
+  <p>Mongoose ships with a set of ready-made validation rules you attach directly to schema fields — no extra code needed for the common cases.</p>
+
+  <h3 class="sub">The Core Built-In Validators</h3>
+  <table>
+    <thead><tr><th>Validator</th><th>Applies To</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>required</code></td><td>Any type</td><td>Field must be present</td></tr>
+      <tr><td><code>min</code> / <code>max</code></td><td>Number</td><td>Numeric lower/upper bound</td></tr>
+      <tr><td><code>minlength</code> / <code>maxlength</code></td><td>String</td><td>String length bounds</td></tr>
+      <tr><td><code>enum</code></td><td>String (or any type)</td><td>Restricts value to a fixed list</td></tr>
+      <tr><td><code>match</code></td><td>String</td><td>Value must match a given regular expression</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">A Real-World Example — Hiring Platform User Schema</h3>
+  <pre>const userSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, "Name is required"],
+    minlength: [2, "Name must be at least 2 characters"],
+    maxlength: [60, "Name cannot exceed 60 characters"]
+  },
+
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"]
+  },
+
+  age: {
+    type: Number,
+    min: [16, "Must be at least 16 years old"],
+    max: [70, "Age cannot exceed 70"]
+  },
+
+  role: {
+    type: String,
+    enum: {
+      values: ["trainee", "mentor", "admin"],
+      message: "{VALUE} is not a supported role"
+    },
+    default: "trainee"
+  }
+});</pre>
+
+  <div class="note"><strong>Note:</strong> every built-in validator accepts either a plain value (<code>required: true</code>) or an array form <code>[value, "custom error message"]</code> — always prefer the array form so the resulting error message is actually useful to whoever reads it (often the frontend).</div>
+  <p class="page-footer">Section One — Built-In Validators</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">Custom Validators</h1>
+  </div>
+  <p>When built-in rules aren't enough — for example, validating a field against business logic, or against another field on the same document — you write a custom validator function.</p>
+
+  <h3 class="sub">Basic Custom Validator</h3>
+  <pre>const userSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function(value) {
+        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+      },
+      message: props => `${props.value} is not a valid email address`
+    }
+  }
+});</pre>
+
+  <h3 class="sub">Real-World Example — Cross-Field Validation</h3>
+  <p>A common real scenario: an order's <code>discountedPrice</code> must never be greater than or equal to its <code>originalPrice</code>.</p>
+  <pre>const productSchema = new Schema({
+  originalPrice: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  discountedPrice: {
+    type: Number,
+    validate: {
+      validator: function(value) {
+        // "this" refers to the document being validated
+        return value < this.originalPrice;
+      },
+      message: "Discounted price must be lower than the original price"
+    }
+  }
+});</pre>
+
+  <div class="warning-box"><strong>Important:</strong> inside a custom validator function, <code>this</code> refers to the document being validated — but only on document creation (<code>save()</code>). It does NOT reliably work the same way during <code>update</code> operations unless <code>runValidators: true</code> and <code>context: "query"</code> are both set (covered further in Section Four).</div>
+  <p class="page-footer">Section Two — Custom Validators</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Async Validators</h1>
+  </div>
+  <p>Some validation checks require an asynchronous operation — for example, checking a database to ensure a username isn't already taken by someone else, or calling an external service.</p>
+
+  <h3 class="sub">Real-World Example — Ensuring an Email Isn't Already in Use (Excluding the Current Document)</h3>
+  <pre>const userSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    validate: {
+      validator: async function(value) {
+        // Skip the check if the email hasn't changed (e.g., during an update)
+        if (!this.isModified("email")) return true;
+
+        const existingUser = await mongoose.model("User").findOne({ email: value });
+        return !existingUser;
+      },
+      message: "This email is already registered"
+    }
+  }
+});</pre>
+
+  <div class="note"><strong>Practical note:</strong> for something as important as email uniqueness, an async validator is a helpful extra layer, but it should not be your only line of defense — always pair it with a <code>unique: true</code> index on the field as well. The validator can have race conditions under high concurrency (two requests checking at nearly the same time), while a unique index is enforced atomically at the database level.</div>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Keep async validators fast and narrowly scoped — a slow validator (e.g., calling a third-party API) directly slows down every save operation on that schema.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Three — Async Validators</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Validation Errors — Handling &amp; Translating to the Frontend</h1>
+  </div>
+
+  <h3 class="sub">What a Mongoose Validation Error Looks Like</h3>
+  <pre>{
+  errors: {
+    email: {
+      message: "Please provide a valid email address",
+      name: "ValidatorError",
+      path: "email",
+      value: "not-an-email"
+    },
+    age: {
+      message: "Must be at least 16 years old",
+      name: "ValidatorError",
+      path: "age",
+      value: 10
+    }
+  },
+  name: "ValidationError"
+}</pre>
+  <p>Notice that a single failed <code>save()</code> can report <strong>multiple field errors at once</strong> — Mongoose collects all validation failures across the document, not just the first one it encounters.</p>
+
+  <h3 class="sub">A Real-World Example — Catching and Reformatting the Error for an API Response</h3>
+  <pre>app.post("/users", async (req, res) => {
+  try {
+    const user = await User.create(req.body);
+    res.status(201).json({ status: "success", data: user });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      const errors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        status: "fail",
+        errors
+      });
+    }
+    res.status(500).json({ status: "error", message: "Something went wrong" });
+  }
+});</pre>
+  <p>This turns Mongoose's internal error object into a clean array of readable messages the frontend can display directly, e.g.:</p>
+  <pre>{
+  "status": "fail",
+  "errors": [
+    "Please provide a valid email address",
+    "Must be at least 16 years old"
+  ]
+}</pre>
+
+  <h3 class="sub">Enabling Validation on Updates — runValidators Revisited</h3>
+  <pre>const updated = await User.findByIdAndUpdate(
+  userId,
+  { age: 12 },
+  { new: true, runValidators: true, context: "query" }
+);</pre>
+  <div class="warning-box"><strong>Note on "context: query":</strong> when using a custom validator that references <code>this</code> to access other fields on the document (as in the discount example earlier), <code>this</code> behaves differently during an update versus a create. Adding <code>context: "query"</code> makes <code>this</code> refer to the query during an update, which affects how you write cross-field custom validators meant to work in both create and update scenarios — test both paths explicitly rather than assuming identical behavior.</div>
+  <p class="page-footer">Section Four — Validation Errors</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Best Practices &amp; Tips for This Level</h1>
+  </div>
+
+  <h3 class="sub">1. Always Provide a Custom Error Message</h3>
+  <pre>// ❌ Generic, unhelpful
+age: { type: Number, min: 16 }
+
+// ✅ Clear and directly usable by the frontend
+age: { type: Number, min: [16, "Must be at least 16 years old"] }</pre>
+
+  <h3 class="sub">2. Combine Async Validators with Unique Indexes for Anything Uniqueness-Related</h3>
+  <p>A validator alone can't guarantee atomicity under concurrent requests — a unique index closes that gap.</p>
+
+  <h3 class="sub">3. Always Set runValidators on Update Operations</h3>
+  <p>Otherwise all your carefully written validators are silently skipped whenever data is modified through an update instead of a create.</p>
+
+  <h3 class="sub">4. Collect and Return All Validation Errors at Once, Not Just the First</h3>
+  <p>As shown in Section Four, Mongoose already gathers every failing field into one <code>ValidationError</code> object — take advantage of that to give the user a complete list of what needs fixing in a single response, instead of forcing them through a frustrating one-error-at-a-time correction loop.</p>
+
+  <h3 class="sub">5. Keep Custom Validators Pure and Side-Effect-Free Where Possible</h3>
+  <p>A validator function should answer "is this valid?" — it shouldn't also be modifying data or triggering unrelated actions (like sending an email). Keep that kind of logic in middleware or in the route handler instead.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Extra Tips &amp; Tricks</span>
+    <ul>
+      <li>Use the <code>{VALUE}</code> placeholder inside <code>enum</code> error messages so the actual invalid value the user submitted appears directly in the error text.</li>
+      <li>For expensive async validators (e.g., checking an external service), consider debouncing or caching results briefly if the same value is likely to be validated repeatedly in a short time window.</li>
+      <li>Test your validators directly with unit tests against the schema, independent of your route handlers — this catches validation regressions early, without needing to spin up the whole API.</li>
+      <li>Remember that validation runs on <code>save()</code> by default but not on <code>insertMany()</code> unless explicitly configured — check your Mongoose version's behavior before relying on validation during bulk inserts.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Five — Best Practices &amp; Tips</p>
+</section>
+
+</body>
+</html>

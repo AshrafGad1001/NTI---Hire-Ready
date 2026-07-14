@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Mongoose Level One — Architecture, Connections &amp; Schema Types</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 26pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.5pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference · Level One</p>
+  <h1>Mongoose Fundamentals</h1>
+  <h2>Architecture, Connection Handling &amp; Schema Types — Hiring Platform Scenario</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Mongoose Architecture — How It Talks to MongoDB</li>
+    <li>Connection Handling</li>
+    <li>Connection Events</li>
+    <li>Connection Pooling</li>
+    <li>Schema Types in Detail</li>
+    <li>SchemaType Options in Detail</li>
+    <li>General Best Practices &amp; Tips</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Mongoose Architecture — How It Talks to MongoDB</h1>
+  </div>
+
+  <h3 class="sub">The Full Picture</h3>
+  <pre>Your Code (Node.js)
+       ↓
+   Mongoose (ODM - Object Document Mapper)
+       ↓
+  MongoDB Native Driver
+       ↓
+   MongoDB Server (actually stores the data)</pre>
+
+  <p><strong>Mongoose isn't a replacement for the MongoDB driver — it's a layer on top of it.</strong> The driver itself (the <code>mongodb</code> package) is what actually talks to the database over its wire protocol. Mongoose uses that driver under the hood and adds on top of it:</p>
+  <ul>
+    <li><strong>Schema Definition</strong> — you can define the expected shape of your data (MongoDB itself doesn't enforce this)</li>
+    <li><strong>Validation</strong> — rules checked before saving</li>
+    <li><strong>Middleware (Hooks)</strong> — as covered previously</li>
+    <li><strong>Type Casting</strong> — automatically converts data to the correct type (e.g., a string automatically becomes an ObjectId if the schema defines it as such)</li>
+    <li><strong>Query Building</strong> — a clearer, easier way to write queries</li>
+  </ul>
+
+  <div class="note"><strong>.NET parallel:</strong> Mongoose is the closest equivalent to <strong>Entity Framework Core</strong> for SQL Server. The key difference: EF Core enforces the schema on the database itself (via migrations), while Mongoose enforces the schema only at the application level — the underlying MongoDB database remains flexible and can accept anything if accessed directly, bypassing Mongoose entirely.</div>
+  <p class="page-footer">Section One — Mongoose Architecture</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">Connection Handling</h1>
+  </div>
+
+  <h3 class="sub">The Basic Approach</h3>
+  <pre>const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost:27017/hiring-platform")
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Connection error:", err));</pre>
+
+  <h3 class="sub">Real-World Example — The Production-Ready Way</h3>
+  <pre>// config/database.js
+const mongoose = require("mongoose");
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      maxPoolSize: 10,        // maximum number of connections in the pool
+      serverSelectionTimeoutMS: 5000,  // throw an error if the server doesn't respond within 5s
+    });
+    console.log("MongoDB Connected Successfully");
+  } catch (error) {
+    console.error("MongoDB Connection Failed:", error.message);
+    process.exit(1);  // shut down the app if it can't connect to the DB at all
+  }
+};
+
+module.exports = connectDB;</pre>
+
+  <div class="warning-box"><strong>Common beginner mistake:</strong> connecting to the database inside a route handler, on every request.</div>
+  <pre>// ❌ Wrong — a new connection attempt on every request
+app.get("/products", async (req, res) => {
+  await mongoose.connect(uri);  // a serious mistake!
+  const products = await Product.find();
+  res.json(products);
+});
+
+// ✅ Correct — connect once at startup
+// server.js
+connectDB();  // only once, here
+app.listen(3000);</pre>
+  <p class="page-footer">Section Two — Connection Handling</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Connection Events</h1>
+  </div>
+  <p>Monitoring the connection's state is essential for diagnosing production issues quickly.</p>
+  <pre>mongoose.connection.on("connected", () => {
+  console.log("Mongoose connected to DB");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("Mongoose connection error:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.log("Mongoose disconnected");
+});
+
+// Gracefully close the connection when the app shuts down (e.g., Ctrl+C)
+process.on("SIGINT", async () => {
+  await mongoose.connection.close();
+  console.log("MongoDB connection closed due to app termination");
+  process.exit(0);
+});</pre>
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Set up connection event listeners from day one on any new project — if a disconnect happens unexpectedly in production, you want to see it immediately in the logs, not discover it through user complaints.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Three — Connection Events</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Connection Pooling</h1>
+  </div>
+  <p><strong>The idea:</strong> instead of opening a brand-new connection to the database for every single request (a very expensive operation), Mongoose maintains a "pool" of ready-to-use connections and reuses them.</p>
+  <pre>mongoose.connect(uri, {
+  maxPoolSize: 10,   // maximum 10 concurrent connections
+  minPoolSize: 2     // minimum connections to keep open even when idle
+});</pre>
+  <div class="note"><strong>.NET parallel:</strong> this is the exact same concept as <strong>Connection Pooling in ADO.NET / EF Core</strong> — same idea, same goal: reducing the overhead of repeatedly opening and closing connections.</div>
+  <p class="page-footer">Section Four — Connection Pooling</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Schema Types in Detail</h1>
+  </div>
+
+  <h3 class="sub">The Basic Types</h3>
+  <pre>const { Schema } = require("mongoose");
+
+const userSchema = new Schema({
+  name: String,               // text
+  age: Number,                 // number
+  isActive: Boolean,           // true/false
+  joinDate: Date,               // date
+  profilePicture: Buffer,       // binary data (rarely used directly)
+  metadata: Schema.Types.Mixed, // any data type (very flexible, but loses schema benefits)
+  track: Schema.Types.ObjectId, // reference to another document
+  tags: [String],               // array of strings
+  preferences: Map              // like an object, but with dynamic keys
+});</pre>
+
+  <h3 class="sub">A Complete Real-World Example — Hiring Platform User Schema</h3>
+  <pre>const userSchema = new Schema({
+  name: String,
+  email: String,
+  age: Number,
+  isActive: Boolean,
+  joinDate: Date,
+  role: String,
+  skills: [String],                          // simple array
+
+  track: {
+    type: Schema.Types.ObjectId,               // reference to another collection
+    ref: "Track"
+  },
+
+  socialLinks: Schema.Types.Mixed,             // flexible-shape data (rarely needed)
+
+  settings: Map,                               // dynamic key-value pairs
+});</pre>
+
+  <h3 class="sub">When to Use "Mixed" (and When to Avoid It)</h3>
+  <pre>socialLinks: Schema.Types.Mixed
+// could be: { linkedin: "...", github: "..." }
+// or: { instagram: "...", facebook: "...", tiktok: "..." }</pre>
+  <div class="warning-box"><strong>Caution:</strong> <code>Mixed</code> defeats the schema's most valuable benefit — validation and clear structure. Use it only when the data's shape is genuinely unpredictable and there's no reasonable way to model it upfront — this is rarely the correct solution.</div>
+
+  <h3 class="sub">"Map" — Often a Better Fit Than "Mixed"</h3>
+  <pre>const productSchema = new Schema({
+  translations: {
+    type: Map,
+    of: String   // every value inside the map must be a String
+  }
+});
+
+// Usage:
+const product = new Product({
+  translations: new Map([
+    ["en", "Laptop"],
+    ["ar", "لابتوب"]
+  ])
+});</pre>
+  <p><strong>The difference from Mixed:</strong> <code>Map</code> allows dynamic keys (e.g., languages not known in advance), but <strong>still enforces a fixed data type on the values</strong> (<code>of: String</code> here) — a much better middle ground than fully unstructured <code>Mixed</code>.</p>
+  <p class="page-footer">Section Five — Schema Types in Detail</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Six</p>
+    <h1 class="topic-title">SchemaType Options in Detail</h1>
+  </div>
+
+  <h3 class="sub">A Comprehensive Example of the Important Options</h3>
+  <pre>const userSchema = new Schema({
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    unique: true,                    // automatically creates a unique index
+    lowercase: true,                 // automatically converts to lowercase before saving
+    trim: true                       // strips leading/trailing whitespace
+  },
+
+  password: {
+    type: String,
+    required: true,
+    select: false                    // not returned automatically in queries (security)
+  },
+
+  role: {
+    type: String,
+    enum: ["trainee", "mentor", "admin"],
+    default: "trainee"               // default value if none is provided
+  },
+
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    immutable: true                  // can't be changed once set
+  },
+
+  monthlyIncome: {
+    type: Number,
+    min: [0, "Income cannot be negative"],
+    get: (value) => Math.round(value)  // transforms the value only when read
+  }
+});</pre>
+
+  <h3 class="sub">Each Option Explained</h3>
+  <table>
+    <thead><tr><th>Option</th><th>Purpose</th><th>Practical Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>required</code></td><td>Field must be present</td><td><code>email</code> must exist</td></tr>
+      <tr><td><code>unique</code></td><td>Prevents duplicate values (creates an index automatically)</td><td>No two identical emails</td></tr>
+      <tr><td><code>default</code></td><td>Default value if the field isn't provided</td><td><code>role: "trainee"</code> when unspecified</td></tr>
+      <tr><td><code>select: false</code></td><td>Field is excluded from normal queries unless explicitly requested</td><td>Protecting the <code>password</code> field</td></tr>
+      <tr><td><code>immutable</code></td><td>Field is set once and can never be changed afterward</td><td><code>createdBy</code> once saved</td></tr>
+      <tr><td><code>lowercase</code> / <code>uppercase</code></td><td>Automatically transforms text</td><td><code>email</code> always stored lowercase</td></tr>
+      <tr><td><code>trim</code></td><td>Strips extra whitespace</td><td>" Ashraf " becomes "Ashraf"</td></tr>
+      <tr><td><code>get</code> / <code>set</code></td><td>Functions that transform a value on read/write</td><td>Rounding a number, transforming a value</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Practical Example — "select: false" with Passwords</h3>
+  <pre>const user = await User.findOne({ email });
+console.log(user.password);  // undefined — automatically protected!
+
+// If you actually need the password (e.g., during login):
+const user = await User.findOne({ email }).select("+password");
+console.log(user.password);  // now it appears</pre>
+  <div class="note"><strong>This is an important security best practice</strong> — it prevents the password from accidentally leaking in any response, without needing to write extra filtering code every single time.</div>
+  <p class="page-footer">Section Six — SchemaType Options in Detail</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Seven</p>
+    <h1 class="topic-title">General Best Practices &amp; Tips</h1>
+  </div>
+
+  <h3 class="sub">1. Keep Database Connection Setup in a Separate Config File</h3>
+  <pre>project/
+  config/
+    database.js
+  models/
+    User.js
+    Product.js
+  server.js</pre>
+  <p>Don't write connection code directly inside <code>server.js</code> — keep it in a separate, reusable, testable file.</p>
+
+  <h3 class="sub">2. Always Use Environment Variables for the Connection String</h3>
+  <pre>// ❌ A serious mistake
+mongoose.connect("mongodb://admin:password123@prod-server.com/mydb");
+
+// ✅ Correct
+mongoose.connect(process.env.MONGO_URI);</pre>
+
+  <h3 class="sub">3. Always Add a Clear Message with "required"</h3>
+  <pre>// ❌ A generic, unhelpful message
+email: { type: String, required: true }
+
+// ✅ A clear message useful to the frontend
+email: { type: String, required: [true, "Email address is required"] }</pre>
+
+  <h3 class="sub">4. Use "select: false" for Any Sensitive Field</h3>
+  <p>Not just passwords — any sensitive field (API keys, tokens, sensitive financial data) should default to <code>select: false</code> as a safe default.</p>
+
+  <h3 class="sub">5. Don't Reach for "Mixed" as a Quick Fix</h3>
+  <p>If you feel like you need <code>Mixed</code>, stop and reconsider — there's usually a clearer solution (a defined sub-schema, a <code>Map</code>, or even a separate collection).</p>
+
+  <h3 class="sub">6. Set Up Connection Events from the Start of Every New Project</h3>
+  <p>So that if an unexpected disconnect happens in production, you find out immediately from the logs instead of from user complaints.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Extra Tips &amp; Tricks</span>
+    <ul>
+      <li>Never call <code>mongoose.connect()</code> more than once in the app's lifecycle — Mongoose maintains a single default connection; repeated calls can cause confusing connection state bugs.</li>
+      <li>Use <code>maxPoolSize</code> thoughtfully based on your expected concurrent load — too small causes requests to queue waiting for a free connection; too large can overwhelm the database server itself.</li>
+      <li>Combine <code>required</code> with <code>trim</code> carefully — a field containing only whitespace will pass a basic <code>required</code> check unless you also trim it first.</li>
+      <li>When using <code>unique: true</code>, remember it's implemented as a unique index — changing it later requires dropping and recreating the index, not just editing the schema.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Seven — General Best Practices &amp; Tips</p>
+</section>
+
+</body>
+</html>

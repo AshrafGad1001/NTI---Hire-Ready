@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Mongoose Level Seven — Plugins, TypeScript &amp; Testing</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.3pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference · Level Seven</p>
+  <h1>Mongoose — Tools &amp; Extended Concepts</h1>
+  <h2>Plugins, TypeScript Integration &amp; Testing Strategies</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Mongoose Plugins — Reusing Logic Across Schemas</li>
+    <li>TypeScript with Mongoose</li>
+    <li>Testing with Mongoose — Mocking &amp; mongodb-memory-server</li>
+    <li>Best Practices &amp; Tips for This Level</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Mongoose Plugins — Reusing Logic Across Schemas</h1>
+  </div>
+  <p>A plugin is a reusable function that attaches shared fields, methods, or middleware to any schema it's applied to — useful when the same pattern (like soft delete or pagination metadata) repeats across many models.</p>
+
+  <h3 class="sub">Real-World Example — A Reusable Soft Delete Plugin</h3>
+  <pre>// plugins/softDelete.js
+function softDeletePlugin(schema) {
+  schema.add({
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null }
+  });
+
+  schema.pre(/^find/, function(next) {
+    this.where({ isDeleted: { $ne: true } });
+    next();
+  });
+
+  schema.methods.softDelete = function() {
+    this.isDeleted = true;
+    this.deletedAt = new Date();
+    return this.save();
+  };
+}
+
+module.exports = softDeletePlugin;</pre>
+  <pre>// models/User.js
+const softDeletePlugin = require("../plugins/softDelete");
+
+const userSchema = new Schema({ name: String, email: String });
+userSchema.plugin(softDeletePlugin);
+
+module.exports = mongoose.model("User", userSchema);</pre>
+  <pre>// models/Product.js
+const softDeletePlugin = require("../plugins/softDelete");
+
+const productSchema = new Schema({ title: String, price: Number });
+productSchema.plugin(softDeletePlugin);   // same reusable logic, different schema
+
+module.exports = mongoose.model("Product", productSchema);</pre>
+
+  <h3 class="sub">Applying a Plugin Globally to Every Schema</h3>
+  <pre>// If every model in the app should have this behavior
+mongoose.plugin(softDeletePlugin);</pre>
+  <div class="note"><strong>Why this matters:</strong> without a plugin, adding soft-delete behavior to five different models means copy-pasting the same fields and middleware five times — any future change (e.g., adding a "deletedBy" field) then requires updating every copy. A plugin centralizes it in one place.</div>
+  <p class="page-footer">Section One — Mongoose Plugins</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">TypeScript with Mongoose</h1>
+  </div>
+  <p>Mongoose provides built-in TypeScript support, letting you type both the document shape and the model's static/instance methods.</p>
+
+  <h3 class="sub">A Typed Schema and Model</h3>
+  <pre>import { Schema, model, Document, Model } from "mongoose";
+
+interface IUser {
+  name: string;
+  email: string;
+  role: "trainee" | "mentor" | "admin";
+  isActive: boolean;
+}
+
+interface IUserDocument extends IUser, Document {
+  // instance methods go here
+  isInStock?(): boolean;
+}
+
+interface IUserModel extends Model<IUserDocument> {
+  // static methods go here
+  findByEmail(email: string): Promise<IUserDocument | null>;
+}
+
+const userSchema = new Schema<IUserDocument, IUserModel>({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  role: { type: String, enum: ["trainee", "mentor", "admin"], default: "trainee" },
+  isActive: { type: Boolean, default: true }
+});
+
+userSchema.statics.findByEmail = function(email: string) {
+  return this.findOne({ email });
+};
+
+const User = model<IUserDocument, IUserModel>("User", userSchema);
+
+export default User;</pre>
+
+  <h3 class="sub">Using the Typed Model</h3>
+  <pre>const user = await User.findByEmail("ashraf@test.com");
+// TypeScript knows "user" is IUserDocument | null, with full autocomplete
+
+if (user) {
+  console.log(user.role);   // typed as "trainee" | "mentor" | "admin"
+}</pre>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Keep the plain data interface (<code>IUser</code>) separate from the Document interface (<code>IUserDocument</code>) — this makes it easy to reuse the plain shape elsewhere (e.g., in a DTO for an API response) without dragging in Mongoose-specific Document behavior.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Two — TypeScript with Mongoose</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Testing with Mongoose — Mocking &amp; mongodb-memory-server</h1>
+  </div>
+  <p>Testing code that touches a real database has two common approaches: mocking Mongoose entirely, or running tests against a real (but temporary, in-memory) MongoDB instance.</p>
+
+  <h3 class="sub">Approach 1 — mongodb-memory-server (Recommended for Most Cases)</h3>
+  <p>This spins up an actual, temporary MongoDB instance in memory for the duration of the test suite — giving you real Mongoose behavior (validation, middleware, indexes) without needing a persistent database or extensive mocking.</p>
+  <pre>// test-setup.js
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const mongoose = require("mongoose");
+
+let mongoServer;
+
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
+});
+
+afterEach(async () => {
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    await collections[key].deleteMany();
+  }
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
+  await mongoServer.stop();
+});</pre>
+
+  <h3 class="sub">Real-World Example — Testing User Creation and Validation</h3>
+  <pre>const User = require("../models/User");
+
+describe("User Model", () => {
+  it("should create a user with valid data", async () => {
+    const user = await User.create({
+      name: "Ashraf",
+      email: "ashraf@test.com",
+      role: "trainee"
+    });
+
+    expect(user.email).toBe("ashraf@test.com");
+  });
+
+  it("should fail validation without a required email", async () => {
+    await expect(
+      User.create({ name: "Ashraf" })
+    ).rejects.toThrow();
+  });
+
+  it("should reject a duplicate email", async () => {
+    await User.create({ name: "A", email: "dup@test.com" });
+    await expect(
+      User.create({ name: "B", email: "dup@test.com" })
+    ).rejects.toThrow();
+  });
+});</pre>
+
+  <h3 class="sub">Approach 2 — Mocking Mongoose Entirely (Faster, but Less Realistic)</h3>
+  <pre>jest.mock("../models/User");
+
+const User = require("../models/User");
+
+it("calls User.create with the right data", async () => {
+  User.create.mockResolvedValue({ _id: "123", name: "Ashraf" });
+
+  const result = await createUserService({ name: "Ashraf" });
+
+  expect(User.create).toHaveBeenCalledWith({ name: "Ashraf" });
+  expect(result._id).toBe("123");
+});</pre>
+
+  <table>
+    <thead><tr><th></th><th>mongodb-memory-server</th><th>Mocking</th></tr></thead>
+    <tbody>
+      <tr><td>Speed</td><td>Slower (spins up a real, temporary DB)</td><td>Very fast (no real DB involved)</td></tr>
+      <tr><td>Realism</td><td>High — real validation, indexes, middleware all run</td><td>Low — you're only testing that functions were called correctly</td></tr>
+      <tr><td>Best for</td><td>Testing schema behavior, validation, queries, aggregations</td><td>Testing business logic in isolation, where DB behavior isn't the focus</td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — Testing with Mongoose</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Best Practices &amp; Tips for This Level</h1>
+  </div>
+
+  <h3 class="sub">1. Extract Repeated Schema Behavior into a Plugin Early</h3>
+  <p>The moment you notice the same fields/middleware being copy-pasted across two or more schemas (soft delete, audit timestamps, versioning), that's the signal to extract a plugin.</p>
+
+  <h3 class="sub">2. Keep Plain Data Interfaces Separate from Document Interfaces in TypeScript</h3>
+  <p>As shown in Section Two — this keeps your typing flexible for use outside the Mongoose layer (API responses, DTOs) without unnecessary coupling.</p>
+
+  <h3 class="sub">3. Prefer mongodb-memory-server for Anything Testing Schema-Level Behavior</h3>
+  <p>Validation rules, middleware, unique indexes, and aggregation pipelines are exactly the kind of behavior that mocking can't meaningfully verify — use a real (if temporary) database for these tests.</p>
+
+  <h3 class="sub">4. Reserve Mocking for True Unit Tests of Business Logic</h3>
+  <p>When testing a service function's decision-making logic in isolation, and the actual database interaction isn't what's being verified, mocking keeps tests fast and focused.</p>
+
+  <h3 class="sub">5. Clean Up Test Data Between Tests, Not Just at the End of the Suite</h3>
+  <p>As shown in the <code>afterEach</code> hook — clearing collections after every test prevents one test's leftover data from silently affecting the next test's assertions.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Extra Tips &amp; Tricks</span>
+    <ul>
+      <li>When writing a plugin, use <code>schema.add()</code> for new fields rather than modifying the schema object directly — it keeps the plugin composable and less likely to conflict with fields the consuming schema already defines.</li>
+      <li>In TypeScript, avoid using <code>any</code> for the Model's generic type "just to make the errors go away" — it silently disables the exact safety net you're integrating TypeScript for in the first place.</li>
+      <li><code>mongodb-memory-server</code> downloads a real MongoDB binary on first run — cache it in CI environments to avoid repeated downloads slowing down every pipeline run.</li>
+      <li>When testing middleware specifically (like a pre-save hook), write a test that asserts the hook's *effect* (e.g., password ends up hashed) rather than trying to spy on the internal hook function itself — this keeps tests resilient to internal refactors.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Four — Best Practices &amp; Tips</p>
+</section>
+
+</body>
+</html>

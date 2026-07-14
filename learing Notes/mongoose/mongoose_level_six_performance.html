@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Mongoose Level Six — Performance &amp; Production</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 27pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.4pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference · Level Six</p>
+  <h1>Mongoose — Performance &amp; Production</h1>
+  <h2>Lean Queries, Indexes in Production, Transactions &amp; Connection Tuning</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>Lean Queries — .lean() and When to Use It</li>
+    <li>Indexes in Mongoose &amp; Building Indexes in Production</li>
+    <li>Transactions with Mongoose</li>
+    <li>Connection Pooling &amp; Performance Tuning</li>
+    <li>Best Practices &amp; Tips for This Level</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">Lean Queries — .lean() and When to Use It</h1>
+  </div>
+  <p>By default, Mongoose wraps every query result in full Mongoose Document instances — objects with change-tracking, getters/setters, virtuals, and instance methods attached. <code>.lean()</code> skips all of that and returns plain JavaScript objects instead.</p>
+
+  <pre>// Without lean() - full Mongoose Document
+const user = await User.findById(id);
+user.isModified("name");   // works - it's a real Document
+await user.save();          // works
+
+// With lean() - plain JS object, much lighter
+const user = await User.findById(id).lean();
+user.isModified;   // undefined - lean objects have no Document methods
+// user.save() would throw — it's not a Document at all</pre>
+
+  <h3 class="sub">A Real-World Example — A Read-Only Listing Endpoint</h3>
+  <pre>// This endpoint only displays data — never modifies it
+app.get("/trainees", async (req, res) => {
+  const trainees = await User
+    .find({ role: "trainee", isActive: true })
+    .select("name track completedCourses")
+    .lean();   // significant performance win here
+
+  res.json({ status: "success", data: trainees });
+});</pre>
+
+  <table>
+    <thead><tr><th></th><th>Without .lean()</th><th>With .lean()</th></tr></thead>
+    <tbody>
+      <tr><td>Return type</td><td>Full Mongoose Document</td><td>Plain JavaScript object</td></tr>
+      <tr><td>Has virtuals/getters</td><td>Yes</td><td>No (unless manually re-applied)</td></tr>
+      <tr><td>Can call .save()</td><td>Yes</td><td>No</td></tr>
+      <tr><td>Memory &amp; CPU overhead</td><td>Higher</td><td>Lower — often noticeably faster on large result sets</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warning-box"><strong>When NOT to use .lean():</strong> if you need to call <code>.save()</code>, rely on virtuals, use instance methods, or need Mongoose's automatic type casting/getters applied to the result, skip <code>.lean()</code> for that particular query.</div>
+  <p class="page-footer">Section One — Lean Queries</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">Indexes in Mongoose &amp; Building Indexes in Production</h1>
+  </div>
+  <p>As covered at the MongoDB level, indexes dramatically speed up reads at the cost of slower writes and extra storage. Mongoose lets you declare them directly in the schema.</p>
+  <pre>userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ role: 1, track: 1, isActive: 1 });   // compound index for common admin filters</pre>
+
+  <h3 class="sub">The Production Concern — Automatic Index Building</h3>
+  <p>By default, Mongoose calls <code>createIndex()</code> automatically for every declared index whenever the application connects — this is convenient in development, but risky in production on large collections.</p>
+  <div class="warning-box"><strong>Why this matters:</strong> building an index on a large, already-populated collection can be slow and resource-intensive. If it happens automatically every time your app restarts in production, it can cause unexpected load spikes or delays at startup.</div>
+  <pre>// Disable automatic index building in production
+mongoose.set("autoIndex", process.env.NODE_ENV !== "production");</pre>
+
+  <h3 class="sub">Real-World Example — Building Indexes Explicitly via a Migration Script</h3>
+  <pre>// scripts/build-indexes.js
+const mongoose = require("mongoose");
+const User = require("../models/User");
+const Product = require("../models/Product");
+
+async function buildIndexes() {
+  await mongoose.connect(process.env.MONGO_URI);
+  await User.createIndexes();
+  await Product.createIndexes();
+  console.log("Indexes built successfully");
+  await mongoose.connection.close();
+}
+
+buildIndexes();</pre>
+  <p>This script is run deliberately (e.g., during a deployment step), rather than silently on every app startup — giving you control over exactly when the potentially expensive index-building operation happens.</p>
+  <p class="page-footer">Section Two — Indexes in Production</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Transactions with Mongoose</h1>
+  </div>
+  <p>This connects directly to the MongoDB Transactions concepts covered earlier — Mongoose provides a thin, convenient wrapper around the same underlying session-based transaction API.</p>
+
+  <h3 class="sub">Real-World Example — The Cash Order Checkout, Revisited with Mongoose Sessions</h3>
+  <pre>const createCashOrder = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const cart = await Cart.findById(req.params.cartId).session(session);
+
+    const order = await Order.create(
+      [{
+        user: req.user._id,
+        cartItems: cart.cartItems,
+        totalOrderPrice: cart.totalPriceAfterDiscount || cart.totalPrice,
+        paymentMethodType: "cash"
+      }],
+      { session }
+    );
+
+    const bulkOptions = cart.cartItems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product, quantity: { $gte: item.quantity } },
+        update: { $inc: { quantity: -item.quantity, sold: +item.quantity } }
+      }
+    }));
+
+    const bulkResult = await Product.bulkWrite(bulkOptions, { session });
+
+    if (bulkResult.modifiedCount !== cart.cartItems.length) {
+      throw new Error("Insufficient stock for one or more products");
+    }
+
+    await Cart.findByIdAndDelete(req.params.cartId).session(session);
+
+    await session.commitTransaction();
+    res.status(201).json({ status: "success", data: order });
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(400).json({ status: "fail", message: error.message });
+  } finally {
+    session.endSession();
+  }
+};</pre>
+
+  <h3 class="sub">A Reusable Transaction Wrapper Pattern</h3>
+  <pre>async function withTransaction(operationFn) {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const result = await operationFn(session);
+    await session.commitTransaction();
+    return result;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
+}
+
+// Usage:
+await withTransaction(async (session) => {
+  await Order.create([orderData], { session });
+  await Product.updateMany(filter, update, { session });
+});</pre>
+  <div class="note"><strong>Reminder from the MongoDB-level coverage:</strong> transactions still require a replica set or sharded cluster underneath, and every operation inside must pass <code>{ session }</code> explicitly — Mongoose doesn't do this automatically just because you're inside a <code>try</code> block.</div>
+  <p class="page-footer">Section Three — Transactions with Mongoose</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Connection Pooling &amp; Performance Tuning</h1>
+  </div>
+  <p>Beyond the basic pooling covered earlier, production tuning involves matching pool size and timeouts to your actual traffic patterns.</p>
+  <pre>mongoose.connect(process.env.MONGO_URI, {
+  maxPoolSize: 20,                   // higher for high-concurrency production traffic
+  minPoolSize: 5,
+  socketTimeoutMS: 45000,             // how long a socket can stay idle before closing
+  serverSelectionTimeoutMS: 5000,     // how long to wait for a server to become available
+  heartbeatFrequencyMS: 10000         // how often the driver checks server status
+});</pre>
+
+  <table>
+    <thead><tr><th>Setting</th><th>Purpose</th><th>Tuning Consideration</th></tr></thead>
+    <tbody>
+      <tr><td>maxPoolSize</td><td>Maximum concurrent connections</td><td>Too low → requests queue waiting for a free connection; too high → can overwhelm the DB server</td></tr>
+      <tr><td>minPoolSize</td><td>Connections kept open even when idle</td><td>Higher values reduce cold-start latency for sudden traffic bursts</td></tr>
+      <tr><td>socketTimeoutMS</td><td>How long an idle socket stays open</td><td>Too short can cause premature disconnects on slow queries</td></tr>
+      <tr><td>serverSelectionTimeoutMS</td><td>How long to wait before failing over connectivity issues</td><td>Lower values fail faster but may be too aggressive on flaky networks</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Monitor actual connection pool usage in production (via MongoDB Atlas metrics or <code>db.serverStatus().connections</code>) before tuning these numbers blindly — start from real traffic data, not guesswork.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Four — Connection Pooling &amp; Performance Tuning</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Five</p>
+    <h1 class="topic-title">Best Practices &amp; Tips for This Level</h1>
+  </div>
+
+  <h3 class="sub">1. Default to .lean() on Any Read-Only List Endpoint</h3>
+  <p>Any endpoint that only displays data (never calls <code>.save()</code> on the result) is a strong candidate for <code>.lean()</code> — this adds up significantly on high-traffic listing pages.</p>
+
+  <h3 class="sub">2. Disable autoIndex in Production, Build Indexes Deliberately</h3>
+  <p>Use <code>mongoose.set("autoIndex", false)</code> in production and run index creation explicitly as part of your deployment process instead.</p>
+
+  <h3 class="sub">3. Wrap Multi-Step Financial or Inventory Operations in Transactions</h3>
+  <p>As covered — anything touching stock, balances, or multiple related collections that must succeed or fail together belongs in a transaction, using the reusable wrapper pattern to avoid repeating boilerplate.</p>
+
+  <h3 class="sub">4. Tune Connection Pool Settings Based on Observed Traffic, Not Assumptions</h3>
+  <p>Start with sensible defaults, then adjust <code>maxPoolSize</code> and timeouts based on actual production monitoring data.</p>
+
+  <h3 class="sub">5. Combine .select() with .lean() for Maximum Read Efficiency</h3>
+  <pre>const trainees = await User
+  .find({ role: "trainee" })
+  .select("name track completedCourses")
+  .lean();</pre>
+  <p>This reduces both the data transferred from MongoDB and the in-memory JS object overhead simultaneously.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Extra Tips &amp; Tricks</span>
+    <ul>
+      <li>Remember that <code>.lean()</code> results won't include virtuals unless you manually attach them — if a listing endpoint depends on a virtual field, either compute it manually after the lean query or skip <code>.lean()</code> for that specific case.</li>
+      <li>For transaction-heavy workloads, keep each transaction's scope as small and fast as possible — avoid slow external calls (emails, third-party APIs) inside the transaction block itself; trigger those after a successful commit instead.</li>
+      <li>When running index-build scripts in production, schedule them during lower-traffic windows if the collection is large, since building can still temporarily affect performance even when run deliberately.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Five — Best Practices &amp; Tips</p>
+</section>
+
+</body>
+</html>

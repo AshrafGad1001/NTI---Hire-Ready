@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Mongoose Level Five — Middleware &amp; Advanced Logic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif Pro', 'Georgia', serif;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 3px double #000;
+  }
+  .cover .kicker {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #333;
+  }
+  .cover h1 {
+    font-size: 26pt;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    border-bottom: 2px solid #000;
+    padding-bottom: 18px;
+    display: inline-block;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #333;
+    margin-top: 22px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 10pt;
+    color: #555;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  .toc { padding: 60px 55px; }
+  .toc h1 {
+    font-size: 18pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .toc ol {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 11.5pt;
+    padding-left: 20px;
+  }
+  .toc li { margin-bottom: 8px; }
+
+  section.topic { padding: 60px 55px 40px 55px; }
+  .topic-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .topic-number {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    color: #444;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+  }
+  .topic-title {
+    font-size: 19pt;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h3.sub {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p { margin: 8px 0; }
+  ul, ol.plain { margin: 8px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  thead th {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-align: left;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding: 8px 9px;
+  }
+  tbody td {
+    padding: 8px 9px;
+    border-bottom: 0.75px solid #999;
+    vertical-align: top;
+    font-size: 11pt;
+  }
+  tbody tr:last-child td { border-bottom: 1.5px solid #000; }
+
+  pre {
+    background: #f2f2f2;
+    border: 0.75px solid #999;
+    border-left: 3px solid #000;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9.3pt;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+  }
+
+  .note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10pt;
+    border-top: 0.75px dotted #666;
+    border-bottom: 0.75px dotted #666;
+    padding: 8px 0;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .tip-box {
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .tip-box .tip-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+  }
+  .tip-box ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .tip-box li { margin-bottom: 5px; }
+
+  .warning-box {
+    border-left: 3px solid #000;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.3pt;
+  }
+  .warning-box strong { text-transform: uppercase; font-size: 9.5pt; letter-spacing: 0.5px; }
+
+  table.middleware-table td, table.middleware-table th { font-size: 10.2pt; }
+
+  .page-footer {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 0.5px solid #999;
+    padding-top: 8px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 20mm 18mm 22mm 18mm; }
+    .cover { page-break-after: always; }
+    .toc { page-break-after: always; }
+    section.topic { page-break-before: always; padding: 0; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .tip-box, .warning-box { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Technical Reference · Level Five</p>
+  <h1>Mongoose Middleware &amp; Advanced Logic</h1>
+  <h2>Middleware Types, Error Handling Middleware &amp; Query Helpers</h2>
+  <p class="meta">Technical Reference · Mongoose / Node.js / MongoDB</p>
+</div>
+
+<div class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li>The Complete Middleware Types — Document, Query, Aggregate, Model</li>
+    <li>Error Handling Middleware</li>
+    <li>Query Helpers — Custom Reusable Query Methods</li>
+    <li>Best Practices &amp; Tips for This Level</li>
+  </ol>
+</div>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section One</p>
+    <h1 class="topic-title">The Complete Middleware Types — Document, Query, Aggregate, Model</h1>
+  </div>
+  <p>Earlier coverage focused on Document middleware (like <code>pre("save")</code>). Mongoose actually supports four categories of middleware, each hooking into a different layer of operation.</p>
+
+  <table class="middleware-table">
+    <thead><tr><th>Middleware Type</th><th>Triggers On</th><th>What "this" Refers To</th></tr></thead>
+    <tbody>
+      <tr><td>Document Middleware</td><td><code>save</code>, <code>validate</code>, <code>remove</code> (called on a document instance)</td><td>The document being saved/validated/removed</td></tr>
+      <tr><td>Query Middleware</td><td><code>find</code>, <code>findOne</code>, <code>updateOne</code>, <code>findOneAndUpdate</code>, <code>deleteMany</code>, etc.</td><td>The query object itself</td></tr>
+      <tr><td>Aggregate Middleware</td><td><code>aggregate()</code> calls</td><td>The aggregation object (its pipeline array)</td></tr>
+      <tr><td>Model Middleware</td><td><code>insertMany()</code></td><td>The array of documents being inserted</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Real-World Example — Document Middleware (Password Hashing, Already Covered, for Reference)</h3>
+  <pre>userSchema.pre("save", async function(next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});</pre>
+
+  <h3 class="sub">Real-World Example — Query Middleware (Soft Delete Filter)</h3>
+  <pre>userSchema.pre(/^find/, function(next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});</pre>
+
+  <h3 class="sub">Real-World Example — Aggregate Middleware (Automatically Exclude Inactive Users from Every Aggregation)</h3>
+  <pre>userSchema.pre("aggregate", function(next) {
+  // "this" refers to the Aggregate object; unshift adds a stage at the very start
+  this.pipeline().unshift({ $match: { isActive: true } });
+  next();
+});</pre>
+  <p>Now, any aggregation run against the User model automatically excludes inactive users first, without needing to remember to add that <code>$match</code> stage manually every time.</p>
+
+  <h3 class="sub">Real-World Example — Model Middleware (insertMany)</h3>
+  <pre>userSchema.pre("insertMany", function(next, docs) {
+  // "docs" is the array of documents about to be inserted
+  docs.forEach(doc => {
+    if (!doc.joinDate) doc.joinDate = new Date();
+  });
+  next();
+});</pre>
+  <div class="note"><strong>Key distinction:</strong> in Document middleware, <code>this</code> is a single document. In Query middleware, <code>this</code> is the query — there's no document yet. In Aggregate middleware, <code>this</code> is the aggregation pipeline object. In Model middleware for <code>insertMany</code>, the documents array is passed as an argument to the callback, not as <code>this</code>. Mixing these up is one of the most common Mongoose middleware bugs.</div>
+  <p class="page-footer">Section One — The Complete Middleware Types</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Two</p>
+    <h1 class="topic-title">Error Handling Middleware</h1>
+  </div>
+  <p>Mongoose supports a special kind of <code>post</code> middleware specifically for catching and transforming errors — for example, converting a raw MongoDB duplicate-key error into a clean, application-friendly message.</p>
+
+  <h3 class="sub">Real-World Example — Handling Duplicate Email Errors Cleanly</h3>
+  <p>When a <code>unique: true</code> index is violated, MongoDB throws a raw error with code <code>11000</code> — not a friendly Mongoose ValidationError. Error handling middleware lets you intercept and reshape it.</p>
+  <pre>userSchema.post("save", function(error, doc, next) {
+  if (error.name === "MongoServerError" && error.code === 11000) {
+    next(new Error("This email is already registered"));
+  } else {
+    next(error);
+  }
+});</pre>
+  <pre>// Usage in a route handler
+app.post("/users", async (req, res) => {
+  try {
+    const user = await User.create(req.body);
+    res.status(201).json({ status: "success", data: user });
+  } catch (error) {
+    res.status(400).json({ status: "fail", message: error.message });
+    // message will now read: "This email is already registered"
+  }
+});</pre>
+
+  <h3 class="sub">Applying the Same Pattern to updateOne/findOneAndUpdate</h3>
+  <pre>userSchema.post(/^findOneAndUpdate/, function(error, doc, next) {
+  if (error.name === "MongoServerError" && error.code === 11000) {
+    next(new Error("This email is already registered"));
+  } else {
+    next(error);
+  }
+});</pre>
+
+  <div class="tip-box">
+    <span class="tip-label">Tip</span>
+    <ul>
+      <li>Error handling middleware takes four arguments (<code>error, doc, next</code> for document/query middleware) — Mongoose recognizes it as an error handler specifically because of this different signature.</li>
+      <li>Always call <code>next(error)</code> for cases you're not explicitly handling, so unexpected errors still propagate normally instead of being silently swallowed.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Two — Error Handling Middleware</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Three</p>
+    <h1 class="topic-title">Query Helpers — Custom Reusable Query Methods</h1>
+  </div>
+  <p>Query Helpers let you extend Mongoose's query chaining with your own custom, reusable methods — reducing repetition across your codebase for common filtering patterns.</p>
+
+  <h3 class="sub">Real-World Example — A Reusable "Active Trainees" Query Helper</h3>
+  <pre>userSchema.query.byActiveTrainees = function() {
+  return this.where({ role: "trainee", isActive: true });
+};
+
+userSchema.query.byTrack = function(trackName) {
+  return this.where({ track: trackName });
+};</pre>
+  <pre>// Now these are chainable exactly like built-in query methods
+const activeMernTrainees = await User
+  .find()
+  .byActiveTrainees()
+  .byTrack("MERN Stack")
+  .sort({ completedCourses: -1 });</pre>
+
+  <div class="note"><strong>Why this matters:</strong> instead of repeating <code>{ role: "trainee", isActive: true }</code> across dozens of routes and risking inconsistency if the business rule ever changes (e.g., adding another condition for "active"), the rule lives in one place, in the schema itself, and every query benefits from the update automatically.</div>
+
+  <h3 class="sub">Query Helper vs. Static Method — When to Use Which</h3>
+  <table>
+    <thead><tr><th></th><th>Query Helper</th><th>Static Method</th></tr></thead>
+    <tbody>
+      <tr><td>Chainable with other query methods</td><td>Yes</td><td>No — it returns a full query/result, ending the chain</td></tr>
+      <tr><td>Best for</td><td>Reusable filter fragments meant to combine with other conditions</td><td>Complete, self-contained queries (e.g., <code>findByEmail</code>)</td></tr>
+      <tr><td>Defined via</td><td><code>schema.query.methodName</code></td><td><code>schema.statics.methodName</code></td></tr>
+    </tbody>
+  </table>
+  <p class="page-footer">Section Three — Query Helpers</p>
+</section>
+
+<section class="topic">
+  <div class="topic-header">
+    <p class="topic-number">Section Four</p>
+    <h1 class="topic-title">Best Practices &amp; Tips for This Level</h1>
+  </div>
+
+  <h3 class="sub">1. Be Explicit About Which Middleware Type You're Writing</h3>
+  <p>Always double-check whether you're inside Document, Query, Aggregate, or Model middleware before relying on what <code>this</code> refers to — this is the single most common source of silent middleware bugs.</p>
+
+  <h3 class="sub">2. Use Aggregate Middleware for Rules That Must Apply to Every Aggregation on a Model</h3>
+  <p>Like automatically filtering out inactive/deleted records — this guarantees the rule can't be forgotten in a future aggregation someone writes.</p>
+
+  <h3 class="sub">3. Centralize Error Translation in Error Handling Middleware, Not in Every Route</h3>
+  <p>Rather than checking for <code>error.code === 11000</code> inside every single route handler that creates a User, handle it once in schema-level error middleware — keeps route handlers clean and the translation logic consistent everywhere.</p>
+
+  <h3 class="sub">4. Reach for Query Helpers When the Same Filter Fragment Shows Up Repeatedly</h3>
+  <p>If you notice the same <code>{ field: value }</code> condition copy-pasted across several route handlers, that's the signal to extract it into a query helper.</p>
+
+  <h3 class="sub">5. Keep Middleware Focused — One Concern Per Hook</h3>
+  <p>Avoid packing unrelated logic (hashing a password AND sending a welcome email AND logging analytics) into a single <code>pre("save")</code> hook — split them into separate, clearly named hooks or move some logic out to the route/service layer instead.</p>
+
+  <div class="tip-box">
+    <span class="tip-label">Extra Tips &amp; Tricks</span>
+    <ul>
+      <li>For Query middleware using a regex like <code>/^find/</code>, remember it also matches <code>findOne</code>, <code>findById</code>, and similar — this is usually desired, but double-check it doesn't accidentally also match something like <code>findOneAndUpdate</code> when you only intended plain reads.</li>
+      <li>Aggregate middleware runs for every call to <code>Model.aggregate()</code>, including ones triggered internally by other library code — test thoroughly if you're globally injecting a <code>$match</code> stage, to make sure it doesn't conflict with pipelines that already start with their own <code>$match</code>.</li>
+      <li>Document your custom query helpers and statics with a short comment near the schema definition — since they extend the query API in a way that isn't visible from Mongoose's own documentation, future maintainers need an easy way to discover they exist.</li>
+    </ul>
+  </div>
+  <p class="page-footer">Section Four — Best Practices &amp; Tips</p>
+</section>
+
+</body>
+</html>
