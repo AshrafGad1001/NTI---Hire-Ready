@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
-
 const refreshTokenSchema = new mongoose.Schema({
-
     tokenHash: {
         type: String,
         required: [true, "Token hash is required"],
@@ -13,7 +11,6 @@ const refreshTokenSchema = new mongoose.Schema({
         required: [true, "User ID is required"],
         index: true,
     },
-
     deviceInfo: {
         type: String,
         default: "Unknown",
@@ -26,15 +23,11 @@ const refreshTokenSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-
     isRevoked: {
         type: Boolean,
         default: false,
     },
 });
-
-
 refreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
-
 const RefreshToken = mongoose.model("RefreshToken", refreshTokenSchema);
 module.exports = RefreshToken;
