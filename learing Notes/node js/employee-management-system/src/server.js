@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+
+
 const allowedOrigins = process.env.CLIENT_ORIGINS
     ? process.env.CLIENT_ORIGINS.split(",")
     : ["http://localhost:3000"];
@@ -30,16 +32,27 @@ app.use(
 app.use("/api/auth", authRoutes);     
 app.use("/api/users", userRoutes);      
 app.use("/api/employees", employeeRoutes); 
+
+
 app.get("/", (_req, res) => {
     res.json({ status: "ok", message: "Employee Management System API" });
 });
-app.all("*", (req, res) => {
+
+
+
+app.use((req, res) => {
     res.status(404).json({
         success: false,
         message: `Route ${req.originalUrl} not found`,
     });
 });
+
+
+
 app.use(errorHandler);
+
+
+
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(` Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
