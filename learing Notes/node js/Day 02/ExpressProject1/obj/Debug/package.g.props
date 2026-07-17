@@ -12,5 +12,7 @@
     <PackageJsonLicense Condition="$(PackageJsonLicense) == ''">ISC</PackageJsonLicense>
     <PackageJsonType Condition="$(PackageJsonType) == ''">commonjs</PackageJsonType>
     <PackageJsonDependenciesExpress Condition="$(PackageJsonDependenciesExpress) == ''">^5.2.1</PackageJsonDependenciesExpress>
+    <PackageJsonDependenciesExpressAsyncHandler Condition="$(PackageJsonDependenciesExpressAsyncHandler) == ''">^1.2.0</PackageJsonDependenciesExpressAsyncHandler>
+    <PackageJsonDependenciesMongoose Condition="$(PackageJsonDependenciesMongoose) == ''">^9.7.4</PackageJsonDependenciesMongoose>
   </PropertyGroup>
 </Project>

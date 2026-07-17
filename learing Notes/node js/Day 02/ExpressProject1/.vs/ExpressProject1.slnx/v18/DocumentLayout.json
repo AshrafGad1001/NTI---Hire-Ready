@@ -5,6 +5,22 @@
     {
       "AbsoluteMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|d:\\nti - hire ready\\learing notes\\node js\\day 02\\expressproject1\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|solutionrelative:index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|d:\\nti - hire ready\\learing notes\\node js\\day 02\\expressproject1\\models\\usermodel.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|solutionrelative:models\\usermodel.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|d:\\nti - hire ready\\learing notes\\node js\\day 02\\expressproject1\\services\\handlersfactory.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|solutionrelative:services\\handlersfactory.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|d:\\nti - hire ready\\learing notes\\node js\\day 02\\expressproject1\\services\\userservices.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|solutionrelative:services\\userservices.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|d:\\nti - hire ready\\learing notes\\node js\\day 02\\expressproject1\\routes\\userroutes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A8CB9C0E-7452-5708-A4C4-EFFEF1B7D9B1}|ExpressProject1.esproj|solutionrelative:routes\\userroutes.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -36,9 +52,61 @@
               "RelativeDocumentMoniker": "index.js",
               "ToolTip": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\index.js",
               "RelativeToolTip": "index.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAADAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-07-13T08:11:12.628Z",
+              "WhenOpened": "2026-07-15T16:35:15.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "userRoutes.js",
+              "DocumentMoniker": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Routes\\userRoutes.js",
+              "RelativeDocumentMoniker": "Routes\\userRoutes.js",
+              "ToolTip": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Routes\\userRoutes.js",
+              "RelativeToolTip": "Routes\\userRoutes.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-15T16:33:57.243Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "handlersFactory.js",
+              "DocumentMoniker": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Services\\handlersFactory.js",
+              "RelativeDocumentMoniker": "Services\\handlersFactory.js",
+              "ToolTip": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Services\\handlersFactory.js",
+              "RelativeToolTip": "Services\\handlersFactory.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-15T16:29:18.792Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "userServices.js",
+              "DocumentMoniker": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Services\\userServices.js",
+              "RelativeDocumentMoniker": "Services\\userServices.js",
+              "ToolTip": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Services\\userServices.js",
+              "RelativeToolTip": "Services\\userServices.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-15T16:23:16.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "userModel.js",
+              "DocumentMoniker": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Models\\userModel.js",
+              "RelativeDocumentMoniker": "Models\\userModel.js",
+              "ToolTip": "D:\\NTI - Hire Ready\\learing Notes\\node js\\Day 02\\ExpressProject1\\Models\\userModel.js",
+              "RelativeToolTip": "Models\\userModel.js",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABcAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-15T16:06:01.558Z",
               "EditorCaption": ""
             }
           ]
